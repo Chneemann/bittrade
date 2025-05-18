@@ -53,17 +53,19 @@
       }
     </div>
 
-    <div>
+    <div class="forgot-password-container">
       Forgot your password?
       <a routerLink="/forgot-password">Click here</a>
     </div>
 
-    <button
-      type="submit"
-      [disabled]="form.invalid"
-      [class.disabled]="form.invalid"
-    >
-      Sign in
-    </button>
+    <div class="button-container">
+      <app-large-button
+        type="submit"
+        value="Sign in"
+        [disabled]="form.invalid"
+        [class.disabled]="form.invalid"
+      >
+      </app-large-button>
+    </div>
   </form>
 </div>

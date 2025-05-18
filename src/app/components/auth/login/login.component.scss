@@ -15,7 +15,6 @@
   height: auto;
 
   padding: 12px;
-  border-radius: 12px;
 }
 
 .headline {
@@ -25,4 +24,26 @@
   font-weight: 700;
 
   text-align: center;
+}
+
+.forgot-password-container {
+  margin-bottom: 24px;
+}
+
+.button-container {
+  width: 100%;
+}
+
+// MEDIA QUERIES
+
+@media (min-width: 480px) {
+  .login {
+    max-width: 424px;
+
+    padding: 24px;
+    border-radius: 24px;
+
+    background-color: var(--color-white);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.08);
+  }
 }

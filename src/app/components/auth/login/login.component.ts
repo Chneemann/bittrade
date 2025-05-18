@@ -7,10 +7,16 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { LargeButtonComponent } from '../../../shared/components/buttons/large-button/large-button.component';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    LargeButtonComponent,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
