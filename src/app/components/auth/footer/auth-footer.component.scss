@@ -12,9 +12,5 @@
   .separator {
     color: var(--color-font-secondary);
     user-select: none;
-
-    @media (max-width: 400px) {
-      font-size: 16px;
-    }
   }
 }
