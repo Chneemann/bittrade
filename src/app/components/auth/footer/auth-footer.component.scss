@@ -1,0 +1,24 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: clamp(50px, 5dvh, 70px);
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  z-index: 2;
+
+  .separator {
+    color: var(--color-font-secondary);
+    user-select: none;
+
+    @media (max-width: 400px) {
+      font-size: 16px;
+    }
+  }
+}
