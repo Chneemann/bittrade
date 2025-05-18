@@ -1,0 +1,79 @@
+.password-field,
+.email-field {
+  position: relative;
+  width: 100%;
+
+  input,
+  textarea,
+  select {
+    padding-left: 50px;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 12px 18px;
+    box-sizing: border-box;
+
+    background: var(--color-white);
+
+    border: 2px solid var(--color-primary);
+    border-radius: 12px;
+
+    font-size: 18px;
+    font-weight: 400;
+
+    resize: none;
+
+    transition: background-color 250ms ease-in-out, color 250ms ease-in-out,
+      border-color 250ms ease-in-out;
+
+    &::placeholder {
+      color: var(--color-font-secondary);
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .error-border {
+    border: 2px solid var(--color-red);
+    color: var(--color-red);
+
+    &::placeholder {
+      color: var(--color-red);
+    }
+  }
+}
+
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 27px;
+  padding: 9px;
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    p {
+      color: var(--color-red);
+
+      height: 16px;
+      font-size: 12px;
+      font-weight: 400;
+    }
+  }
+}

@@ -1,8 +1,6 @@
 section {
   max-width: 1024px;
-  padding: 24px;
   margin-inline: auto;
-  margin-bottom: clamp(50px, 5dvh, 70px);
 
   background-color: var(--color-background);
   color: var(--color-text);
@@ -14,29 +12,30 @@ section {
 }
 
 h1 {
+  margin: 12px 0;
+
   font-size: clamp(24px, 4vw, 32px);
   font-weight: 700;
   line-height: 1.2;
-  text-align: center;
 
-  margin-bottom: 24px;
+  text-align: center;
 }
 
 h2 {
-  font-size: clamp(20px, 3vw, 24px);
-  font-weight: 700;
-
   margin: 42px 0 16px;
   padding-bottom: 8px;
+
+  font-size: clamp(20px, 3vw, 24px);
+  font-weight: 700;
 
   border-bottom: 2px solid var(--color-gray);
 }
 
 p {
+  margin-bottom: 16px;
+
   font-size: clamp(16px, 2.5vw, 18px);
   line-height: 1.65;
-
-  margin-bottom: 16px;
 }
 
 ul {

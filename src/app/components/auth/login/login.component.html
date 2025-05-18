@@ -1,1 +1,69 @@
-<p>login works!</p>
+<div class="login">
+  <div class="headline">Login to your Account</div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="email-field">
+      <input
+        formControlName="email"
+        type="email"
+        id="email"
+        placeholder="Email Address"
+        autocomplete="email"
+        [class.error-border]="
+          form.controls['email'].invalid && form.controls['email'].touched
+        "
+      />
+    </div>
+
+    <div class="error-container">
+      @if (form.controls['email'].touched && form.controls['email'].invalid) {
+      <div class="error-message">
+        @if (form.controls['email'].errors?.['required']) {
+        <p role="alert">Please enter your email</p>
+        } @if (form.controls['email'].errors?.['invalidEmailFormat']) {
+        <p role="alert">This is not a valid email format</p>
+        }
+      </div>
+      }
+    </div>
+
+    <div class="password-field">
+      <input
+        id="password"
+        formControlName="password"
+        placeholder="Enter a password"
+        autocomplete="new-password"
+        minlength="8"
+        [class.error-border]="
+          form.controls['password'].invalid && form.controls['password'].touched
+        "
+      />
+    </div>
+
+    <div class="error-container">
+      @if (form.controls['password'].touched &&
+      form.controls['password'].invalid) {
+      <div class="error-message">
+        @if (form.controls['password'].errors?.['required']) {
+        <p role="alert">Please enter a password</p>
+        } @if (form.controls['password'].errors?.['minlength']) {
+        <p role="alert">Password is too short, min 8 characters</p>
+        }
+      </div>
+      }
+    </div>
+
+    <div>
+      Forgot your password?
+      <a routerLink="/forgot-password">Click here</a>
+    </div>
+
+    <button
+      type="submit"
+      [disabled]="form.invalid"
+      [class.disabled]="form.invalid"
+    >
+      Sign in
+    </button>
+  </form>
+</div>
