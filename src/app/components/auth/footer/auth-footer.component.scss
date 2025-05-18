@@ -1,10 +1,6 @@
 .footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   height: clamp(50px, 5dvh, 70px);
-  width: 100%;
+  background-color: var(--color-background);
 
   display: flex;
   align-items: center;
