@@ -1,11 +1,8 @@
-.password-field,
-.email-field {
+.input-field {
   position: relative;
   width: 100%;
 
-  input,
-  textarea,
-  select {
+  input {
     padding-left: 50px;
   }
 }
@@ -16,16 +13,14 @@ form {
   align-items: center;
   justify-content: space-between;
 
-  input,
-  textarea,
-  select {
+  input {
     width: 100%;
     padding: 12px 18px;
     box-sizing: border-box;
 
     background: var(--color-white);
 
-    border: 2px solid var(--color-primary);
+    border: 2px solid var(--color-gray);
     border-radius: 12px;
 
     font-size: 18px;
@@ -36,21 +31,40 @@ form {
     transition: background-color 250ms ease-in-out, color 250ms ease-in-out,
       border-color 250ms ease-in-out;
 
-    &::placeholder {
-      color: var(--color-font-secondary);
+    &:focus {
+      border-color: var(--color-primary);
     }
 
-    &:focus {
-      outline: none;
+    &.error-border {
+      border: 2px solid var(--color-red);
+      color: var(--color-red);
+
+      + label {
+        color: var(--color-red);
+      }
     }
   }
 
-  .error-border {
-    border: 2px solid var(--color-red);
-    color: var(--color-red);
+  label {
+    position: absolute;
+    left: 50px;
+    top: 50%;
+    transform: translateY(-50%);
 
-    &::placeholder {
-      color: var(--color-red);
+    padding: 0 4px;
+    background: var(--color-white);
+
+    font-size: 18px;
+    color: var(--color-font-placeholder);
+
+    pointer-events: none;
+    transition: all 0.2s ease;
+
+    &.focused {
+      top: 2px;
+
+      font-size: 13px;
+      color: var(--color-primary);
     }
   }
 }
@@ -69,11 +83,11 @@ form {
     justify-content: center;
 
     p {
-      color: var(--color-red);
-
       height: 16px;
+
       font-size: 12px;
       font-weight: 400;
+      color: var(--color-red);
     }
   }
 }

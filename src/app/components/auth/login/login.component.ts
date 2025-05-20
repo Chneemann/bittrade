@@ -23,6 +23,9 @@ import { LargeButtonComponent } from '../../../shared/components/buttons/large-b
 export class LoginComponent {
   form: FormGroup = new FormGroup({});
 
+  emailFieldFocused: boolean = false;
+  passwordFieldFocused: boolean = false;
+
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {

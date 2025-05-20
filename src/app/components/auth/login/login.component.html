@@ -2,17 +2,24 @@
   <div class="headline">Login to your Account</div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="email-field">
+    <div class="input-field">
       <input
         formControlName="email"
         type="email"
         id="email"
-        placeholder="Email Address"
         autocomplete="email"
+        (focus)="emailFieldFocused = true"
+        (blur)="emailFieldFocused = false"
         [class.error-border]="
           form.controls['email'].invalid && form.controls['email'].touched
         "
       />
+      <label
+        for="email"
+        [class.focused]="form.controls['email'].value || emailFieldFocused"
+      >
+        Email Address
+      </label>
     </div>
 
     <div class="error-container">
@@ -27,17 +34,26 @@
       }
     </div>
 
-    <div class="password-field">
+    <div class="input-field">
       <input
-        id="password"
         formControlName="password"
-        placeholder="Enter a password"
-        autocomplete="new-password"
-        minlength="8"
+        type="password"
+        id="password"
+        autocomplete="current-password"
+        (focus)="passwordFieldFocused = true"
+        (blur)="passwordFieldFocused = false"
         [class.error-border]="
           form.controls['password'].invalid && form.controls['password'].touched
         "
       />
+      <label
+        for="password"
+        [class.focused]="
+          form.controls['password'].value || passwordFieldFocused
+        "
+      >
+        Password
+      </label>
     </div>
 
     <div class="error-container">
