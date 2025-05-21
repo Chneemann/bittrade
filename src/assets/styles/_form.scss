@@ -1,23 +1,21 @@
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
 .input-field {
   position: relative;
   width: 100%;
 
   input {
     padding-left: 50px;
-  }
-}
+    color: var(--filter-color-primary);
 
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-
-  input {
     width: 100%;
-    padding: 12px 18px;
+    padding: 12px 18px 12px 55px;
     box-sizing: border-box;
-
     background: var(--color-white);
 
     border: 2px solid var(--color-gray);
@@ -27,21 +25,26 @@ form {
     font-weight: 400;
 
     resize: none;
-
     transition: background-color 250ms ease-in-out, color 250ms ease-in-out,
       border-color 250ms ease-in-out;
 
-    &:focus {
+    &.focused {
       border-color: var(--color-primary);
+      color: var(--color-primary);
     }
 
-    &.error-border {
-      border: 2px solid var(--color-red);
-      color: var(--color-red);
+    &.valid,
+    &.valid.focused {
+      outline: none;
+      border-color: var(--color-black);
+      color: var(--color-black);
+    }
 
-      + label {
-        color: var(--color-red);
-      }
+    &.invalid,
+    &.invalid.focused {
+      outline: none;
+      border-color: var(--color-red);
+      color: var(--color-red);
     }
   }
 
@@ -53,7 +56,6 @@ form {
 
     padding: 0 4px;
     background: var(--color-white);
-
     font-size: 18px;
     color: var(--color-font-placeholder);
 
@@ -62,19 +64,50 @@ form {
 
     &.focused {
       top: 2px;
-
       font-size: 13px;
       color: var(--color-primary);
+    }
+
+    &.valid,
+    &.valid.focused {
+      color: var(--color-black);
+    }
+
+    &.invalid,
+    &.invalid.focused {
+      color: var(--color-red);
+    }
+  }
+
+  .icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: filter 250ms ease-in-out;
+
+    &.focused {
+      filter: var(--filter-color-primary);
+    }
+
+    &.valid,
+    &.valid.focused {
+      filter: var(--filter-color-black);
+    }
+
+    &.invalid,
+    &.invalid.focused {
+      filter: var(--filter-color-red);
     }
   }
 }
 
-.error-container {
+.error-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
 
-  height: 27px;
+  height: 32px;
   padding: 9px;
 
   .error-message {

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -21,7 +22,7 @@ import { LargeButtonComponent } from '../../../shared/components/buttons/large-b
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  form: FormGroup = new FormGroup({});
+  form!: FormGroup;
 
   emailFieldFocused: boolean = false;
   passwordFieldFocused: boolean = false;
@@ -32,16 +33,56 @@ export class LoginComponent {
     this.createLoginForm();
   }
 
+  async onSubmit(): Promise<void> {
+    if (this.form.invalid) return;
+    // TODO: implement login
+  }
+
+  get emailInputClasses(): { [key: string]: boolean } {
+    return this.getInputClasses(
+      this.form.get('email') as FormControl,
+      this.emailFieldFocused
+    );
+  }
+
+  get passwordInputClasses(): { [key: string]: boolean } {
+    return this.getInputClasses(
+      this.form.get('password') as FormControl,
+      this.passwordFieldFocused
+    );
+  }
+
   private createLoginForm(): void {
     this.form = this.formBuilder.group({
-      email: ['', [Validators.required]],
-      password: ['', Validators.required],
-      keepLoggedIn: [false],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
-  async onSubmit(): Promise<void> {
-    if (this.form.invalid) return;
-    console.log(this.form.value);
+  private getInputClasses(
+    control: FormControl,
+    focused: boolean
+  ): { [key: string]: boolean } {
+    return {
+      focused: focused || !!control.value,
+      valid: control.valid && control.touched,
+      invalid: control.invalid && control.touched && control.dirty,
+    };
+  }
+
+  getFormErrors(controlName: string): string[] {
+    const control = this.form.get(controlName);
+    if (!control || !control.errors || !(control.touched && control.dirty))
+      return [];
+
+    const errors: string[] = [];
+    if (control.errors['required'])
+      errors.push(`Please enter your ${controlName}`);
+    if (control.errors['email'])
+      errors.push('This is not a valid email format');
+    if (control.errors['minlength'])
+      errors.push(`${controlName} is too short, min 8 characters`);
+
+    return errors;
   }
 }

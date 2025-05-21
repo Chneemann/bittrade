@@ -12,4 +12,11 @@
   --color-font-primary: #212529;
   --color-font-secondary: #6c757d;
   --color-font-placeholder: #d8d9e4;
+
+  --filter-color-primary: brightness(0) saturate(100%) invert(24%) sepia(88%)
+    saturate(2218%) hue-rotate(206deg) brightness(92%) contrast(111%);
+  --filter-color-red: brightness(0) saturate(100%) invert(12%) sepia(84%)
+    saturate(7426%) hue-rotate(346deg) brightness(85%) contrast(100%);
+  --filter-color-black: brightness(0) saturate(100%) invert(0%) sepia(55%)
+    saturate(0%) hue-rotate(329deg) brightness(99%) contrast(101%);
 }

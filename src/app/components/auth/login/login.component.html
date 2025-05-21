@@ -2,68 +2,85 @@
   <div class="headline">Login to your Account</div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Email field -->
     <div class="input-field">
       <input
         formControlName="email"
         type="email"
         id="email"
+        name="email"
         autocomplete="email"
         (focus)="emailFieldFocused = true"
         (blur)="emailFieldFocused = false"
-        [class.error-border]="
-          form.controls['email'].invalid && form.controls['email'].touched
+        [ngClass]="emailInputClasses"
+        [attr.aria-describedby]="
+          getFormErrors('email').length ? 'email-errors' : null
         "
+        required
       />
-      <label
-        for="email"
-        [class.focused]="form.controls['email'].value || emailFieldFocused"
-      >
-        Email Address
-      </label>
+
+      <img
+        class="icon"
+        src="./assets/img/form/email.svg"
+        alt="email icon"
+        [ngClass]="emailInputClasses"
+      />
+
+      <label for="email" [ngClass]="emailInputClasses"> Email Address </label>
     </div>
 
-    <div class="error-container">
-      @if (form.controls['email'].touched && form.controls['email'].invalid) {
+    <div
+      id="email-errors"
+      class="error-wrapper"
+      role="alert"
+      aria-live="assertive"
+    >
+      @if (getFormErrors('email').length) {
       <div class="error-message">
-        @if (form.controls['email'].errors?.['required']) {
-        <p role="alert">Please enter your email</p>
-        } @if (form.controls['email'].errors?.['invalidEmailFormat']) {
-        <p role="alert">This is not a valid email format</p>
+        @for (error of getFormErrors('email'); track $index) {
+        <p>{{ error }}</p>
         }
       </div>
       }
     </div>
 
+    <!-- Password field -->
     <div class="input-field">
       <input
         formControlName="password"
         type="password"
         id="password"
+        name="password"
         autocomplete="current-password"
         (focus)="passwordFieldFocused = true"
         (blur)="passwordFieldFocused = false"
-        [class.error-border]="
-          form.controls['password'].invalid && form.controls['password'].touched
+        [ngClass]="passwordInputClasses"
+        [attr.aria-describedby]="
+          getFormErrors('password').length ? 'password-errors' : null
         "
+        required
       />
-      <label
-        for="password"
-        [class.focused]="
-          form.controls['password'].value || passwordFieldFocused
-        "
-      >
-        Password
-      </label>
+
+      <img
+        class="icon"
+        src="./assets/img/form/password.svg"
+        alt="password icon"
+        [ngClass]="passwordInputClasses"
+      />
+
+      <label for="password" [ngClass]="passwordInputClasses"> Password </label>
     </div>
 
-    <div class="error-container">
-      @if (form.controls['password'].touched &&
-      form.controls['password'].invalid) {
+    <div
+      id="password-errors"
+      class="error-wrapper"
+      role="alert"
+      aria-live="assertive"
+    >
+      @if (getFormErrors('password').length) {
       <div class="error-message">
-        @if (form.controls['password'].errors?.['required']) {
-        <p role="alert">Please enter a password</p>
-        } @if (form.controls['password'].errors?.['minlength']) {
-        <p role="alert">Password is too short, min 8 characters</p>
+        @for (error of getFormErrors('password'); track $index) {
+        <p>{{ error }}</p>
         }
       </div>
       }
@@ -75,12 +92,7 @@
     </div>
 
     <div class="button-container">
-      <app-large-button
-        type="submit"
-        value="Sign in"
-        [disabled]="form.invalid"
-        [class.disabled]="form.invalid"
-      >
+      <app-large-button type="submit" value="Sign in" [disabled]="form.invalid">
       </app-large-button>
     </div>
   </form>
