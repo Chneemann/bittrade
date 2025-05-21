@@ -92,7 +92,13 @@
     </div>
 
     <div class="button-container">
-      <app-large-button type="submit" value="Sign in" [disabled]="form.invalid">
+      <app-large-button
+        type="submit"
+        value="Sign in"
+        [loading]="isLoading"
+        [loadingMessage]="'Signing in...'"
+        [disabled]="form.invalid"
+      >
       </app-large-button>
     </div>
   </form>

@@ -24,6 +24,7 @@ import { LargeButtonComponent } from '../../../shared/components/buttons/large-b
 export class LoginComponent {
   form!: FormGroup;
 
+  isLoading = false;
   emailFieldFocused: boolean = false;
   passwordFieldFocused: boolean = false;
 
@@ -35,7 +36,18 @@ export class LoginComponent {
 
   async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
-    // TODO: implement login
+
+    this.isLoading = true;
+    this.form.disable();
+    try {
+      // TODO Login logic
+    } catch (error) {
+      // Error handling
+      this.form.reset();
+    } finally {
+      this.isLoading = false;
+      this.form.enable();
+    }
   }
 
   get emailInputClasses(): { [key: string]: boolean } {
