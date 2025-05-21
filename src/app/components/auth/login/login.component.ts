@@ -9,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { LargeButtonComponent } from '../../../shared/components/buttons/large-button/large-button.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,7 @@ export class LoginComponent {
   emailFieldFocused: boolean = false;
   passwordFieldFocused: boolean = false;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder, private router: Router) {}
 
   ngOnInit(): void {
     this.createLoginForm();
@@ -41,6 +42,8 @@ export class LoginComponent {
     this.form.disable();
     try {
       // TODO Login logic
+      // await this.authService.login(credentials);
+      this.router.navigate(['/home/']);
     } catch (error) {
       // Error handling
       this.form.reset();
