@@ -5,11 +5,7 @@ import { catchError, map, tap, shareReplay } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly TOKEN_KEY = 'authToken';
-
-  private loggedInSubject = new BehaviorSubject<boolean>(
-    !!localStorage.getItem(this.TOKEN_KEY)
-  );
+  private loggedInSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.loggedInSubject.asObservable();
 
   private authCheck$?: Observable<boolean>;
@@ -18,13 +14,6 @@ export class AuthService {
 
   initAuthCheck(): Observable<boolean> {
     if (this.authCheck$) {
-      return this.authCheck$;
-    }
-
-    const token = localStorage.getItem(this.TOKEN_KEY);
-    if (!token) {
-      this.loggedInSubject.next(false);
-      this.authCheck$ = of(false);
       return this.authCheck$;
     }
 
@@ -41,25 +30,16 @@ export class AuthService {
     return this.authCheck$;
   }
 
-  login(credentials: {
-    email: string;
-    password: string;
-  }): Observable<{ token: string }> {
+  login(credentials: { email: string; password: string }): Observable<void> {
     this.authCheck$ = undefined;
-
     return this.apiService
-      .post<{ token: string }>('/auth/login/', credentials)
-      .pipe(
-        tap((res) => {
-          localStorage.setItem(this.TOKEN_KEY, res.token);
-          this.loggedInSubject.next(true);
-        })
-      );
+      .post<void>('/auth/login/', credentials)
+      .pipe(tap(() => this.loggedInSubject.next(true)));
   }
 
-  logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    this.loggedInSubject.next(false);
-    this.authCheck$ = undefined;
+  logout(): Observable<void> {
+    return this.apiService
+      .post<void>('/auth/logout/', {})
+      .pipe(tap(() => this.loggedInSubject.next(false)));
   }
 }

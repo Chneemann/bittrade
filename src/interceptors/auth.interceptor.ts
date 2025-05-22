@@ -18,14 +18,7 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('authToken');
-
-    let authReq = req;
-    if (token) {
-      authReq = req.clone({
-        setHeaders: { Authorization: `Token ${token}` },
-      });
-    }
+    const authReq = req;
 
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
