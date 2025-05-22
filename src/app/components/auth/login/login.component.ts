@@ -10,6 +10,8 @@ import {
 } from '@angular/forms';
 import { LargeButtonComponent } from '../../../shared/components/buttons/large-button/large-button.component';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +31,11 @@ export class LoginComponent {
   emailFieldFocused: boolean = false;
   passwordFieldFocused: boolean = false;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.createLoginForm();
@@ -37,15 +43,18 @@ export class LoginComponent {
 
   async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
+    const credentials = {
+      email: this.form.get('email')?.value,
+      password: this.form.get('password')?.value,
+    };
 
     this.isLoading = true;
     this.form.disable();
     try {
-      // TODO Login logic
-      // await this.authService.login(credentials);
+      await firstValueFrom(this.authService.login(credentials));
       this.router.navigate(['/home/']);
-    } catch (error) {
-      // Error handling
+    } catch (error: any) {
+      console.log(error);
       this.form.reset();
     } finally {
       this.isLoading = false;
