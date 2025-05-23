@@ -91,13 +91,23 @@
       <a class="link link--inline" routerLink="/forgot-password">Click here</a>
     </div>
 
+    <!-- Sign in and guest login buttons -->
     <div class="button-container">
       <app-large-button
         type="submit"
         value="Sign in"
-        [loading]="isLoading"
+        [loading]="isSignInLoading"
         [loadingMessage]="'Signing in...'"
-        [disabled]="form.invalid"
+        [disabled]="isSignInButtonDisabled"
+      >
+      </app-large-button>
+      <app-large-button
+        type="button"
+        value="Guest Login"
+        [loading]="isGuestLoading"
+        [loadingMessage]="'Signing in...'"
+        [disabled]="isGuestLoginDisabled"
+        (click)="onGuestLogin()"
       >
       </app-large-button>
     </div>
