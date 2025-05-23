@@ -13,17 +13,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-
-enum LoginLoadingState {
-  None = 'none',
-  SignIn = 'signIn',
-  Guest = 'guest',
-}
-
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
+import { LoginLoadingState, LoginCredentials } from '../../models/auth.model';
 
 @Component({
   selector: 'app-login',
@@ -38,8 +28,8 @@ interface LoginCredentials {
 })
 export class LoginComponent {
   form!: FormGroup<{
-    email: FormControl<string | null>;
-    password: FormControl<string | null>;
+    email: FormControl<string>;
+    password: FormControl<string>;
   }>;
 
   loadingState: LoginLoadingState = LoginLoadingState.None;
@@ -62,7 +52,7 @@ export class LoginComponent {
     if (this.form.invalid) return;
 
     const credentials = this.form.value as LoginCredentials;
-    await this.performLogin(credentials, LoginLoadingState.SignIn);
+    await this.performLogin(credentials, LoginLoadingState.UserSignIn);
   }
 
   async onGuestLogin(): Promise<void> {
@@ -70,15 +60,15 @@ export class LoginComponent {
       email: environment.guestEmail,
       password: environment.guestPassword,
     };
-    await this.performLogin(guestCredentials, LoginLoadingState.Guest);
+    await this.performLogin(guestCredentials, LoginLoadingState.GuestSignIn);
   }
 
   get isSignInLoading(): boolean {
-    return this.loadingState === LoginLoadingState.SignIn;
+    return this.loadingState === LoginLoadingState.UserSignIn;
   }
 
   get isGuestLoading(): boolean {
-    return this.loadingState === LoginLoadingState.Guest;
+    return this.loadingState === LoginLoadingState.GuestSignIn;
   }
 
   get isSignInButtonDisabled(): boolean {
@@ -141,7 +131,7 @@ export class LoginComponent {
   }
 
   private createLoginForm(): void {
-    this.form = this.formBuilder.group({
+    this.form = this.formBuilder.nonNullable.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
