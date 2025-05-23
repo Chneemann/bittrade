@@ -81,10 +81,18 @@ form {
 
   .icon {
     position: absolute;
-    left: 20px;
     top: 50%;
     transform: translateY(-50%);
-    transition: filter 250ms ease-in-out;
+    width: 24px;
+    height: 24px;
+
+    &--base {
+      left: 20px;
+    }
+    &--status {
+      left: auto;
+      right: 15px;
+    }
 
     &.focused {
       filter: var(--filter-color-primary);

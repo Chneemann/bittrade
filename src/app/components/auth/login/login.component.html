@@ -19,12 +19,31 @@
         required
       />
 
+      <!-- Static email icon -->
       <img
-        class="icon"
+        class="icon icon--base"
         src="./assets/img/form/email.svg"
         alt="email icon"
         [ngClass]="emailInputClasses"
       />
+
+      <!-- Success icon -->
+      @if (form.controls['email'].valid && form.controls['email'].touched) {
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/success.svg"
+        alt="valid input"
+      />
+      }
+
+      <!-- Error icon -->
+      @if (form.controls['email'].invalid && form.controls['email'].touched) {
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/error.svg"
+        alt="invalid input"
+      />
+      }
 
       <label for="email" [ngClass]="emailInputClasses"> Email Address </label>
     </div>
@@ -61,12 +80,33 @@
         required
       />
 
+      <!-- Static email icon -->
       <img
-        class="icon"
+        class="icon icon--base"
         src="./assets/img/form/password.svg"
         alt="password icon"
         [ngClass]="passwordInputClasses"
       />
+
+      <!-- Success icon -->
+      @if (form.controls['password'].valid && form.controls['password'].touched)
+      {
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/success.svg"
+        alt="valid input"
+      />
+      }
+
+      <!-- Error icon -->
+      @if (form.controls['password'].invalid &&
+      form.controls['password'].touched) {
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/error.svg"
+        alt="invalid input"
+      />
+      }
 
       <label for="password" [ngClass]="passwordInputClasses"> Password </label>
     </div>
