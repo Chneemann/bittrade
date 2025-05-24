@@ -33,13 +33,16 @@ export class AuthService {
   login(credentials: { email: string; password: string }): Observable<void> {
     this.authCheck$ = undefined;
     return this.backendApiService
-      .post<void>('/auth/login/', credentials)
+      .post<void, { email: string; password: string }>(
+        '/auth/login/',
+        credentials
+      )
       .pipe(tap(() => this.loggedInSubject.next(true)));
   }
 
   logout(): Observable<void> {
     return this.backendApiService
-      .post<void>('/auth/logout/', {})
+      .post<void, {}>('/auth/logout/', {})
       .pipe(tap(() => this.loggedInSubject.next(false)));
   }
 }
