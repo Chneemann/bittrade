@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from './api.service';
+import { BackendApiService } from './backend/backend-api.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap, shareReplay } from 'rxjs/operators';
 
@@ -10,14 +10,14 @@ export class AuthService {
 
   private authCheck$?: Observable<boolean>;
 
-  constructor(private apiService: ApiService) {}
+  constructor(private backendApiService: BackendApiService) {}
 
   initAuthCheck(): Observable<boolean> {
     if (this.authCheck$) {
       return this.authCheck$;
     }
 
-    this.authCheck$ = this.apiService.get('/auth/me/').pipe(
+    this.authCheck$ = this.backendApiService.get('/auth/me/').pipe(
       tap(() => this.loggedInSubject.next(true)),
       map(() => true),
       catchError(() => {
@@ -32,13 +32,13 @@ export class AuthService {
 
   login(credentials: { email: string; password: string }): Observable<void> {
     this.authCheck$ = undefined;
-    return this.apiService
+    return this.backendApiService
       .post<void>('/auth/login/', credentials)
       .pipe(tap(() => this.loggedInSubject.next(true)));
   }
 
   logout(): Observable<void> {
-    return this.apiService
+    return this.backendApiService
       .post<void>('/auth/logout/', {})
       .pipe(tap(() => this.loggedInSubject.next(false)));
   }

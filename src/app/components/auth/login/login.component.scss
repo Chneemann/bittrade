@@ -26,8 +26,9 @@
   text-align: center;
 }
 
-.forgot-password-container {
-  margin-bottom: 24px;
+.forgot-password-container,
+.register-container {
+  padding: 6px 0;
 }
 
 .button-container {
@@ -35,6 +36,8 @@
   flex-direction: column;
   width: 100%;
   gap: 12px;
+
+  margin-top: 12px;
 }
 
 // MEDIA QUERIES

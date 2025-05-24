@@ -1,5 +1,5 @@
 .header {
-  height: clamp(100px, 10dvh, 120px);
+  height: clamp(80px, 8dvh, 100px);
   background-color: var(--color-background);
 
   display: flex;
@@ -30,7 +30,7 @@
 
 // Media Queries
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 480px) {
   .logo {
     img {
       width: 42px;
