@@ -81,18 +81,18 @@ export class CoinGeckoService {
   }
 
   /**
-   * Fetches current prices for multiple coins in a given currency.
+   * Fetches current prices and 24h price change percentage for multiple coins in a given currency.
    * Returns cached data if available and fresh.
    * @param coinIds Array of coin IDs to fetch prices for
    * @param currency Target currency (default 'usd')
-   * @returns Observable emitting an object mapping coin IDs to their price data
+   * @returns Observable emitting an object mapping coin IDs to their price data, including 24h change percentage
    */
   getCoinPrices(
     coinIds: string[],
     currency: string = 'usd'
   ): Observable<Record<string, Record<string, number>>> {
     const sortedIds = [...coinIds].sort().join(',');
-    const key = this.buildCacheKey('coinPrices', { ids: sortedIds, currency });
+    const key = this.buildCacheKey('coinPrices', { ids: sortedIds });
 
     const cached =
       this.getCachedData<Record<string, Record<string, number>>>(key);
@@ -101,6 +101,7 @@ export class CoinGeckoService {
     const params = this.buildHttpParams({
       ids: sortedIds,
       vs_currencies: currency,
+      include_24hr_change: 'true',
     });
 
     return this.http
