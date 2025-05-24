@@ -17,3 +17,12 @@ export interface CoinData {
   };
   last_updated: string;
 }
+
+export interface CoinPriceData {
+  readonly usd: number;
+  readonly usd_24h_change: number;
+}
+
+export interface CoinPricesResponse {
+  [coinId: string]: CoinPriceData;
+}

@@ -3,7 +3,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, shareReplay, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { CoinData } from '../../components/models/coin.model';
+import {
+  CoinData,
+  CoinPricesResponse,
+} from '../../components/models/coin.model';
 
 interface CacheItem<T> {
   data: T;
@@ -87,28 +90,21 @@ export class CoinGeckoService {
    * @param currency Target currency (default 'usd')
    * @returns Observable emitting an object mapping coin IDs to their price data, including 24h change percentage
    */
-  getCoinPrices(
-    coinIds: string[],
-    currency: string = 'usd'
-  ): Observable<Record<string, Record<string, number>>> {
+  getCoinPrices(coinIds: string[]): Observable<CoinPricesResponse> {
     const sortedIds = [...coinIds].sort().join(',');
     const key = this.buildCacheKey('coinPrices', { ids: sortedIds });
 
-    const cached =
-      this.getCachedData<Record<string, Record<string, number>>>(key);
+    const cached = this.getCachedData<CoinPricesResponse>(key);
     if (cached) return of(cached);
 
     const params = this.buildHttpParams({
       ids: sortedIds,
-      vs_currencies: currency,
+      vs_currencies: 'usd',
       include_24hr_change: 'true',
     });
 
     return this.http
-      .get<Record<string, Record<string, number>>>(
-        `${this.baseUrl}/simple/price`,
-        { params }
-      )
+      .get<CoinPricesResponse>(`${this.baseUrl}/simple/price`, { params })
       .pipe(
         tap((data) => this.setCache(key, data)),
         shareReplay(1),
