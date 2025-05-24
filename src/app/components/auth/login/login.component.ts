@@ -37,6 +37,7 @@ export class LoginComponent {
 
   emailFieldFocused: boolean = false;
   passwordFieldFocused: boolean = false;
+  httpErrorMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -122,12 +123,19 @@ export class LoginComponent {
     try {
       await firstValueFrom(this.authService.login(credentials));
       await this.router.navigate(['/home/']);
-    } catch (error) {
-      console.error('Login failed:', error);
+    } catch (error: unknown) {
+      this.httpErrorMessage = this.extractErrorMessage(error);
     } finally {
       this.loadingState = LoginLoadingState.None;
       this.form.enable();
     }
+  }
+
+  private extractErrorMessage(error: unknown): string {
+    if (error instanceof Error) {
+      return error.message;
+    }
+    return 'Unknown error';
   }
 
   private createLoginForm(): void {

@@ -27,17 +27,15 @@
         [ngClass]="emailInputClasses"
       />
 
+      @if (form.controls['email'].valid) {
       <!-- Success icon -->
-      @if (form.controls['email'].valid && form.controls['email'].touched) {
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      }
-
+      } @else if (getFormErrors('email').length > 0) {
       <!-- Error icon -->
-      @if (form.controls['email'].invalid && form.controls['email'].touched) {
       <img
         class="icon icon--status"
         src="./assets/img/form/error.svg"
@@ -54,6 +52,7 @@
       role="alert"
       aria-live="assertive"
     >
+      <!-- Frontend email error message -->
       @if (getFormErrors('email').length) {
       <div class="error-message">
         @for (error of getFormErrors('email'); track $index) {
@@ -80,7 +79,7 @@
         required
       />
 
-      <!-- Static email icon -->
+      <!-- Static password icon -->
       <img
         class="icon icon--base"
         src="./assets/img/form/password.svg"
@@ -88,19 +87,15 @@
         [ngClass]="passwordInputClasses"
       />
 
+      @if (form.controls['password'].valid) {
       <!-- Success icon -->
-      @if (form.controls['password'].valid && form.controls['password'].touched)
-      {
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      }
-
+      } @else if (getFormErrors('password').length > 0) {
       <!-- Error icon -->
-      @if (form.controls['password'].invalid &&
-      form.controls['password'].touched) {
       <img
         class="icon icon--status"
         src="./assets/img/form/error.svg"
@@ -117,11 +112,18 @@
       role="alert"
       aria-live="assertive"
     >
+      <!-- Frontend password error message -->
       @if (getFormErrors('password').length) {
       <div class="error-message">
         @for (error of getFormErrors('password'); track $index) {
         <p>{{ error }}</p>
         }
+      </div>
+      }
+      <!-- Backend error message -->
+      @if (httpErrorMessage) {
+      <div class="error-message">
+        <p>{{ httpErrorMessage }}</p>
       </div>
       }
     </div>

@@ -40,10 +40,10 @@ export class ApiService {
     console.error('API error:', error);
     let errorMsg = 'Unknown error';
 
-    if (error.error && error.error.message) {
-      errorMsg = error.error.message;
-    } else if (error.message) {
-      errorMsg = error.message;
+    if (error.error) {
+      if (typeof error.error.error === 'string') {
+        errorMsg = error.error.message;
+      }
     }
 
     return throwError(() => new Error(errorMsg));
