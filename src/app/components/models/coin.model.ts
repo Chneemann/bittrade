@@ -31,3 +31,11 @@ export interface CoinPrice {
 export interface CoinPricesResponse {
   readonly [coinId: string]: CoinPrice;
 }
+
+export type CoinList = {
+  readonly id: string;
+  readonly name: string;
+  readonly symbol: string;
+};
+
+export type CoinListResponse = CoinList[];
