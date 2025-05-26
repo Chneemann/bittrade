@@ -1,17 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, shareReplay, tap } from 'rxjs/operators';
+import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import {
-  CoinData,
+  Cached,
+  Coin,
   CoinPricesResponse,
 } from '../../components/models/coin.model';
-
-interface CacheItem<T> {
-  data: T;
-  timestamp: number;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -22,28 +18,10 @@ export class CoinGeckoService {
 
   // Cache lifetime in milliseconds (24h)
   private readonly TTL_MS = 24 * 60 * 60 * 1000;
+  private readonly STORAGE_KEY_COIN = 'cachedCoin';
+  private readonly STORAGE_KEY_COIN_PRICES = 'cachedCoinPrices';
 
   constructor(private http: HttpClient) {}
-
-  /**
-   * Builds a cache key string from a namespace and parameters.
-   * Parameters are sorted alphabetically to ensure consistent keys.
-   * @param namespace Cache namespace (e.g. 'coinData')
-   * @param paramsObj Object of parameters to include in the key
-   * @returns A string key for caching
-   */
-  private buildCacheKey(
-    namespace: string,
-    paramsObj: Readonly<Record<string, string>>
-  ): string {
-    return (
-      `${namespace}:` +
-      Object.entries(paramsObj)
-        .sort(([aKey], [bKey]) => aKey.localeCompare(bKey))
-        .map(([key, val]) => `${key}=${val}`)
-        .join('&')
-    );
-  }
 
   /**
    * Builds HttpParams from an object, including the API key if available.
@@ -67,17 +45,22 @@ export class CoinGeckoService {
    * @param coinId The coin identifier string
    * @returns Observable emitting CoinData
    */
-  getCoinData(coinId: string): Observable<CoinData> {
-    const key = this.buildCacheKey('coinData', { id: coinId });
-    const cached = this.getCachedData<CoinData>(key);
-    if (cached) return of(cached);
+  getCoinData(coinId: string): Observable<Cached<Coin>> {
+    const formattedId = this.formatCoinId(coinId);
+    const key = `${this.STORAGE_KEY_COIN}${formattedId}`;
+    const cached = this.getCachedData<Coin>(key);
+
+    if (cached) {
+      return of({ data: cached.data, timestamp: cached.timestamp });
+    }
 
     const params = this.buildHttpParams({});
 
     return this.http
-      .get<CoinData>(`${this.baseUrl}/coins/${coinId}`, { params })
+      .get<Coin>(`${this.baseUrl}/coins/${coinId}`, { params })
       .pipe(
         tap((data) => this.setCache(key, data)),
+        map((data) => ({ data, timestamp: Date.now() })),
         shareReplay(1),
         catchError(this.handleError)
       );
@@ -90,15 +73,17 @@ export class CoinGeckoService {
    * @param currency Target currency (default 'usd')
    * @returns Observable emitting an object mapping coin IDs to their price data, including 24h change percentage
    */
-  getCoinPrices(coinIds: string[]): Observable<CoinPricesResponse> {
-    const sortedIds = [...coinIds].sort().join(',');
-    const key = this.buildCacheKey('coinPrices', { ids: sortedIds });
+  getCoinPrices(coinIds: string[]): Observable<Cached<CoinPricesResponse>> {
+    const cached = this.getCachedData<CoinPricesResponse>(
+      this.STORAGE_KEY_COIN_PRICES
+    );
 
-    const cached = this.getCachedData<CoinPricesResponse>(key);
-    if (cached) return of(cached);
+    if (cached) {
+      return of({ data: cached.data, timestamp: cached.timestamp });
+    }
 
     const params = this.buildHttpParams({
-      ids: sortedIds,
+      ids: coinIds.join(','),
       vs_currencies: 'usd',
       include_24hr_change: 'true',
     });
@@ -106,7 +91,8 @@ export class CoinGeckoService {
     return this.http
       .get<CoinPricesResponse>(`${this.baseUrl}/simple/price`, { params })
       .pipe(
-        tap((data) => this.setCache(key, data)),
+        tap((data) => this.setCache(this.STORAGE_KEY_COIN_PRICES, data)),
+        map((data) => ({ data, timestamp: Date.now() })),
         shareReplay(1),
         catchError(this.handleError)
       );
@@ -118,16 +104,20 @@ export class CoinGeckoService {
    * @param key Cache key string
    * @returns Cached data of type T or null
    */
-  private getCachedData<T>(key: string): T | null {
+  private getCachedData<T>(key: string): Cached<T> | null {
     const raw = localStorage.getItem(key);
     if (!raw) return null;
+
     try {
-      const { data, timestamp }: CacheItem<T> = JSON.parse(raw);
-      if (Date.now() - timestamp < this.TTL_MS) return data;
+      const cacheItem: Cached<T> = JSON.parse(raw);
+      if (Date.now() - cacheItem.timestamp < this.TTL_MS) {
+        return cacheItem;
+      }
       localStorage.removeItem(key);
     } catch {
       localStorage.removeItem(key);
     }
+
     return null;
   }
 
@@ -137,8 +127,55 @@ export class CoinGeckoService {
    * @param data Data to cache
    */
   private setCache<T>(key: string, data: T): void {
-    const item: CacheItem<T> = { data, timestamp: Date.now() };
+    const item: Cached<T> = { data, timestamp: Date.now() };
     localStorage.setItem(key, JSON.stringify(item));
+  }
+
+  /**
+   * Formats a coin ID with uppercase first letter and lowercase rest.
+   * @param id The coin ID string
+   * @returns Formatted coin ID
+   */
+  private formatCoinId(id: string): string {
+    return id.charAt(0).toUpperCase() + id.slice(1).toLowerCase();
+  }
+
+  /**
+   * Fetches current prices and 24h price change percentage for multiple coins in a given currency, ignoring cache.
+   * @param coinIds Array of coin IDs to fetch prices for
+   * @returns Observable emitting an object mapping coin IDs to their price data, including 24h change percentage
+   */
+  refreshCoinPrices(coinIds: string[]): Observable<Cached<CoinPricesResponse>> {
+    this.clearCoinPriceCache();
+    return this.getCoinPrices(coinIds);
+  }
+
+  /**
+   * Clears the cache for the given coin and fetches fresh data.
+   * @param coinId The coin identifier string
+   * @returns Observable emitting fresh data for the given coin
+   */
+  refreshCoinData(coinId: string): Observable<Cached<Coin>> {
+    const formattedId = this.formatCoinId(coinId);
+    const key = `${this.STORAGE_KEY_COIN}${formattedId}`;
+    localStorage.removeItem(key);
+    return this.getCoinData(coinId);
+  }
+
+  /**
+   * Clears all cached coin data from localStorage.
+   */
+  clearCoinCache(): void {
+    Object.keys(localStorage)
+      .filter((key) => key.startsWith(this.STORAGE_KEY_COIN))
+      .forEach((key) => localStorage.removeItem(key));
+  }
+
+  /**
+   * Clears the cache for the current prices and 24h price change percentage data from localStorage.
+   */
+  clearCoinPriceCache(): void {
+    localStorage.removeItem(this.STORAGE_KEY_COIN_PRICES);
   }
 
   /**

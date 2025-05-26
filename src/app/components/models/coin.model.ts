@@ -1,28 +1,33 @@
-export interface CoinData {
-  id: string;
-  symbol: string;
-  name: string;
-  web_slug: string;
-  description: {
-    en: string;
-    [key: string]: string;
+export interface Coin {
+  readonly id: string;
+  readonly symbol: string;
+  readonly name: string;
+  readonly web_slug: string;
+  readonly description: {
+    readonly en: string;
+    readonly [key: string]: string;
   };
-  market_data: {
-    current_price: {
-      [currency: string]: number;
+  readonly market_data: {
+    readonly current_price: {
+      readonly [currency: string]: number;
     };
-    ath: {
-      [currency: string]: number;
+    readonly ath: {
+      readonly [currency: string]: number;
     };
   };
-  last_updated: string;
+  readonly last_updated: string;
 }
 
-export interface CoinPriceData {
+export interface Cached<T> {
+  readonly data: T;
+  readonly timestamp: number;
+}
+
+export interface CoinPrice {
   readonly usd: number;
   readonly usd_24h_change: number;
 }
 
 export interface CoinPricesResponse {
-  [coinId: string]: CoinPriceData;
+  readonly [coinId: string]: CoinPrice;
 }

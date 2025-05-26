@@ -2,15 +2,19 @@ import { Injectable } from '@angular/core';
 import { BackendApiService } from './backend/backend-api.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap, shareReplay } from 'rxjs/operators';
+import { CoinGeckoService } from './external/coingecko.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private loggedInSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.loggedInSubject.asObservable();
 
-  private authCheck$?: Observable<boolean>;
+  private authCheck$: Observable<boolean> | null = null;
 
-  constructor(private backendApiService: BackendApiService) {}
+  constructor(
+    private backendApiService: BackendApiService,
+    private coinGeckoService: CoinGeckoService
+  ) {}
 
   initAuthCheck(): Observable<boolean> {
     if (this.authCheck$) {
@@ -31,18 +35,28 @@ export class AuthService {
   }
 
   login(credentials: { email: string; password: string }): Observable<void> {
-    this.authCheck$ = undefined;
     return this.backendApiService
       .post<void, { email: string; password: string }>(
         '/auth/login/',
         credentials
       )
-      .pipe(tap(() => this.loggedInSubject.next(true)));
+      .pipe(
+        tap(() => {
+          this.loggedInSubject.next(true);
+          this.authCheck$ = null;
+        })
+      );
   }
 
   logout(): Observable<void> {
     return this.backendApiService
       .post<void, {}>('/auth/logout/', {})
-      .pipe(tap(() => this.loggedInSubject.next(false)));
+      .pipe(tap(() => this.clearSession()));
+  }
+
+  private clearSession(): void {
+    this.loggedInSubject.next(false);
+    this.coinGeckoService.clearCoinCache();
+    this.coinGeckoService.clearCoinPriceCache();
   }
 }
