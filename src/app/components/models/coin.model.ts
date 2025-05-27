@@ -39,3 +39,13 @@ export type CoinList = {
 };
 
 export type CoinListResponse = CoinList[];
+
+export interface MarketChartData {
+  prices: [number, number][];
+  market_caps: [number, number][];
+  total_volumes: [number, number][];
+}
+
+export interface MarketChartCache {
+  [key: string]: Cached<MarketChartData>;
+}

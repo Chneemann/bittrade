@@ -7,6 +7,8 @@ import {
   Cached,
   Coin,
   CoinPricesResponse,
+  MarketChartCache,
+  MarketChartData,
 } from '../../components/models/coin.model';
 
 @Injectable({
@@ -20,6 +22,7 @@ export class CoinGeckoService {
   private readonly TTL_MS = 24 * 60 * 60 * 1000;
   private readonly STORAGE_KEY_COIN = 'cachedCoin';
   private readonly STORAGE_KEY_COIN_PRICES = 'cachedCoinPrices';
+  private readonly STORAGE_KEY_COIN_MARKET_CHART = 'cachedCoinMarketChart';
 
   constructor(private http: HttpClient) {}
 
@@ -99,6 +102,76 @@ export class CoinGeckoService {
   }
 
   /**
+   * Fetches market chart data for a given coin and time range.
+   * Returns cached data if available and fresh.
+   * @param coinId The coin identifier string
+   * @param days The time range for the chart data (e.g. '1', '7', '14', '30', '90', '180', '365', 'max')
+   * @returns Observable emitting the market chart data for the given coin and time range, along with a timestamp
+   */
+  getMarketChartData(
+    coinId: string,
+    days: string
+  ): Observable<Cached<MarketChartData>> {
+    const formattedId = this.formatCoinId(coinId);
+    const cacheKey = `${formattedId}${days}`;
+
+    const cache = this.getMarketChartCache();
+
+    const cachedEntry = cache[cacheKey];
+    if (cachedEntry && Date.now() - cachedEntry.timestamp < this.TTL_MS) {
+      return of(cachedEntry);
+    }
+
+    const params = this.buildHttpParams({
+      vs_currency: 'usd',
+      days: days,
+    });
+
+    return this.http
+      .get<MarketChartData>(`${this.baseUrl}/coins/${coinId}/market_chart`, {
+        params,
+      })
+      .pipe(
+        tap((data) => {
+          const cache = this.getMarketChartCache();
+          cache[cacheKey] = { data, timestamp: Date.now() };
+          this.setMarketChartCache(cache);
+        }),
+        map((data) => ({ data, timestamp: Date.now() })),
+        shareReplay(1),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Retrieves the cached market chart data from localStorage.
+   * Returns an empty object if cache does not exist, is expired or invalid.
+   * @returns Cached market chart data object or empty object
+   */
+  private getMarketChartCache(): MarketChartCache {
+    const raw = localStorage.getItem(this.STORAGE_KEY_COIN_MARKET_CHART);
+    if (!raw) return {};
+    try {
+      const cache: MarketChartCache = JSON.parse(raw);
+      return cache;
+    } catch {
+      localStorage.removeItem(this.STORAGE_KEY_COIN_MARKET_CHART);
+      return {};
+    }
+  }
+
+  /**
+   * Stores the market chart data cache in localStorage.
+   * @param cache Cache object with market chart data
+   */
+  private setMarketChartCache(cache: MarketChartCache): void {
+    localStorage.setItem(
+      this.STORAGE_KEY_COIN_MARKET_CHART,
+      JSON.stringify(cache)
+    );
+  }
+
+  /**
    * Attempts to retrieve cached data from localStorage.
    * Returns null if no cache exists or cache is expired or invalid.
    * @param key Cache key string
@@ -145,8 +218,11 @@ export class CoinGeckoService {
    * @param coinIds Array of coin IDs to fetch prices for
    * @returns Observable emitting an object mapping coin IDs to their price data, including 24h change percentage
    */
-  refreshCoinPrices(coinIds: string[]): Observable<Cached<CoinPricesResponse>> {
+  refreshPricesAndMarketCharts(
+    coinIds: string[]
+  ): Observable<Cached<CoinPricesResponse>> {
     this.clearCoinPriceCache();
+    this.clearMarketChartDataCache();
     return this.getCoinPrices(coinIds);
   }
 
@@ -176,6 +252,13 @@ export class CoinGeckoService {
    */
   clearCoinPriceCache(): void {
     localStorage.removeItem(this.STORAGE_KEY_COIN_PRICES);
+  }
+
+  /**
+   * Clears all cached market chart data from localStorage.
+   */
+  clearMarketChartDataCache(): void {
+    localStorage.removeItem(this.STORAGE_KEY_COIN_MARKET_CHART);
   }
 
   /**
