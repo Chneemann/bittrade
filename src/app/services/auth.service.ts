@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BackendApiService } from './backend/backend-api.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap, shareReplay } from 'rxjs/operators';
-import { CoinGeckoService } from './external/coingecko.service';
+import { CoinGeckoCacheService } from './external/coin-gecko-cache.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,7 +13,7 @@ export class AuthService {
 
   constructor(
     private backendApiService: BackendApiService,
-    private coinGeckoService: CoinGeckoService
+    private coinGeckoCacheService: CoinGeckoCacheService
   ) {}
 
   initAuthCheck(): Observable<boolean> {
@@ -56,7 +56,6 @@ export class AuthService {
 
   private clearSession(): void {
     this.loggedInSubject.next(false);
-    this.coinGeckoService.clearCoinCache();
-    this.coinGeckoService.clearCoinPriceCache();
+    this.coinGeckoCacheService.clearAllCoinDataCache();
   }
 }

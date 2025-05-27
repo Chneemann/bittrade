@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { BackendApiService } from './backend/backend-api.service';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { CoinGeckoService } from './external/coingecko.service';
 import { Cached, CoinListResponse } from '../components/models/coin.model';
+import { CoinGeckoCacheService } from './external/coin-gecko-cache.service';
 
 @Injectable({ providedIn: 'root' })
 export class CoinsService {
@@ -13,7 +13,7 @@ export class CoinsService {
 
   constructor(
     private backendApiService: BackendApiService,
-    private coinGeckoService: CoinGeckoService
+    private coinGeckoCacheService: CoinGeckoCacheService
   ) {}
 
   /**
@@ -69,7 +69,7 @@ export class CoinsService {
         const dataChanged = !this.isDataEqual(oldData, freshData);
         this.setCache(freshData);
         if (dataChanged) {
-          this.coinGeckoService.clearCoinPriceCache();
+          this.coinGeckoCacheService.clearCoinPriceCache();
         }
       })
     );
