@@ -1,0 +1,68 @@
+.footer {
+  height: 100%;
+  padding: 2px 4px;
+
+  color: var(--color-font-primary);
+
+  font-size: 12px;
+  font-weight: 400;
+
+  .footer-content {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 4px;
+  }
+
+  .coingecko-icon {
+    height: 16px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+}
+
+.footer-links {
+  display: flex;
+  gap: 8px;
+
+  .separator {
+    user-select: none;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+
+    text-decoration: none;
+    cursor: pointer;
+    color: inherit;
+
+    .icon {
+      display: none;
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Media Queries
+@media (max-width: 450px) {
+  .footer-links {
+    a {
+      .link-text {
+        display: none;
+      }
+
+      .icon {
+        display: inline;
+      }
+    }
+  }
+}
