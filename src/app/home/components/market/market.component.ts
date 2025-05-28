@@ -10,10 +10,11 @@ import {
 } from '../../models/coin.model';
 import { CoinsService } from '../../services/coins.service';
 import { Router } from '@angular/router';
+import { CoinCardComponent } from '../../../shared/components/coin-card/coin-card.component';
 
 @Component({
   selector: 'app-market',
-  imports: [CommonModule],
+  imports: [CommonModule, CoinCardComponent],
   templateUrl: './market.component.html',
   styleUrl: './market.component.scss',
 })

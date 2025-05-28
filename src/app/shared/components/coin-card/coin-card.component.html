@@ -1,0 +1,23 @@
+<div class="coin-card">
+  <div class="icon-name">
+    <img
+      class="icon"
+      [src]="'assets/img/coins/' + coin.name.toLowerCase() + '.svg'"
+      [alt]="coin.name + ' logo'"
+    />
+    <div class="name-symbol">
+      <div class="name">{{ coin.name }}</div>
+      <div class="symbol">{{ coin.symbol }}</div>
+    </div>
+  </div>
+
+  <div class="price-info">
+    <div class="price">${{ coin.price | number : "1.2-2" }}</div>
+    <div
+      class="change"
+      [ngClass]="{ positive: coin.change >= 0, negative: coin.change < 0 }"
+    >
+      {{ coin.change >= 0 ? "+" : "" }}{{ coin.change | number : "1.2-2" }}%
+    </div>
+  </div>
+</div>

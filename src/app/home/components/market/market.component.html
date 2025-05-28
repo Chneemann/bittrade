@@ -2,11 +2,14 @@
 <div>
   @for (coin of coinList$ | async; track $index) {
   <div (click)="onCoinClick(coin)">
-    {{ coin.name }} {{ coin.symbol }}
-    {{ prices.data[coin.name.toLowerCase()].usd }}
-    {{
-      prices.data[coin.name.toLowerCase()].usd_24h_change | number : "1.2-2"
-    }}%
+    <app-coin-card
+      [coin]="{
+        name: coin.name,
+        symbol: coin.symbol,
+        price: prices.data[coin.name.toLowerCase()].usd,
+        change: prices.data[coin.name.toLowerCase()].usd_24h_change
+      }"
+    ></app-coin-card>
   </div>
   }
   <small>
