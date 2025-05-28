@@ -6,6 +6,7 @@ import { LegalNoticeComponent } from './pages/legal-notice/legal-notice.componen
 import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './guards/auth.guard';
 import { LogoutComponent } from './components/auth/logout/logout.component';
+import { MarketComponent } from './components/home/market/market.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -26,6 +27,7 @@ export const routes: Routes = [
     path: 'home',
     component: HomeComponent,
     canActivate: [AuthGuard],
+    children: [{ path: 'market', component: MarketComponent }],
   },
 
   { path: '**', redirectTo: 'home' },

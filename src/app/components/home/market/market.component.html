@@ -1,0 +1,19 @@
+@if (coinPrices$ | async; as prices) {
+<div>
+  @for (coin of coinList$ | async; track $index) {
+  <div (click)="onCoinClick(coin)">
+    {{ coin.name }} {{ coin.symbol }}
+    {{ prices.data[coin.name.toLowerCase()].usd }}
+    {{
+      prices.data[coin.name.toLowerCase()].usd_24h_change | number : "1.2-2"
+    }}%
+  </div>
+  }
+  <small>
+    Data fetched
+    <a href="javascript:void(0)" (click)="updateCoinPrices()">{{
+      getRelativeTime(prices.timestamp)
+    }}</a>
+  </small>
+</div>
+}

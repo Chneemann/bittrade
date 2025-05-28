@@ -8,12 +8,11 @@
   background-color: var(--color-white);
 }
 
-router-outlet {
-  display: block;
+.content-wrapper {
   flex: 1;
 
-  // Reserve space for fixed navigation and footer
-  padding-bottom: 72px; // 48px Navigation + 24px Footer
+  padding: 12px;
+  margin-bottom: 72px;
 }
 
 app-navigation {
