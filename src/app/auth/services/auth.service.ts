@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BackendApiService } from './backend/backend-api.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap, shareReplay } from 'rxjs/operators';
-import { CoinGeckoCacheService } from './external/coin-gecko-cache.service';
+import { BackendApiService } from '../../core/services/backend-api.service';
+import { CoinGeckoCacheService } from '../../core/services/external/coin-gecko-cache.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

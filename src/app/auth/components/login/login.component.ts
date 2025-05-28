@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { LargeButtonComponent } from '../../../shared/components/buttons/large-button/large-button.component';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { LoginLoadingState, LoginCredentials } from '../../models/auth.model';

@@ -7,7 +7,7 @@ import {
   Coin,
   CoinPricesResponse,
   MarketChartData,
-} from '../../components/models/coin.model';
+} from '../../../home/models/coin.model';
 import { CoinGeckoCacheService } from './coin-gecko-cache.service';
 
 @Injectable({

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Cached, MarketChartCache } from '../../components/models/coin.model'; // Assuming your models are here
+import { Cached, MarketChartCache } from '../../../home/models/coin.model'; // Assuming your models are here
 
 import { CoinGeckoService } from './coin-gecko.service';
 

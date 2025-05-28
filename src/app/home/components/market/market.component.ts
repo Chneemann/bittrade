@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CoinGeckoService } from '../../../services/external/coin-gecko.service';
+import { CoinGeckoService } from '../../../core/services/external/coin-gecko.service';
 import { Observable, shareReplay, switchMap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import {
@@ -8,7 +8,7 @@ import {
   CoinListResponse,
   CoinPricesResponse,
 } from '../../models/coin.model';
-import { CoinsService } from '../../../services/coins.service';
+import { CoinsService } from '../../services/coins.service';
 import { Router } from '@angular/router';
 
 @Component({

@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
-import { AuthWrapperComponent } from './components/auth/auth-wrapper.component';
-import { LoginComponent } from './components/auth/login/login.component';
+import { AuthWrapperComponent } from './auth/auth-wrapper.component';
+import { LoginComponent } from './auth/components/login/login.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { LegalNoticeComponent } from './pages/legal-notice/legal-notice.component';
-import { HomeComponent } from './components/home/home.component';
-import { AuthGuard } from './guards/auth.guard';
-import { LogoutComponent } from './components/auth/logout/logout.component';
-import { MarketComponent } from './components/home/market/market.component';
+import { HomeComponent } from './home/home.component';
+import { AuthGuard } from './auth/guards/auth.guard';
+import { LogoutComponent } from './auth/components/logout/logout.component';
+import { MarketComponent } from './home/components/market/market.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },

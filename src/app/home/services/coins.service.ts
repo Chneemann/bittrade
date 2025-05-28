@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BackendApiService } from './backend/backend-api.service';
+import { BackendApiService } from '../../core/services/backend-api.service';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Cached, CoinListResponse } from '../components/models/coin.model';
-import { CoinGeckoCacheService } from './external/coin-gecko-cache.service';
+import { Cached, CoinListResponse } from '../models/coin.model';
+import { CoinGeckoCacheService } from '../../core/services/external/coin-gecko-cache.service';
 
 @Injectable({ providedIn: 'root' })
 export class CoinsService {
