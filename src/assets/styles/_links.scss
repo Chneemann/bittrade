@@ -11,29 +11,38 @@
 
   transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
 
+  &:hover {
+    text-decoration: underline;
+  }
+
   &:active {
-    color: var(--color-primary);
+    color: var(--color-font-primary);
     transform: scale(0.95);
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-font-primary);
     outline-offset: -4px;
+  }
+
+  &.disabled {
+    color: var(--color-font-secondary);
+    cursor: not-allowed;
+    pointer-events: none;
   }
 }
 
+// Links in navigation
 .link--nav {
   color: var(--color-font-primary);
 
-  padding: 8px 10px;
-  margin: 4px 6px;
-  border-radius: 12px;
-
   &:hover {
+    text-decoration: none;
     color: var(--color-primary);
   }
 }
 
+// Links in text content
 .link--inline {
   color: var(--color-primary);
 

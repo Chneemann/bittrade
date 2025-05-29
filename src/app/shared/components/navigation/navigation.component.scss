@@ -2,19 +2,10 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  height: 100%;
   gap: 24px;
 
-  a {
-    font-size: 18px;
-    font-weight: 500;
-    text-decoration: none;
-    color: var(--color-font-primary);
-    cursor: pointer;
+  height: 100%;
 
-    &:hover {
-      color: var(--color-primary);
-    }
-  }
+  font-size: 18px;
+  font-weight: 500;
 }

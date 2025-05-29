@@ -7,10 +7,15 @@
   justify-content: center;
   text-align: center;
 
+  font-size: 16px;
+  font-weight: 400;
+
   z-index: 2;
 
+  gap: 12px;
+
   .separator {
-    color: var(--color-font-secondary);
+    color: var(--color-font-primary);
     user-select: none;
   }
 }
