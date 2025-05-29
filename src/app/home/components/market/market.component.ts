@@ -19,6 +19,8 @@ import { CoinCardComponent } from '../../../shared/components/coin-card/coin-car
   styleUrl: './market.component.scss',
 })
 export class MarketComponent implements OnInit {
+  private readonly ONE_HOUR_MS = 60 * 60 * 1000; // 1 hour in milliseconds
+
   coinPrices$!: Observable<Cached<CoinPricesResponse>>;
   coinList$!: Observable<CoinListResponse>;
 
@@ -76,5 +78,10 @@ export class MarketComponent implements OnInit {
     if (!coin?.name) return;
     const coinName = coin.name.trim().toLowerCase().replace(/\s+/g, '-');
     this.router.navigate(['/home/coin', coinName]);
+  }
+
+  canRefresh(timestamp: number | Date): boolean {
+    const last = timestamp instanceof Date ? timestamp : new Date(timestamp);
+    return Date.now() - last.getTime() >= this.ONE_HOUR_MS;
   }
 }
