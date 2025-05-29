@@ -1,9 +1,11 @@
 <nav>
-  <a class="link link--nav" routerLink="/home/market" routerLinkActive="active"
+  <a
+    class="link link--nav"
+    routerLink="/home/market"
+    routerLinkActive="link--active"
+    [routerLinkActiveOptions]="{ exact: true }"
     >Market</a
   >
   <a class="link link--nav" (click)="reloadPage()">Reload</a>
-  <a class="link link--nav" routerLink="/auth/logout" routerLinkActive="active"
-    >Logout</a
-  >
+  <a class="link link--nav" routerLink="/auth/logout">Logout</a>
 </nav>

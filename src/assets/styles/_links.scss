@@ -51,3 +51,8 @@
     text-decoration: underline;
   }
 }
+
+// Active link
+.link--active {
+  filter: var(--filter-color-primary);
+}
