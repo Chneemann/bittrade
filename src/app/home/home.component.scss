@@ -12,7 +12,21 @@
   flex: 1;
 
   padding: 12px;
+  margin-top: 48px;
   margin-bottom: 72px;
+}
+
+app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 48px;
+
+  background-color: var(--color-white);
+
+  z-index: 100;
 }
 
 app-navigation {
