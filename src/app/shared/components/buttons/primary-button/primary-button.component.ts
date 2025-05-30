@@ -10,13 +10,13 @@ import {
 import { BehaviorSubject, Subscription, timer } from 'rxjs';
 
 @Component({
-  selector: 'app-large-button',
+  selector: 'app-primary-button',
   imports: [CommonModule],
-  templateUrl: './large-button.component.html',
-  styleUrl: './large-button.component.scss',
+  templateUrl: './primary-button.component.html',
+  styleUrl: './primary-button.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LargeButtonComponent implements OnChanges, OnDestroy {
+export class PrimaryButtonComponent implements OnChanges, OnDestroy {
   @Input() type: string = '';
   @Input() value: string = '';
   @Input() disabled: boolean = false;

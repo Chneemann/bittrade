@@ -141,15 +141,15 @@
 
     <!-- Sign in and guest login buttons -->
     <div class="button-container">
-      <app-large-button
+      <app-primary-button
         type="submit"
         value="Sign in"
         [loading]="isSignInLoading"
         [loadingMessage]="'Signing in...'"
         [disabled]="isSignInButtonDisabled"
       >
-      </app-large-button>
-      <app-large-button
+      </app-primary-button>
+      <app-primary-button
         type="button"
         value="Guest Login"
         [loading]="isGuestLoading"
@@ -157,7 +157,7 @@
         [disabled]="isGuestLoginDisabled"
         (click)="onGuestLogin()"
       >
-      </app-large-button>
+      </app-primary-button>
     </div>
   </form>
 </div>

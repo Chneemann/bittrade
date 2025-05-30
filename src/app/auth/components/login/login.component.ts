@@ -8,7 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { LargeButtonComponent } from '../../../shared/components/buttons/large-button/large-button.component';
+import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { firstValueFrom } from 'rxjs';
@@ -21,7 +21,7 @@ import { LoginLoadingState, LoginCredentials } from '../../models/auth.model';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    LargeButtonComponent,
+    PrimaryButtonComponent,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
