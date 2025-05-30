@@ -1,0 +1,37 @@
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 24px;
+
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  filter: var(--filter-color-black);
+
+  .icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  &:hover {
+    filter: var(--filter-color-primary);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    filter: var(--filter-color-gray);
+    cursor: auto;
+  }
+}
+
+.invisible {
+  visibility: hidden;
+}

@@ -1,0 +1,16 @@
+@if (isValidIcon() && !hidden) {
+<button
+  class="icon-button"
+  [attr.aria-label]="tooltip || icon"
+  [title]="tooltip || icon"
+  [disabled]="disabled"
+>
+  <img
+    [src]="getIconPath()"
+    class="icon"
+    [alt]="tooltip ? tooltip + ' icon' : icon + ' icon'"
+  />
+</button>
+} @else {
+<button class="icon-button invisible"></button>
+}

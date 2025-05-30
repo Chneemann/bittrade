@@ -1,1 +1,14 @@
-<header class="app-header">header works!</header>
+<header class="app-header">
+  <app-icon-button
+    icon="back"
+    tooltip="Back"
+    [hidden]="!showBackButton"
+    (click)="goBack()"
+  ></app-icon-button>
+  <p>{{ title }}</p>
+  <app-icon-button
+    icon="refresh"
+    tooltip="Refresh coin data"
+    [disabled]="true"
+  ></app-icon-button>
+</header>
