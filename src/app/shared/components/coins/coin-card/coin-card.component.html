@@ -11,6 +11,15 @@
     </div>
   </div>
 
+  <div class="chart">
+    @if (chartData.length > 0) {
+    <app-simple-chart
+      [chartData]="chartData"
+      [isPositiveTrend]="coin.change >= 0"
+    ></app-simple-chart>
+    }
+  </div>
+
   <div class="price-info">
     <div class="price">${{ coin.price | number : "1.2-2" }}</div>
     <div

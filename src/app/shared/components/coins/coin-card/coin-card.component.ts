@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { CoinGeckoService } from '../../../../core/services/external/coin-gecko.service';
+import { SimpleChartComponent } from '../../charts/simple-chart/simple-chart.component';
 
 export interface CoinData {
   name: string;
@@ -11,7 +12,7 @@ export interface CoinData {
 
 @Component({
   selector: 'app-coin-card',
-  imports: [CommonModule],
+  imports: [CommonModule, SimpleChartComponent],
   templateUrl: './coin-card.component.html',
   styleUrl: './coin-card.component.scss',
 })
