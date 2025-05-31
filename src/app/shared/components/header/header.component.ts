@@ -1,9 +1,25 @@
 import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, Observable, of, Subject, takeUntil } from 'rxjs';
+import {
+  filter,
+  Observable,
+  of,
+  shareReplay,
+  startWith,
+  Subject,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { IconButtonComponent } from '../buttons/icon-button/icon-button.component';
 import { CoinUpdateService } from '../../../home/services/coin-update.service';
 import { CommonModule } from '@angular/common';
+import { CoinListResponse } from '../../../home/models/coin.model';
+import { CoinsService } from '../../../home/services/coins.service';
+
+type RouteConfig = {
+  dataKey: string;
+  title: string;
+};
 
 @Component({
   selector: 'app-header',
@@ -19,24 +35,22 @@ export class HeaderComponent {
   canUpdate$!: Observable<boolean>;
   cooldownRemaining$!: Observable<number>;
 
-  private readonly dataKeys: { [path: string]: string } = {
-    'home/market': 'cachedCoinPrices',
-    'home/coin/bitcoin': 'cachedCoinBitcoin',
-  };
-
-  private readonly titles: { [path: string]: string } = {
-    'home/market': 'Market',
-    'home/coin': 'Coin Detail',
+  private readonly routeConfigs: { [path: string]: RouteConfig } = {
+    'home/market': {
+      dataKey: 'cachedCoinPrices',
+      title: 'Market',
+    },
   };
 
   constructor(
     private router: Router,
+    private coinsService: CoinsService,
     private coinUpdateService: CoinUpdateService
   ) {}
 
   ngOnInit(): void {
-    this.getCurrentPath();
-    this.updateObservables();
+    this.subscribeToRouteChanges();
+    this.loadAndProcessCoinList();
   }
 
   ngOnDestroy(): void {
@@ -44,33 +58,11 @@ export class HeaderComponent {
     this.destroy$.complete();
   }
 
-  private findMatchingKey(map: { [key: string]: string }): string | undefined {
-    return Object.keys(map).find(
-      (key) =>
-        this.currentPath === key || this.currentPath.startsWith(key + '/')
-    );
-  }
-
-  private updateObservables(): void {
-    const matchingKey = this.findMatchingKey(this.dataKeys);
-    this.showRefreshButton = !!matchingKey;
-
-    if (matchingKey) {
-      const dataKey = this.dataKeys[matchingKey];
-      this.canUpdate$ = this.coinUpdateService.canUpdate(dataKey);
-      this.cooldownRemaining$ =
-        this.coinUpdateService.getCooldownRemaining(dataKey);
-    } else {
-      this.canUpdate$ = of(false);
-      this.cooldownRemaining$ = of(0);
-    }
-  }
-
-  getCurrentPath(): void {
-    this.currentPath = this.router.url.substring(1);
+  private subscribeToRouteChanges(): void {
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
+        startWith(this.router.url),
         takeUntil(this.destroy$)
       )
       .subscribe(() => {
@@ -79,12 +71,62 @@ export class HeaderComponent {
       });
   }
 
-  onUpdatePricesClick(): void {
-    const matchingKey = this.findMatchingKey(this.dataKeys);
-    if (!matchingKey) {
-      return;
+  private loadAndProcessCoinList(): void {
+    this.loadCoinList()
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((response) => {
+          this.addCoinsFromList(response);
+          this.updateObservables();
+        })
+      )
+      .subscribe();
+  }
+
+  private loadCoinList(): Observable<CoinListResponse> {
+    return this.coinsService
+      .getCoinList()
+      .pipe(shareReplay({ bufferSize: 1, refCount: true }));
+  }
+
+  private addCoinsFromList(response: CoinListResponse): void {
+    response.forEach((coin) => {
+      const cleanName = coin.name.trim().toLowerCase();
+      const path = `home/coin/${cleanName}`;
+      this.routeConfigs[path] = {
+        dataKey: `cachedCoin${coin.name}`,
+        title: `${coin.name} (${coin.symbol})`,
+      };
+    });
+  }
+
+  private findMatchingConfig(): [string, RouteConfig] | undefined {
+    return Object.entries(this.routeConfigs).find(
+      ([key]) =>
+        this.currentPath === key || this.currentPath.startsWith(key + '/')
+    );
+  }
+
+  private updateObservables(): void {
+    const matching = this.findMatchingConfig();
+    this.showRefreshButton = !!matching;
+
+    if (matching) {
+      const [, config] = matching;
+      this.canUpdate$ = this.coinUpdateService.canUpdate(config.dataKey);
+      this.cooldownRemaining$ = this.coinUpdateService.getCooldownRemaining(
+        config.dataKey
+      );
+    } else {
+      this.canUpdate$ = of(false);
+      this.cooldownRemaining$ = of(0);
     }
-    this.coinUpdateService.triggerUpdatePrices(this.dataKeys[matchingKey]);
+  }
+
+  onUpdatePricesClick(): void {
+    const config = this.findMatchingConfig()?.[1];
+    if (!config) return;
+    this.coinUpdateService.triggerUpdatePrices(config.dataKey);
   }
 
   goHistoryBack(): void {
@@ -92,14 +134,8 @@ export class HeaderComponent {
     window.history.back();
   }
 
-  get title(): string | undefined {
-    const matchingKey = this.findMatchingKey(this.titles);
-    return matchingKey ? this.titles[matchingKey] : undefined;
-  }
-
-  get dataKey(): string | undefined {
-    const matchingKey = this.findMatchingKey(this.dataKeys);
-    return matchingKey ? this.dataKeys[matchingKey] : undefined;
+  get routeTitle(): string | undefined {
+    return this.findMatchingConfig()?.[1].title;
   }
 
   get showBackButton(): boolean {
