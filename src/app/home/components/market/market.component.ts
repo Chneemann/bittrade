@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CoinGeckoService } from '../../../core/services/external/coin-gecko.service';
-import { Observable, shareReplay, switchMap } from 'rxjs';
+import { Observable, shareReplay, Subscription, switchMap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import {
   Cached,
@@ -11,6 +11,7 @@ import {
 import { CoinsService } from '../../services/coins.service';
 import { Router } from '@angular/router';
 import { CoinCardComponent } from '../../../shared/components/coin-card/coin-card.component';
+import { CoinUpdateService } from '../../services/coin-update.service';
 
 @Component({
   selector: 'app-market',
@@ -19,19 +20,32 @@ import { CoinCardComponent } from '../../../shared/components/coin-card/coin-car
   styleUrl: './market.component.scss',
 })
 export class MarketComponent implements OnInit {
-  private readonly ONE_HOUR_MS = 60 * 60 * 1000; // 1 hour in milliseconds
+  private subscriptions: Subscription = new Subscription();
 
   coinPrices$!: Observable<Cached<CoinPricesResponse>>;
   coinList$!: Observable<CoinListResponse>;
 
   constructor(
+    private router: Router,
     private coinGeckoService: CoinGeckoService,
     private coinsService: CoinsService,
-    private router: Router
+    private coinUpdateService: CoinUpdateService
   ) {}
 
   ngOnInit(): void {
     this.loadCoinData();
+    this.subscribeToUpdatePrices();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  private subscribeToUpdatePrices(): void {
+    const sub = this.coinUpdateService.updatePrices$.subscribe(() => {
+      this.updateCoinPrices();
+    });
+    this.subscriptions.add(sub);
   }
 
   private fetchCoinPrices(): void {
@@ -51,20 +65,6 @@ export class MarketComponent implements OnInit {
     this.fetchCoinPrices();
   }
 
-  getRelativeTime(timestamp: number | Date): string {
-    if (!timestamp) return '';
-
-    const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffSec = Math.floor(diffMs / 1000);
-
-    if (diffSec < 60) return 'just now';
-    if (diffSec < 3600) return `${Math.floor(diffSec / 60)} minute(s)`;
-    if (diffSec < 86400) return `${Math.floor(diffSec / 3600)} hour(s)`;
-    return `${Math.floor(diffSec / 86400)} day(s)`;
-  }
-
   updateCoinPrices(): void {
     this.coinPrices$ = this.coinList$.pipe(
       switchMap((coins) => {
@@ -78,10 +78,5 @@ export class MarketComponent implements OnInit {
     if (!coin?.name) return;
     const coinName = coin.name.trim().toLowerCase().replace(/\s+/g, '-');
     this.router.navigate(['/home/coin', coinName]);
-  }
-
-  canRefresh(timestamp: number | Date): boolean {
-    const last = timestamp instanceof Date ? timestamp : new Date(timestamp);
-    return Date.now() - last.getTime() >= this.ONE_HOUR_MS;
   }
 }

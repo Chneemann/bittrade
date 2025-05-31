@@ -1,14 +1,20 @@
 <header class="app-header">
+  <!-- Back button -->
   <app-icon-button
     icon="back"
     tooltip="Back"
     [hidden]="!showBackButton"
     (click)="goBack()"
   ></app-icon-button>
+
   <p>{{ title }}</p>
+
+  <!-- Refresh button -->
   <app-icon-button
     icon="refresh"
-    tooltip="Refresh coin data"
-    [disabled]="true"
+    tooltip="You can refresh again in {{ cooldownRemaining$ | async }} seconds"
+    [disabled]="!(canUpdate$ | async)"
+    [hidden]="!showRefreshButton"
+    (click)="onUpdatePricesClick()"
   ></app-icon-button>
 </header>

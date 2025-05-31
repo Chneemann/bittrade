@@ -12,16 +12,5 @@
     ></app-coin-card>
   </div>
   }
-  <small class="extra-small">
-    Data fetched
-    <a
-      class="link"
-      href="javascript:void(0)"
-      [class.disabled]="!canRefresh(prices.timestamp)"
-      (click)="canRefresh(prices.timestamp) && updateCoinPrices()"
-    >
-      {{ getRelativeTime(prices.timestamp) }}
-    </a>
-  </small>
 </div>
 }
