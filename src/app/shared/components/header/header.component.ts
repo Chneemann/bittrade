@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
 })
 export class HeaderComponent {
   currentPath: string = '';
-  showBackButton: boolean = false;
   showRefreshButton: boolean = false;
 
   private destroy$ = new Subject<void>();
@@ -22,6 +21,12 @@ export class HeaderComponent {
 
   private readonly dataKeys: { [path: string]: string } = {
     'home/market': 'cachedCoinPrices',
+    'home/coin/bitcoin': 'cachedCoinBitcoin',
+  };
+
+  private readonly titles: { [path: string]: string } = {
+    'home/market': 'Market',
+    'home/coin': 'Coin Detail',
   };
 
   constructor(
@@ -39,14 +44,22 @@ export class HeaderComponent {
     this.destroy$.complete();
   }
 
-  private updateObservables(): void {
-    const key = this.dataKeys[this.currentPath];
-    this.showRefreshButton = !!key;
+  private findMatchingKey(map: { [key: string]: string }): string | undefined {
+    return Object.keys(map).find(
+      (key) =>
+        this.currentPath === key || this.currentPath.startsWith(key + '/')
+    );
+  }
 
-    if (key) {
-      this.canUpdate$ = this.coinUpdateService.canUpdate(key);
+  private updateObservables(): void {
+    const matchingKey = this.findMatchingKey(this.dataKeys);
+    this.showRefreshButton = !!matchingKey;
+
+    if (matchingKey) {
+      const dataKey = this.dataKeys[matchingKey];
+      this.canUpdate$ = this.coinUpdateService.canUpdate(dataKey);
       this.cooldownRemaining$ =
-        this.coinUpdateService.getCooldownRemaining(key);
+        this.coinUpdateService.getCooldownRemaining(dataKey);
     } else {
       this.canUpdate$ = of(false);
       this.cooldownRemaining$ = of(0);
@@ -67,23 +80,33 @@ export class HeaderComponent {
   }
 
   onUpdatePricesClick(): void {
-    const key = this.dataKeys[this.currentPath];
-    if (!key) {
+    const matchingKey = this.findMatchingKey(this.dataKeys);
+    if (!matchingKey) {
       return;
     }
-    this.coinUpdateService.triggerUpdatePrices(key);
+    this.coinUpdateService.triggerUpdatePrices(this.dataKeys[matchingKey]);
   }
 
-  goBack(): void {
+  goHistoryBack(): void {
     if (!this.showBackButton) return;
     window.history.back();
   }
 
-  get title(): string {
-    const titles: { [key: string]: string } = {
-      'home/market': 'Market',
-    };
+  get title(): string | undefined {
+    const matchingKey = this.findMatchingKey(this.titles);
+    return matchingKey ? this.titles[matchingKey] : undefined;
+  }
 
-    return titles[this.currentPath];
+  get dataKey(): string | undefined {
+    const matchingKey = this.findMatchingKey(this.dataKeys);
+    return matchingKey ? this.dataKeys[matchingKey] : undefined;
+  }
+
+  get showBackButton(): boolean {
+    const backButtonPaths = ['home/coin'];
+    return backButtonPaths.some(
+      (path) =>
+        this.currentPath === path || this.currentPath.startsWith(path + '/')
+    );
   }
 }

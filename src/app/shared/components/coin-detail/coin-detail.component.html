@@ -1,0 +1,21 @@
+@if (currentCoin$ | async; as coin) {
+<div class="coin-detail">
+  <h2>{{ coin.name }} ({{ coin.symbol | uppercase }})</h2>
+
+  <img [src]="'./assets/img/coins/' + coin.name.toLowerCase() + '.svg'" />
+
+  <p>
+    <strong>Price:</strong>
+    ${{ coin.market_data.current_price["usd"] | number : "1.2-2" }}
+  </p>
+
+  <p>
+    <strong>All-time High:</strong>
+    ${{ coin.market_data.ath["usd"] | number : "1.2-2" }}
+  </p>
+</div>
+} @else {
+<div class="loading-container">
+  <span>Loading, please wait...</span>
+</div>
+}
