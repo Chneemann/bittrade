@@ -1,3 +1,14 @@
+.coin-list {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.coin-details {
+  width: 800px;
+}
+
 .loading-container {
   display: flex;
   justify-content: center;
