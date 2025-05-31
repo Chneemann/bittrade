@@ -7,7 +7,7 @@ import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { LogoutComponent } from './auth/components/logout/logout.component';
 import { MarketComponent } from './home/components/market/market.component';
-import { CoinDetailComponent } from './shared/components/coin-detail/coin-detail.component';
+import { CoinDetailComponent } from './shared/components/coins/coin-detail/coin-detail.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },

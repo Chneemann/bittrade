@@ -10,12 +10,12 @@ import {
   switchMap,
   throwError,
 } from 'rxjs';
-import { CoinGeckoService } from '../../../core/services/external/coin-gecko.service';
-import { Coin, CoinListResponse } from '../../../home/models/coin.model';
+import { CoinGeckoService } from '../../../../core/services/external/coin-gecko.service';
+import { Coin, CoinListResponse } from '../../../../home/models/coin.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
-import { CoinsService } from '../../../home/services/coins.service';
-import { CoinUpdateService } from '../../../home/services/coin-update.service';
+import { CoinsService } from '../../../../home/services/coins.service';
+import { CoinUpdateService } from '../../../../home/services/coin-update.service';
 
 @Component({
   selector: 'app-coin-detail',

@@ -10,7 +10,7 @@ import {
 } from '../../models/coin.model';
 import { CoinsService } from '../../services/coins.service';
 import { Router } from '@angular/router';
-import { CoinCardComponent } from '../../../shared/components/coin-card/coin-card.component';
+import { CoinCardComponent } from '../../../shared/components/coins/coin-card/coin-card.component';
 import { CoinUpdateService } from '../../services/coin-update.service';
 
 @Component({
