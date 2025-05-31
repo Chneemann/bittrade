@@ -1,5 +1,5 @@
 <header class="app-header">
-  <!-- Back button -->
+  <!-- History back button -->
   <app-icon-button
     icon="back"
     tooltip="Back"
@@ -7,9 +7,19 @@
     (click)="goHistoryBack()"
   ></app-icon-button>
 
-  <p>{{ routeTitle }}</p>
+  <!-- Header title, including optional icon -->
+  <div class="title">
+    @if (routeIcon; as icon) {
+    <img
+      [src]="'assets/img/coins/' + icon + '.svg'"
+      [alt]="routeTitle + ' icon'"
+      class="icon"
+    />
+    }
+    <p>{{ routeTitle }}</p>
+  </div>
 
-  <!-- Refresh button -->
+  <!-- Coin data/price refresh button -->
   <app-icon-button
     icon="refresh"
     tooltip="You can refresh again in {{ cooldownRemaining$ | async }} seconds"

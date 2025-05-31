@@ -19,6 +19,7 @@ import { CoinsService } from '../../../home/services/coins.service';
 type RouteConfig = {
   dataKey: string;
   title: string;
+  icon?: string;
 };
 
 @Component({
@@ -96,6 +97,7 @@ export class HeaderComponent {
       this.routeConfigs[path] = {
         dataKey: `cachedCoin${coin.name}`,
         title: `${coin.name} (${coin.symbol})`,
+        icon: cleanName,
       };
     });
   }
@@ -136,6 +138,10 @@ export class HeaderComponent {
 
   get routeTitle(): string | undefined {
     return this.findMatchingConfig()?.[1].title;
+  }
+
+  get routeIcon(): string | undefined {
+    return this.findMatchingConfig()?.[1].icon;
   }
 
   get showBackButton(): boolean {
