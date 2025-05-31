@@ -1,8 +1,24 @@
-.extra-small {
-  font-size: 14px;
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 18px;
   font-weight: 400;
 
-  @media (max-width: 450px) {
-    font-size: 12px;
+  height: 60px;
+
+  animation: pulseText 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseText {
+  0% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
   }
 }

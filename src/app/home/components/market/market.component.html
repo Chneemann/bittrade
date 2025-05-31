@@ -1,7 +1,7 @@
 @if (coinPrices$ | async; as prices) {
-<div>
+<div class="coin-list">
   @for (coin of coinList$ | async; track $index) {
-  <div (click)="onCoinClick(coin)">
+  <div class="coin-details" (click)="onCoinClick(coin)">
     <app-coin-card
       [coin]="{
         name: coin.name,
@@ -12,5 +12,9 @@
     ></app-coin-card>
   </div>
   }
+</div>
+} @else {
+<div class="loading-container">
+  <span>Loading, please wait...</span>
 </div>
 }
