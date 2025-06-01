@@ -62,6 +62,13 @@ export class CoinUpdateService {
     );
   }
 
+  public getLastUpdateTimestamp(storageKey: string): Observable<number | null> {
+    return this.updatePrices$.pipe(
+      startWith(null),
+      map(() => this.getTimestamp(storageKey))
+    );
+  }
+
   public triggerUpdatePrices(storageKey: string): void {
     const now = Date.now();
     const last = this.getTimestamp(storageKey);

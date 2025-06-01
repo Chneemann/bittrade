@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {
+  combineLatest,
   filter,
+  map,
   Observable,
   of,
   shareReplay,
@@ -15,6 +17,7 @@ import { CoinUpdateService } from '../../../home/services/coin-update.service';
 import { CommonModule } from '@angular/common';
 import { CoinListResponse } from '../../../home/models/coin.model';
 import { CoinsService } from '../../../home/services/coins.service';
+import { TooltipDirective } from '../../../core/directives/tooltip.directive';
 
 type RouteConfig = {
   dataKey: string;
@@ -24,7 +27,7 @@ type RouteConfig = {
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, IconButtonComponent],
+  imports: [CommonModule, IconButtonComponent, TooltipDirective],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -35,6 +38,8 @@ export class HeaderComponent {
   private destroy$ = new Subject<void>();
   canUpdate$!: Observable<boolean>;
   cooldownRemaining$!: Observable<number>;
+  lastUpdateTimestamp$!: Observable<number | null>;
+  refreshTooltipText$!: Observable<string>;
 
   private readonly routeConfigs: { [path: string]: RouteConfig } = {
     'home/market': {
@@ -115,14 +120,36 @@ export class HeaderComponent {
 
     if (matching) {
       const [, config] = matching;
-      this.canUpdate$ = this.coinUpdateService.canUpdate(config.dataKey);
-      this.cooldownRemaining$ = this.coinUpdateService.getCooldownRemaining(
-        config.dataKey
-      );
+      const key = config.dataKey;
+
+      this.canUpdate$ = this.coinUpdateService.canUpdate(key);
+      this.cooldownRemaining$ =
+        this.coinUpdateService.getCooldownRemaining(key);
+      this.lastUpdateTimestamp$ =
+        this.coinUpdateService.getLastUpdateTimestamp(key);
+      this.refreshTooltipText$ = this.tooltipText();
     } else {
       this.canUpdate$ = of(false);
       this.cooldownRemaining$ = of(0);
+      this.lastUpdateTimestamp$ = of(null);
+      this.refreshTooltipText$ = of('');
     }
+  }
+
+  tooltipText(): Observable<string> {
+    return combineLatest([
+      this.cooldownRemaining$,
+      this.lastUpdateTimestamp$,
+    ]).pipe(
+      map(([cooldown, timestamp]) => {
+        const lastUpdated = timestamp
+          ? new Date(timestamp).toLocaleString()
+          : 'never';
+        return cooldown === 0
+          ? `You're good to go – click to update!<br><i>Last updated: ${lastUpdated}</i>`
+          : `You can update in ${cooldown} seconds.<br><i>Last updated: ${lastUpdated}</i>`;
+      })
+    );
   }
 
   onUpdatePricesClick(): void {

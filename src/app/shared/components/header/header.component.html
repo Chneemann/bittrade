@@ -22,9 +22,9 @@
   <!-- Coin data/price refresh button -->
   <app-icon-button
     icon="refresh"
-    tooltip="You can refresh again in {{ cooldownRemaining$ | async }} seconds"
     [disabled]="!(canUpdate$ | async)"
     [hidden]="!showRefreshButton"
     (click)="onUpdatePricesClick()"
+    [appTooltip]="refreshTooltipText$"
   ></app-icon-button>
 </header>
