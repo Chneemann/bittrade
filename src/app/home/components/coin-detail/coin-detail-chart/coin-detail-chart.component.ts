@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { SimpleChartComponent } from '../../../charts/simple-chart/simple-chart.component';
+import { SimpleChartComponent } from '../../../../shared/components/charts/simple-chart/simple-chart.component';
 
 @Component({
   selector: 'app-coin-detail-chart',

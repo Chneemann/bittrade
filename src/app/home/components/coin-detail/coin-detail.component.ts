@@ -15,12 +15,12 @@ import {
 } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
-import { CoinGeckoService } from '../../../../core/services/external/coin-gecko.service';
-import { Coin, CoinListResponse } from '../../../../home/models/coin.model';
-import { CoinsService } from '../../../../home/services/coins.service';
-import { CoinUpdateService } from '../../../../home/services/coin-update.service';
+import { CoinGeckoService } from '../../../core/services/external/coin-gecko.service';
+import { Coin, CoinListResponse } from '../../models/coin.model';
+import { CoinsService } from '../../services/coins.service';
+import { CoinUpdateService } from '../../services/coin-update.service';
 import { CoinDetailChartComponent } from './coin-detail-chart/coin-detail-chart.component';
-import { CoinGeckoCacheService } from '../../../../core/services/external/coin-gecko-cache.service';
+import { CoinGeckoCacheService } from '../../../core/services/external/coin-gecko-cache.service';
 
 @Component({
   selector: 'app-coin-detail',
