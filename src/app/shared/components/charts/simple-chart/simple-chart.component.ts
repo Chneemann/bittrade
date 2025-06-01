@@ -19,6 +19,7 @@ interface ChartSeries {
   styleUrl: './simple-chart.component.scss',
 })
 export class SimpleChartComponent implements OnChanges {
+  @Input() dynamicClass = 'coin-card-chart';
   @Input() chartData: { date: Date; price: number }[] = [];
   @Input() isPositiveTrend: boolean = true; // Used to determine line color
 
@@ -26,6 +27,8 @@ export class SimpleChartComponent implements OnChanges {
 
   readonly chartOptions = {
     autoScale: true,
+    showXAxis: false,
+    showYAxis: false,
   };
 
   private readonly positiveColor = '#20bf73';
@@ -40,16 +43,29 @@ export class SimpleChartComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['chartData']?.currentValue) {
-      this.updateChart();
+      this.configureChart();
     }
   }
 
-  private updateChart(): void {
-    this.updateChartSeries();
-    this.updateColorScheme();
+  private configureChart(): void {
+    this.buildChartSeries();
+    this.setColorByTrend();
+    this.configureAxisVisibility();
   }
 
-  private updateChartSeries(): void {
+  configureAxisVisibility(): void {
+    if (this.dynamicClass === 'coin-detail-chart') {
+      this.chartOptions.showXAxis = true;
+      this.chartOptions.showYAxis = true;
+    }
+  }
+
+  private buildChartSeries(): void {
+    if (!this.chartData?.length) {
+      this.chartSeries = [];
+      return;
+    }
+
     this.chartSeries = [
       {
         name: 'Price',
@@ -61,7 +77,7 @@ export class SimpleChartComponent implements OnChanges {
     ];
   }
 
-  private updateColorScheme(): void {
+  private setColorByTrend(): void {
     const newColor = this.isPositiveTrend
       ? this.positiveColor
       : this.negativeColor;

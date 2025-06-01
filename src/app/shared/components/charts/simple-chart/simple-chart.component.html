@@ -1,8 +1,10 @@
-<div class="chart-container">
+<div [ngClass]="dynamicClass">
   <ngx-charts-line-chart
     [results]="chartSeries"
     [autoScale]="chartOptions.autoScale"
     [scheme]="colorScheme"
+    [xAxis]="chartOptions.showXAxis"
+    [yAxis]="chartOptions.showYAxis"
   >
   </ngx-charts-line-chart>
 </div>

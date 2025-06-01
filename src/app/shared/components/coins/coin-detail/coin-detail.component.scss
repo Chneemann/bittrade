@@ -1,27 +1,21 @@
 .coin-detail {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
 
-  gap: 24px;
-
-  img {
-    width: 64px;
-    height: 64px;
-  }
+.coin-wrapper {
+  width: 800px;
 }
 
 .loading-container {
   display: flex;
   justify-content: center;
   align-items: center;
-
   font-size: 18px;
   font-weight: 400;
-
   height: 60px;
-
   animation: pulseText 1.5s infinite ease-in-out;
 }
 
@@ -35,4 +29,28 @@
   100% {
     opacity: 0.2;
   }
+}
+
+.price-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  p {
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  span {
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+.positive {
+  color: var(--color-green);
+}
+
+.negative {
+  color: var(--color-red);
 }

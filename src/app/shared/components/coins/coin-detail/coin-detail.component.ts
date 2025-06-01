@@ -1,33 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   catchError,
   combineLatest,
   EMPTY,
+  forkJoin,
   map,
   Observable,
   shareReplay,
   Subscription,
   switchMap,
+  tap,
   throwError,
 } from 'rxjs';
-import { CoinGeckoService } from '../../../../core/services/external/coin-gecko.service';
-import { Coin, CoinListResponse } from '../../../../home/models/coin.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
+import { CoinGeckoService } from '../../../../core/services/external/coin-gecko.service';
+import { Coin, CoinListResponse } from '../../../../home/models/coin.model';
 import { CoinsService } from '../../../../home/services/coins.service';
 import { CoinUpdateService } from '../../../../home/services/coin-update.service';
+import { SimpleChartComponent } from '../../charts/simple-chart/simple-chart.component';
 
 @Component({
   selector: 'app-coin-detail',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, SimpleChartComponent],
   templateUrl: './coin-detail.component.html',
   styleUrl: './coin-detail.component.scss',
 })
-export class CoinDetailComponent implements OnInit {
+export class CoinDetailComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
 
   coinList$!: Observable<CoinListResponse>;
   currentCoin$!: Observable<Coin>;
+
+  selectedTime: string = '1'; // default: 1 day
+  chartData: { date: Date; price: number }[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -73,15 +80,29 @@ export class CoinDetailComponent implements OnInit {
         if (!allowedIds.includes(id)) {
           return throwError(() => new Error('Coin not found'));
         }
-        return this.coinGeckoService
-          .getCoinData(id)
-          .pipe(map((cached) => cached.data));
+
+        return forkJoin({
+          coin: this.coinGeckoService
+            .getCoinData(id)
+            .pipe(map((res) => res.data)),
+          chart: this.coinGeckoService.getMarketChartData(
+            id,
+            this.selectedTime
+          ),
+        });
       }),
+      tap(({ chart }) => {
+        this.chartData = chart.data.prices.map((item: number[]) => ({
+          date: new Date(item[0]),
+          price: item[1],
+        }));
+      }),
+      map(({ coin }) => coin),
       catchError((err) => {
         if (window.history.length > 1) {
           this.location.back();
         } else {
-          this.router.navigate(['/home']); // fallback
+          this.router.navigate(['/home']);
         }
         return EMPTY;
       })

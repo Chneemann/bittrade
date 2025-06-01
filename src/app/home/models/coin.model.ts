@@ -8,6 +8,8 @@ export interface Coin {
     readonly [key: string]: string;
   };
   readonly market_data: {
+    readonly price_change_24h: number;
+    readonly price_change_percentage_24h: number;
     readonly current_price: {
       readonly [currency: string]: number;
     };
@@ -15,6 +17,7 @@ export interface Coin {
       readonly [currency: string]: number;
     };
   };
+  readonly change: number;
   readonly last_updated: string;
 }
 

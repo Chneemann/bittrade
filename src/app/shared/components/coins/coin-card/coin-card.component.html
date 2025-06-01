@@ -14,6 +14,7 @@
   <div class="chart">
     @if (chartData.length > 0) {
     <app-simple-chart
+      dynamicClass="coin-card-chart"
       [chartData]="chartData"
       [isPositiveTrend]="coin.change >= 0"
     ></app-simple-chart>

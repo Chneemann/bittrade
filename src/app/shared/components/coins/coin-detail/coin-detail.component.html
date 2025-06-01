@@ -1,21 +1,24 @@
-@if (currentCoin$ | async; as coin) {
 <div class="coin-detail">
-  <h2>{{ coin.name }} ({{ coin.symbol | uppercase }})</h2>
+  @if (currentCoin$ | async; as coin) {
+  <div class="coin-wrapper">
+    <div class="price-header">
+      <p>${{ coin.market_data.current_price["usd"] | number : "1.2-2" }}</p>
+      <span [ngClass]="coin.change >= 0 ? 'positive' : 'negative'">
+        {{ coin.change >= 0 ? "+" : "-" }}
+        {{ coin.market_data.price_change_24h | number : "1.2-2" }}
+        ({{ coin.market_data.price_change_percentage_24h | number : "1.2-2" }}%)
+      </span>
+    </div>
 
-  <img [src]="'./assets/img/coins/' + coin.name.toLowerCase() + '.svg'" />
-
-  <p>
-    <strong>Price:</strong>
-    ${{ coin.market_data.current_price["usd"] | number : "1.2-2" }}
-  </p>
-
-  <p>
-    <strong>All-time High:</strong>
-    ${{ coin.market_data.ath["usd"] | number : "1.2-2" }}
-  </p>
+    <app-simple-chart
+      dynamicClass="coin-detail-chart"
+      [chartData]="chartData"
+      [isPositiveTrend]="coin.change >= 0"
+    ></app-simple-chart>
+  </div>
+  } @else {
+  <div class="loading-container">
+    <span>Loading, please wait...</span>
+  </div>
+  }
 </div>
-} @else {
-<div class="loading-container">
-  <span>Loading, please wait...</span>
-</div>
-}
