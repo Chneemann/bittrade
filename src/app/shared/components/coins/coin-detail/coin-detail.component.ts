@@ -18,12 +18,12 @@ import { CoinGeckoService } from '../../../../core/services/external/coin-gecko.
 import { Coin, CoinListResponse } from '../../../../home/models/coin.model';
 import { CoinsService } from '../../../../home/services/coins.service';
 import { CoinUpdateService } from '../../../../home/services/coin-update.service';
-import { SimpleChartComponent } from '../../charts/simple-chart/simple-chart.component';
+import { CoinDetailChartComponent } from './coin-detail-chart/coin-detail-chart.component';
 
 @Component({
   selector: 'app-coin-detail',
   standalone: true,
-  imports: [CommonModule, SimpleChartComponent],
+  imports: [CommonModule, CoinDetailChartComponent],
   templateUrl: './coin-detail.component.html',
   styleUrl: './coin-detail.component.scss',
 })
@@ -53,6 +53,11 @@ export class CoinDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  onIntervalChange(interval: string): void {
+    this.selectedTime = interval;
+    this.updateCoinChart();
   }
 
   private subscribeToUpdatePrice(): void {
@@ -107,6 +112,23 @@ export class CoinDetailComponent implements OnInit, OnDestroy {
         return EMPTY;
       })
     );
+  }
+
+  updateCoinChart(): void {
+    const id = this.route.snapshot.paramMap.get('id')?.toLowerCase() ?? '';
+    if (!id) return;
+
+    this.coinGeckoService.getMarketChartData(id, this.selectedTime).subscribe({
+      next: (chartResponse) => {
+        this.chartData = chartResponse.data.prices.map((item: number[]) => ({
+          date: new Date(item[0]),
+          price: item[1],
+        }));
+      },
+      error: (err) => {
+        console.error('Error updating coin chart:', err);
+      },
+    });
   }
 
   updateCoinPrice(): void {

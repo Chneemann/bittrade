@@ -1,0 +1,20 @@
+<div class="coin-chart">
+  <app-simple-chart
+    dynamicClass="coin-detail-chart"
+    [chartData]="chartData"
+    [isPositiveTrend]="isPositiveTrend"
+  ></app-simple-chart>
+</div>
+
+<div class="time-intervals">
+  @for (interval of intervals; track $index) {
+
+  <button
+    [class.active]="selectedTime === interval.value"
+    (click)="onIntervalChange(interval.value)"
+  >
+    <span class="desktop-label">{{ interval.label }}</span>
+    <span class="mobile-label">{{ interval.mobileLabel }}</span>
+  </button>
+  }
+</div>

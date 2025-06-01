@@ -10,11 +10,12 @@
       </span>
     </div>
 
-    <app-simple-chart
-      dynamicClass="coin-detail-chart"
+    <app-coin-detail-chart
       [chartData]="chartData"
       [isPositiveTrend]="coin.change >= 0"
-    ></app-simple-chart>
+      [selectedTime]="selectedTime"
+      (intervalChange)="onIntervalChange($event)"
+    ></app-coin-detail-chart>
   </div>
   } @else {
   <div class="loading-container">
