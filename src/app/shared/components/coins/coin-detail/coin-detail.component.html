@@ -1,18 +1,24 @@
 <div class="coin-detail">
   @if (currentCoin$ | async; as coin) {
   <div class="coin-wrapper">
+    @if (coin?.market_data; as data) {
     <div class="price-header">
-      <p>${{ coin.market_data.current_price["usd"] | number : "1.2-2" }}</p>
-      <span [ngClass]="coin.change >= 0 ? 'positive' : 'negative'">
-        {{ coin.change >= 0 ? "+" : "-" }}
-        {{ coin.market_data.price_change_24h | number : "1.2-2" }}
-        ({{ coin.market_data.price_change_percentage_24h | number : "1.2-2" }}%)
+      <p>${{ data.current_price["usd"] | number : "1.2-2" }}</p>
+      <span
+        [ngClass]="
+          data.price_change_percentage_24h >= 0 ? 'positive' : 'negative'
+        "
+      >
+        {{ data.price_change_percentage_24h >= 0 ? "+" : "-" }}
+        {{ data.price_change_24h_in_currency["usd"] | number : "1.2-2" }}
+        ({{ data.price_change_percentage_24h | number : "1.2-2" }}%)
       </span>
     </div>
+    }
 
     <app-coin-detail-chart
       [chartData]="chartData"
-      [isPositiveTrend]="coin.change >= 0"
+      [isPositiveTrend]="coin.market_data.price_change_percentage_24h >= 0"
       [selectedTime]="selectedTime"
       (intervalChange)="onIntervalChange($event)"
     ></app-coin-detail-chart>

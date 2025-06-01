@@ -3,6 +3,7 @@ import {
   catchError,
   combineLatest,
   EMPTY,
+  filter,
   forkJoin,
   map,
   Observable,
@@ -19,6 +20,7 @@ import { Coin, CoinListResponse } from '../../../../home/models/coin.model';
 import { CoinsService } from '../../../../home/services/coins.service';
 import { CoinUpdateService } from '../../../../home/services/coin-update.service';
 import { CoinDetailChartComponent } from './coin-detail-chart/coin-detail-chart.component';
+import { CoinGeckoCacheService } from '../../../../core/services/external/coin-gecko-cache.service';
 
 @Component({
   selector: 'app-coin-detail',
@@ -42,6 +44,7 @@ export class CoinDetailComponent implements OnInit, OnDestroy {
     private location: Location,
     private coinsService: CoinsService,
     private coinGeckoService: CoinGeckoService,
+    private coinGeckoCacheService: CoinGeckoCacheService,
     private coinUpdateService: CoinUpdateService
   ) {}
 
@@ -133,9 +136,14 @@ export class CoinDetailComponent implements OnInit, OnDestroy {
 
   updateCoinPrice(): void {
     this.currentCoin$ = this.route.paramMap.pipe(
-      map((params) => params.get('id')?.toLowerCase() ?? ''),
+      map((params) => params.get('id')?.toLowerCase()),
+      filter((id): id is string => !!id),
+      tap((id) => this.coinGeckoCacheService.clearCoinMarketChartCache(id)),
       switchMap((id) => this.coinGeckoService.refreshCoinData(id)),
-      map((cached) => cached.data)
+      tap(() => {
+        this.updateCoinChart();
+      }),
+      map((response) => response.data)
     );
   }
 }

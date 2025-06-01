@@ -82,12 +82,16 @@ export class CoinGeckoCacheService {
     );
   }
 
-  clearSpecificMarketChartDataCache(coinId: string, days: string): void {
-    const formattedId =
-      coinId.charAt(0).toUpperCase() + coinId.slice(1).toLowerCase();
-    const cacheKey = `${formattedId}${days}`;
+  clearCoinMarketChartCache(coinId: string): void {
+    const normalizedId = coinId.toLowerCase();
     const cache = this.getMarketChartCache();
-    delete cache[cacheKey];
+
+    Object.keys(cache).forEach((key) => {
+      if (key.startsWith(normalizedId)) {
+        delete cache[key];
+      }
+    });
+
     this.setMarketChartCache(cache);
   }
 
