@@ -1,4 +1,4 @@
-@if (isValidIcon() && !hidden) {
+@if (isValidIcon()) {
 <button
   class="icon-button"
   [attr.aria-label]="tooltip || icon"
@@ -11,6 +11,4 @@
     [alt]="tooltip ? tooltip + ' icon' : icon + ' icon'"
   />
 </button>
-} @else {
-<button class="icon-button invisible"></button>
 }

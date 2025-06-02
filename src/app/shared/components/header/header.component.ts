@@ -20,7 +20,7 @@ import { CoinsService } from '../../../home/services/coins.service';
 import { TooltipDirective } from '../../../core/directives/tooltip.directive';
 
 type RouteConfig = {
-  dataKey: string;
+  dataKey: string | null;
   title: string;
   icon?: string;
 };
@@ -40,11 +40,16 @@ export class HeaderComponent {
   cooldownRemaining$!: Observable<number>;
   lastUpdateTimestamp$!: Observable<number | null>;
   refreshTooltipText$!: Observable<string>;
+  emptyTooltip$ = of('');
 
   private readonly routeConfigs: { [path: string]: RouteConfig } = {
     'home/market': {
       dataKey: 'cachedCoinPrices',
       title: 'Market',
+    },
+    'home/transactions': {
+      dataKey: null,
+      title: 'Transactions',
     },
   };
 
@@ -122,6 +127,11 @@ export class HeaderComponent {
       const [, config] = matching;
       const key = config.dataKey;
 
+      if (!key) {
+        this.showRefreshButton = false;
+        return;
+      }
+
       this.canUpdate$ = this.coinUpdateService.canUpdate(key);
       this.cooldownRemaining$ =
         this.coinUpdateService.getCooldownRemaining(key);
@@ -154,7 +164,7 @@ export class HeaderComponent {
 
   onUpdatePricesClick(): void {
     const config = this.findMatchingConfig()?.[1];
-    if (!config) return;
+    if (!config || !config.dataKey) return;
     this.coinUpdateService.triggerUpdatePrices(config.dataKey);
   }
 
@@ -172,7 +182,7 @@ export class HeaderComponent {
   }
 
   get showBackButton(): boolean {
-    const backButtonPaths = ['home/coin'];
+    const backButtonPaths = ['home/coin', 'home/transactions'];
     return backButtonPaths.some(
       (path) =>
         this.currentPath === path || this.currentPath.startsWith(path + '/')

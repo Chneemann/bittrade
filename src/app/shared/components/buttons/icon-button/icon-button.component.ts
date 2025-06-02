@@ -9,7 +9,6 @@ import { Component, Input } from '@angular/core';
 export class IconButtonComponent {
   @Input() icon: string = '';
   @Input() tooltip?: string = '';
-  @Input() hidden?: boolean = false;
   @Input() disabled?: boolean = false;
 
   VALID_ICONS = ['back', 'refresh'];

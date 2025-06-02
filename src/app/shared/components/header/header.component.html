@@ -1,11 +1,14 @@
 <header class="app-header">
   <!-- History back button -->
+  @if (showBackButton) {
   <app-icon-button
     icon="back"
     tooltip="Back"
-    [hidden]="!showBackButton"
     (click)="goHistoryBack()"
   ></app-icon-button>
+  } @else {
+  <div class="hidden"></div>
+  }
 
   <!-- Header title, including optional icon -->
   <div class="title">
@@ -20,11 +23,14 @@
   </div>
 
   <!-- Coin data/price refresh button -->
+  @if (showRefreshButton) {
   <app-icon-button
     icon="refresh"
     [disabled]="!(canUpdate$ | async)"
-    [hidden]="!showRefreshButton"
     (click)="onUpdatePricesClick()"
     [appTooltip]="refreshTooltipText$"
   ></app-icon-button>
+  } @else {
+  <div class="hidden"></div>
+  }
 </header>
