@@ -9,7 +9,7 @@
           data.price_change_percentage_24h >= 0 ? 'positive' : 'negative'
         "
       >
-        {{ data.price_change_percentage_24h >= 0 ? "+" : "-" }}
+        {{ data.price_change_percentage_24h >= 0 ? "+" : "" }}
         {{ data.price_change_24h_in_currency["usd"] | number : "1.2-2" }}
         ({{ data.price_change_percentage_24h | number : "1.2-2" }}%)
       </span>
@@ -22,6 +22,32 @@
       [selectedTime]="selectedTime"
       (intervalChange)="onIntervalChange($event)"
     ></app-coin-detail-chart>
+
+    <div class="coin-card">
+      <div class="coin-icon">
+        <img
+          [src]="'assets/img/coins/' + coin.name.toLowerCase() + '.svg'"
+          [alt]="coin.name + ' logo'"
+        />
+      </div>
+      <div class="coin-info">
+        <div class="coin-details">
+          <p class="label">Balance</p>
+          <span class="value">Total</span>
+        </div>
+        <div class="coin-value">
+          <p class="amount">$100.00</p>
+          <span class="crypto">0.02 BTC</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="coin-card secondary">
+      <div class="coin-info">
+        <p>Transactions</p>
+        <img src="assets/img/small-button/forward.svg" alt="Arrow icon" />
+      </div>
+    </div>
   </div>
   } @else {
   <div class="loading-container">
