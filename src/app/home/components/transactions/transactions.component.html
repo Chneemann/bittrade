@@ -1,1 +1,5 @@
-<p>transactions works!</p>
+@if (selectedCoinId) {
+<p>Transactions for {{ selectedCoinId | titlecase }}</p>
+} @else {
+<p>All Transactions</p>
+}

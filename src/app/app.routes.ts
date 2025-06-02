@@ -32,6 +32,7 @@ export const routes: Routes = [
     children: [
       { path: 'market', component: MarketComponent },
       { path: 'coin/:id', component: CoinDetailComponent },
+      { path: 'transactions', component: TransactionsComponent },
       { path: 'transactions/:id', component: TransactionsComponent },
     ],
   },
