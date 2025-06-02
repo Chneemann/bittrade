@@ -16,7 +16,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { CoinGeckoService } from '../../../core/services/external/coin-gecko.service';
-import { Coin, CoinListResponse } from '../../models/coin.model';
+import { Coin, CoinList, CoinListResponse } from '../../models/coin.model';
 import { CoinsService } from '../../services/coins.service';
 import { CoinUpdateService } from '../../services/coin-update.service';
 import { CoinDetailChartComponent } from './coin-detail-chart/coin-detail-chart.component';
@@ -145,5 +145,11 @@ export class CoinDetailComponent implements OnInit, OnDestroy {
       }),
       map((response) => response.data)
     );
+  }
+
+  onClick(coin: CoinList): void {
+    if (!coin?.name) return;
+    const coinName = coin.name.trim().toLowerCase().replace(/\s+/g, '-');
+    this.router.navigate(['/home/transactions', coinName]);
   }
 }

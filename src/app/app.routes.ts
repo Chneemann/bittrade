@@ -8,6 +8,7 @@ import { AuthGuard } from './auth/guards/auth.guard';
 import { LogoutComponent } from './auth/components/logout/logout.component';
 import { MarketComponent } from './home/components/market/market.component';
 import { CoinDetailComponent } from './home/components/coin-detail/coin-detail.component';
+import { TransactionsComponent } from './home/components/transactions/transactions.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -31,6 +32,7 @@ export const routes: Routes = [
     children: [
       { path: 'market', component: MarketComponent },
       { path: 'coin/:id', component: CoinDetailComponent },
+      { path: 'transactions/:id', component: TransactionsComponent },
     ],
   },
 
