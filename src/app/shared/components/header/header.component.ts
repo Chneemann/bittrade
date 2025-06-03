@@ -16,7 +16,7 @@ import { IconButtonComponent } from '../buttons/icon-button/icon-button.componen
 import { CoinUpdateService } from '../../../home/services/coin-update.service';
 import { CommonModule } from '@angular/common';
 import { CoinListResponse } from '../../../home/models/coin.model';
-import { CoinsService } from '../../../home/services/coins.service';
+import { CoinListService } from '../../../home/services/coin-list.service';
 import { TooltipDirective } from '../../../core/directives/tooltip.directive';
 
 type RouteConfig = {
@@ -55,7 +55,7 @@ export class HeaderComponent {
 
   constructor(
     private router: Router,
-    private coinsService: CoinsService,
+    private coinListService: CoinListService,
     private coinUpdateService: CoinUpdateService
   ) {}
 
@@ -95,7 +95,7 @@ export class HeaderComponent {
   }
 
   private loadCoinList(): Observable<CoinListResponse> {
-    return this.coinsService
+    return this.coinListService
       .getCoinList()
       .pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }

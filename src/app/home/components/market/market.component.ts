@@ -8,7 +8,7 @@ import {
   CoinListResponse,
   CoinPricesResponse,
 } from '../../models/coin.model';
-import { CoinsService } from '../../services/coins.service';
+import { CoinListService } from '../../services/coin-list.service';
 import { Router } from '@angular/router';
 import { CoinCardComponent } from '../../../shared/components/coins/coin-card/coin-card.component';
 import { CoinUpdateService } from '../../services/coin-update.service';
@@ -28,7 +28,7 @@ export class MarketComponent implements OnInit {
   constructor(
     private router: Router,
     private coinGeckoService: CoinGeckoService,
-    private coinsService: CoinsService,
+    private coinListService: CoinListService,
     private coinUpdateService: CoinUpdateService
   ) {}
 
@@ -59,7 +59,7 @@ export class MarketComponent implements OnInit {
   }
 
   private loadCoinData(): void {
-    this.coinList$ = this.coinsService
+    this.coinList$ = this.coinListService
       .getCoinList()
       .pipe(shareReplay({ bufferSize: 1, refCount: true }));
     this.fetchCoinPrices();

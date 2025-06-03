@@ -6,7 +6,7 @@ import { Cached, CoinListResponse } from '../models/coin.model';
 import { CoinGeckoCacheService } from '../../core/services/external/coin-gecko-cache.service';
 
 @Injectable({ providedIn: 'root' })
-export class CoinsService {
+export class CoinListService {
   // Cache lifetime in milliseconds (24h)
   private readonly TTL_MS = 60 * 60 * 1000;
   private readonly STORAGE_KEY_COIN_LIST = 'cachedCoinList';

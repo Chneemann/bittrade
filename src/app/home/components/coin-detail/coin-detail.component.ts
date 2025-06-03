@@ -17,7 +17,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { CoinGeckoService } from '../../../core/services/external/coin-gecko.service';
 import { Coin, CoinList, CoinListResponse } from '../../models/coin.model';
-import { CoinsService } from '../../services/coins.service';
+import { CoinListService } from '../../services/coin-list.service';
 import { CoinUpdateService } from '../../services/coin-update.service';
 import { CoinDetailChartComponent } from './coin-detail-chart/coin-detail-chart.component';
 import { CoinGeckoCacheService } from '../../../core/services/external/coin-gecko-cache.service';
@@ -42,7 +42,7 @@ export class CoinDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private coinsService: CoinsService,
+    private coinListService: CoinListService,
     private coinGeckoService: CoinGeckoService,
     private coinGeckoCacheService: CoinGeckoCacheService,
     private coinUpdateService: CoinUpdateService
@@ -71,7 +71,7 @@ export class CoinDetailComponent implements OnInit, OnDestroy {
   }
 
   private loadCoinList(): Observable<CoinListResponse> {
-    return this.coinsService
+    return this.coinListService
       .getCoinList()
       .pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
