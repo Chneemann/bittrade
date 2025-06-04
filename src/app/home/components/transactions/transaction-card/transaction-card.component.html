@@ -1,0 +1,40 @@
+@if (transaction) {
+<div class="coin-card">
+  <div class="coin-icon">
+    <img
+      [src]="'assets/img/coins/' + transaction.slug + '.svg'"
+      [alt]="transaction.slug + ' logo'"
+    />
+  </div>
+  <div class="coin-info">
+    <div class="coin-meta">
+      <p class="coin-name">Bitcoin (BTC)</p>
+      <span class="label-amount"
+        >Amount: {{ transaction.amount | number : "1.2-2" }}</span
+      >
+      <span class="label-price"
+        >Price: ${{ transaction.price_per_coin | number : "1.2-2" }}</span
+      >
+    </div>
+    <div class="transaction-info">
+      <p class="total-value">
+        ${{
+          transaction.amount * transaction.price_per_coin | number : "1.2-2"
+        }}
+      </p>
+      <span class="transaction-date">{{
+        transaction.created_at | date : "short"
+      }}</span>
+      <span
+        class="transaction-type"
+        [ngClass]="{
+          positive: transaction.transaction_type === 'buy',
+          negative: transaction.transaction_type === 'sell'
+        }"
+      >
+        {{ transaction.transaction_type }}
+      </span>
+    </div>
+  </div>
+</div>
+}

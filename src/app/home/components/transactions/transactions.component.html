@@ -1,7 +1,7 @@
 @if (selectedCoinId) {
 <!-- Transaction list -->
 @for (transaction of transactions; track $index) {
-{{ transaction | json }}
-} } @else {
+<app-transaction-card [transaction]="transaction"></app-transaction-card> } }
+@else {
 <p>All Transactions</p>
 }

@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { TransactionCardComponent } from './transaction-card/transaction-card.component';
 import { CoinTransactionService } from '../../services/coin-transactions.service';
 
 @Component({
   selector: 'app-transactions',
-  imports: [CommonModule],
+  imports: [CommonModule, TransactionCardComponent],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
 })
