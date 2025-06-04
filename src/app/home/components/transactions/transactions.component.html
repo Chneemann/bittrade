@@ -1,5 +1,7 @@
 @if (selectedCoinId) {
-<p>Transactions for {{ selectedCoinId | titlecase }}</p>
-} @else {
+<!-- Transaction list -->
+@for (transaction of transactions; track $index) {
+{{ transaction | json }}
+} } @else {
 <p>All Transactions</p>
 }

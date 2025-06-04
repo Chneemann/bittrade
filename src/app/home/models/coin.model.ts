@@ -53,3 +53,12 @@ export interface MarketChartData {
 export interface MarketChartCache {
   [key: string]: Cached<MarketChartData>;
 }
+
+export interface CoinTransaction {
+  id: string;
+  slug: string;
+  transaction_type: 'buy' | 'sell';
+  amount: number;
+  price_per_coin: number;
+  created_at: string;
+}
