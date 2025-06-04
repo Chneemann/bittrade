@@ -1,0 +1,10 @@
+<div class="selection-list">
+  <button
+    *ngFor="let option of options"
+    class="selection-item"
+    [class.active]="option === activeOption"
+    (click)="selectOption(option)"
+  >
+    {{ option.charAt(0).toUpperCase() + option.slice(1).toLowerCase() }}
+  </button>
+</div>
