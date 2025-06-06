@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { CoinHolding } from '../../../models/coin.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CoinHoldingsService } from '../../../services/coin-holdings.service';
 import { CommonModule } from '@angular/common';
@@ -14,7 +15,7 @@ export class CoinDetailHoldingsComponent {
   @Input() coinPrice: number = 0;
 
   selectedCoinSlug: string | null = null;
-  holding!: any;
+  holding!: CoinHolding;
 
   constructor(
     private router: Router,

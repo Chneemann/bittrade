@@ -62,3 +62,10 @@ export interface CoinTransaction {
   price_per_coin: number;
   created_at: string;
 }
+
+export interface CoinHolding {
+  id: string;
+  slug: string;
+  amount: number;
+  average_buy_price: number;
+}
