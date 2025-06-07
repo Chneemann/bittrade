@@ -11,11 +11,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './coin-detail-holdings.component.scss',
 })
 export class CoinDetailHoldingsComponent {
-  @Input() coinSlug: string = '';
-  @Input() coinSymbol: string = '';
   @Input() coinPrice: number = 0;
 
-  selectedCoinSlug: string | null = null;
+  selectedCoinId: string | null = null;
   holding: CoinHolding | null = null;
 
   constructor(
@@ -26,10 +24,10 @@ export class CoinDetailHoldingsComponent {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      this.selectedCoinSlug = params.get('id');
+      this.selectedCoinId = params.get('id');
 
-      if (this.selectedCoinSlug) {
-        this.loadHolding(this.selectedCoinSlug);
+      if (this.selectedCoinId) {
+        this.loadHolding(this.selectedCoinId);
       }
     });
   }

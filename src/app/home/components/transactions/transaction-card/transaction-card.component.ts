@@ -9,5 +9,5 @@ import { CommonModule } from '@angular/common';
   styleUrl: './transaction-card.component.scss',
 })
 export class TransactionCardComponent {
-  @Input() transaction!: CoinTransaction;
+  @Input() transaction: CoinTransaction | null = null;
 }

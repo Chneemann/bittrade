@@ -1,13 +1,21 @@
 @if (selectedCoinId) {
 <div class="transaction-list">
-  <!-- Transaction list -->
   <app-selection-tabs
     [options]="options"
     [activeOption]="activeOption"
     (optionSelected)="onFilterTransactions($event)"
   ></app-selection-tabs>
+
+  @if (transactions.length !== 0) {
+
+  <!-- Transaction list -->
   @for (transaction of transactions; track $index) {
-  <app-transaction-card [transaction]="transaction"></app-transaction-card> }
+  <app-transaction-card [transaction]="transaction"></app-transaction-card>
+  } } @else {
+  <div class="no-transactions-container">
+    <p>No transactions found</p>
+  </div>
+  }
 </div>
 } @else {
 <p>All Transactions</p>

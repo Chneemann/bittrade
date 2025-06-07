@@ -1,8 +1,9 @@
+@if (holding) {
 <div class="coin-holding-card">
   <div class="coin-icon">
     <img
-      [src]="'assets/img/coins/' + coinSlug + '.svg'"
-      [alt]="coinSlug + ' logo'"
+      [src]="'assets/img/coins/' + holding.coin.slug + '.svg'"
+      [alt]="holding.coin.slug + ' logo'"
       onerror="this.src='assets/img/coins/default.svg';"
     />
   </div>
@@ -13,20 +14,22 @@
       <span class="value">Total</span>
     </div>
     <div class="coin-value">
-      <p class="amount">
-        ${{ (holding?.amount ?? 0) * coinPrice | number : "1.2-2" }}
-      </p>
+      <p class="amount">${{ holding.amount * coinPrice | number : "1.2-2" }}</p>
       <span class="crypto">
-        {{ holding?.amount | number : "1.2-2" }}
-        {{ coinSymbol.toUpperCase() }}
+        {{ holding.amount | number : "1.2-2" }}
+        {{ holding.coin.symbol.toUpperCase() }}
       </span>
     </div>
   </div>
 </div>
 
-<div class="coin-holding-card transaction-card" (click)="onClick(coinSlug)">
+<div
+  class="coin-holding-card transaction-card"
+  (click)="onClick(holding.coin.slug)"
+>
   <div class="coin-info">
     <p>Transactions</p>
     <img src="assets/img/small-button/forward.svg" alt="Arrow icon" />
   </div>
 </div>
+}

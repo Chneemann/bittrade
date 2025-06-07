@@ -54,9 +54,17 @@ export interface MarketChartCache {
   [key: string]: Cached<MarketChartData>;
 }
 
+// Backend (Django) API responses
+
+export interface BaseCoin {
+  name: string;
+  symbol: string;
+  slug: string;
+}
+
 export interface CoinTransaction {
   id: string;
-  slug: string;
+  coin: BaseCoin;
   transaction_type: 'buy' | 'sell';
   amount: number;
   price_per_coin: number;
@@ -65,7 +73,7 @@ export interface CoinTransaction {
 
 export interface CoinHolding {
   id: string;
-  slug: string;
+  coin: BaseCoin;
   amount: number;
   average_buy_price: number;
 }

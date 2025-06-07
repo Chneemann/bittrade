@@ -2,13 +2,16 @@
 <div class="coin-card">
   <div class="coin-icon">
     <img
-      [src]="'assets/img/coins/' + transaction.slug + '.svg'"
-      [alt]="transaction.slug + ' logo'"
+      [src]="'assets/img/coins/' + transaction.coin.slug + '.svg'"
+      [alt]="transaction.coin.slug + ' logo'"
+      onerror="this.src='assets/img/coins/default.svg';"
     />
   </div>
   <div class="coin-info">
     <div class="coin-meta">
-      <p class="coin-name">Bitcoin (BTC)</p>
+      <p class="coin-name">
+        {{ transaction.coin.name }} ({{ transaction.coin.symbol }})
+      </p>
       <span class="label-amount"
         >Amount: {{ transaction.amount | number : "1.2-2" }}</span
       >
