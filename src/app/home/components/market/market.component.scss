@@ -12,8 +12,8 @@ app-market-header {
   width: 100%;
 }
 
-// Loading container
-.loading-container {
+.loading-container,
+.no-results-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,7 +22,9 @@ app-market-header {
   font-weight: 400;
 
   height: 60px;
+}
 
+.loading-container {
   animation: pulseText 1.5s infinite ease-in-out;
 }
 

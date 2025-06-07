@@ -25,6 +25,7 @@
       type="text"
       placeholder="Search..."
       [class.visible]="searchActive"
+      (input)="onSearchInput($event)"
     />
   </div>
 </div>

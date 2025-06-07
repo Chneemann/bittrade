@@ -1,7 +1,14 @@
 @if (coinPrices$ | async; as prices) {
+
 <div class="coin-list">
-  <app-market-header [averageChange24h]="averageChange24h"></app-market-header>
-  @for (coin of coinList$ | async; track $index) {
+  <app-market-header
+    [averageChange24h]="averageChange24h"
+    (searchChange)="onSearch($event)"
+  ></app-market-header>
+  @if (filteredCoins$ | async; as coins) {
+
+  <!-- Coin cards -->
+  @if (coins.length) { @for (coin of coins; track coin.symbol) {
   <div class="coin-details" (click)="onCoinClick(coin)">
     <app-coin-card
       [coin]="{
@@ -12,8 +19,13 @@
       }"
     ></app-coin-card>
   </div>
-  }
+  } } @else {
+  <div class="no-results-container">
+    <span>No results...</span>
+  </div>
+  } }
 </div>
+
 } @else {
 <div class="loading-container">
   <span>Loading, please wait...</span>

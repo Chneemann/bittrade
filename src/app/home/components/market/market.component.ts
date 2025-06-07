@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CoinGeckoService } from '../../../core/services/external/coin-gecko.service';
-import { Observable, shareReplay, Subscription, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  map,
+  Observable,
+  shareReplay,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 import { CommonModule } from '@angular/common';
 import {
   Cached,
@@ -25,8 +33,11 @@ export class MarketComponent implements OnInit {
 
   averageChange24h: number | null = null;
 
+  private searchText$ = new BehaviorSubject<string>('');
+
   coinPrices$!: Observable<Cached<CoinPricesResponse>>;
   coinList$!: Observable<CoinListResponse>;
+  filteredCoins$!: Observable<CoinListResponse>;
 
   constructor(
     private router: Router,
@@ -38,6 +49,23 @@ export class MarketComponent implements OnInit {
   ngOnInit(): void {
     this.loadCoinData();
     this.subscribeToUpdatePrices();
+    this.setupFilteredCoins();
+  }
+
+  private setupFilteredCoins(): void {
+    this.filteredCoins$ = combineLatest([
+      this.coinList$,
+      this.searchText$,
+    ]).pipe(
+      map(([coins, search]) => {
+        if (!search) return coins;
+        return coins.filter(
+          (coin) =>
+            coin.name.toLowerCase().includes(search) ||
+            coin.symbol.toLowerCase().includes(search)
+        );
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -97,5 +125,9 @@ export class MarketComponent implements OnInit {
     if (!coin?.name) return;
     const coinName = coin.name.trim().toLowerCase().replace(/\s+/g, '-');
     this.router.navigate(['/home/coin', coinName]);
+  }
+
+  onSearch(searchText: string) {
+    this.searchText$.next(searchText.toLowerCase());
   }
 }

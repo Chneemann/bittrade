@@ -1,8 +1,10 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
   Input,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -17,6 +19,7 @@ export class MarketHeaderComponent {
   @ViewChild('searchBox') searchBoxRef!: ElementRef;
 
   @Input() averageChange24h: number | null = null;
+  @Output() searchChange = new EventEmitter<string>();
 
   private _searchActive = false;
 
@@ -49,5 +52,10 @@ export class MarketHeaderComponent {
   get averageChangeClass(): string {
     if (this.averageChange24h === null) return '';
     return this.averageChange24h < 0 ? 'text-red' : 'text-green';
+  }
+
+  onSearchInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchChange.emit(input.value);
   }
 }
