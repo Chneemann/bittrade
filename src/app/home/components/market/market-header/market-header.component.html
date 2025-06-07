@@ -1,0 +1,30 @@
+<div class="header">
+  <!-- Headline -->
+  <div class="headline" [class.visible]="hideHeadline">
+    <p>
+      Market is @if (averageChange24h) {
+      {{ averageChange24h < 0 ? "down" : "up" }}
+      <span [ngClass]="averageChangeClass">
+        {{ averageChange24h | number : "1.2-2" }}%
+      </span>
+      }
+    </p>
+    <p class="subtext">In the past 24 hours</p>
+  </div>
+
+  <!-- Search bar -->
+  <div class="search-container" #searchBox>
+    <img
+      src="assets/img/search.svg"
+      alt="Search icon"
+      (click)="toggleSearch()"
+    />
+    <input
+      id="marketSearch"
+      name="marketSearch"
+      type="text"
+      placeholder="Search..."
+      [class.visible]="searchActive"
+    />
+  </div>
+</div>

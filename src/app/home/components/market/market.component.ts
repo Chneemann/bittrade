@@ -12,10 +12,11 @@ import { CoinListService } from '../../services/coin-list.service';
 import { Router } from '@angular/router';
 import { CoinCardComponent } from '../../../shared/components/coins/coin-card/coin-card.component';
 import { CoinUpdateService } from '../../services/coin-update.service';
+import { MarketHeaderComponent } from './market-header/market-header.component';
 
 @Component({
   selector: 'app-market',
-  imports: [CommonModule, CoinCardComponent],
+  imports: [CommonModule, CoinCardComponent, MarketHeaderComponent],
   templateUrl: './market.component.html',
   styleUrl: './market.component.scss',
 })
@@ -59,6 +60,10 @@ export class MarketComponent implements OnInit {
       shareReplay({ bufferSize: 1, refCount: true })
     );
 
+    this.averageChange();
+  }
+
+  private averageChange(): void {
     this.coinPrices$.subscribe((cachedData) => {
       const data = cachedData.data;
       const changes = Object.values(data)
@@ -92,10 +97,5 @@ export class MarketComponent implements OnInit {
     if (!coin?.name) return;
     const coinName = coin.name.trim().toLowerCase().replace(/\s+/g, '-');
     this.router.navigate(['/home/coin', coinName]);
-  }
-
-  get averageChangeClass(): string {
-    if (this.averageChange24h === null) return '';
-    return this.averageChange24h < 0 ? 'text-red' : 'text-green';
   }
 }

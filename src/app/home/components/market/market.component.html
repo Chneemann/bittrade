@@ -1,16 +1,6 @@
 @if (coinPrices$ | async; as prices) {
 <div class="coin-list">
-  <div class="header">
-    <p class="headline">
-      Market is @if (averageChange24h) {
-      {{ averageChange24h < 0 ? "down" : "up" }}
-      <span [ngClass]="averageChangeClass">
-        {{ averageChange24h | number : "1.2-2" }}%
-      </span>
-      }
-    </p>
-    <p class="subtext">In the past 24 hours</p>
-  </div>
+  <app-market-header [averageChange24h]="averageChange24h"></app-market-header>
   @for (coin of coinList$ | async; track $index) {
   <div class="coin-details" (click)="onCoinClick(coin)">
     <app-coin-card
