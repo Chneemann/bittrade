@@ -7,8 +7,9 @@
   flex-wrap: wrap;
 }
 
-.coin-details {
-  width: 800px;
+.coin-details,
+app-market-header {
+  width: 100%;
 }
 
 // Loading container
