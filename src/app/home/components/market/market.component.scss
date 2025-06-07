@@ -9,6 +9,32 @@
   width: 800px;
 }
 
+// Header
+.header {
+  width: 800px;
+
+  .headline {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-font-primary);
+  }
+
+  .text-red {
+    color: var(--color-red);
+  }
+
+  .text-green {
+    color: var(--color-green);
+  }
+
+  .subtext {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--color-font-secondary);
+  }
+}
+
+// Loading container
 .loading-container {
   display: flex;
   justify-content: center;

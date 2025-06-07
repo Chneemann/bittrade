@@ -22,6 +22,8 @@ import { CoinUpdateService } from '../../services/coin-update.service';
 export class MarketComponent implements OnInit {
   private subscriptions: Subscription = new Subscription();
 
+  averageChange24h: number | null = null;
+
   coinPrices$!: Observable<Cached<CoinPricesResponse>>;
   coinList$!: Observable<CoinListResponse>;
 
@@ -56,6 +58,18 @@ export class MarketComponent implements OnInit {
       }),
       shareReplay({ bufferSize: 1, refCount: true })
     );
+
+    this.coinPrices$.subscribe((cachedData) => {
+      const data = cachedData.data;
+      const changes = Object.values(data)
+        .map((coin) => coin.usd_24h_change)
+        .filter((change) => typeof change === 'number');
+
+      const total = changes.reduce((sum, value) => sum + value, 0);
+      const avg = changes.length > 0 ? total / changes.length : 0;
+
+      this.averageChange24h = avg;
+    });
   }
 
   private loadCoinData(): void {
@@ -78,5 +92,10 @@ export class MarketComponent implements OnInit {
     if (!coin?.name) return;
     const coinName = coin.name.trim().toLowerCase().replace(/\s+/g, '-');
     this.router.navigate(['/home/coin', coinName]);
+  }
+
+  get averageChangeClass(): string {
+    if (this.averageChange24h === null) return '';
+    return this.averageChange24h < 0 ? 'text-red' : 'text-green';
   }
 }
