@@ -3,20 +3,25 @@
     <img
       [src]="'assets/img/coins/' + coinSlug + '.svg'"
       [alt]="coinSlug + ' logo'"
+      onerror="this.src='assets/img/coins/default.svg';"
     />
   </div>
-  @if (holding) {
+
   <div class="coin-info">
     <div class="coin-details">
       <p class="label">Balance</p>
       <span class="value">Total</span>
     </div>
     <div class="coin-value">
-      <p class="amount">${{ holding.amount * coinPrice | number : "1.2-2" }}</p>
-      <span class="crypto">{{ holding.amount | number : "1.2-2" }} BTC</span>
+      <p class="amount">
+        ${{ (holding?.amount ?? 0) * coinPrice | number : "1.2-2" }}
+      </p>
+      <span class="crypto">
+        {{ holding?.amount | number : "1.2-2" }}
+        {{ coinSymbol.toUpperCase() }}
+      </span>
     </div>
   </div>
-  }
 </div>
 
 <div class="coin-holding-card transaction-card" (click)="onClick(coinSlug)">

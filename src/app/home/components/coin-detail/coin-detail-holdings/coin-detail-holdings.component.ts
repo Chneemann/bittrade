@@ -12,10 +12,11 @@ import { CommonModule } from '@angular/common';
 })
 export class CoinDetailHoldingsComponent {
   @Input() coinSlug: string = '';
+  @Input() coinSymbol: string = '';
   @Input() coinPrice: number = 0;
 
   selectedCoinSlug: string | null = null;
-  holding!: CoinHolding;
+  holding: CoinHolding | null = null;
 
   constructor(
     private router: Router,
@@ -34,8 +35,12 @@ export class CoinDetailHoldingsComponent {
   }
 
   loadHolding(coinId: string): void {
-    this.coinHoldingsService.getHoldingByCoin(coinId).subscribe((txs) => {
-      this.holding = txs;
+    this.coinHoldingsService.getHoldingByCoin(coinId).subscribe({
+      next: (data) => (this.holding = data),
+      error: (err) => {
+        console.error('Error loading the holding:', err);
+        this.holding = null;
+      },
     });
   }
 

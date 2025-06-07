@@ -25,6 +25,7 @@
 
     <app-coin-detail-holdings
       [coinSlug]="coin.web_slug"
+      [coinSymbol]="coin.symbol"
       [coinPrice]="coin.market_data.current_price['usd']"
     ></app-coin-detail-holdings>
   </div>
