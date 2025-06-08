@@ -5,6 +5,12 @@
     [averageChange24h]="averageChange24h"
     (searchChange)="onSearch($event)"
   ></app-market-header>
+
+  <app-selection-tabs
+    [options]="options"
+    [activeOption]="activeOption"
+    (optionSelected)="onFilterTransactions($event)"
+  ></app-selection-tabs>
   @if (filteredCoins$ | async; as coins) {
 
   <!-- Coin cards -->

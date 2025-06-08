@@ -21,10 +21,16 @@ import { Router } from '@angular/router';
 import { CoinCardComponent } from '../../../shared/components/coins/coin-card/coin-card.component';
 import { CoinUpdateService } from '../../services/coin-update.service';
 import { MarketHeaderComponent } from './market-header/market-header.component';
+import { SelectionTabsComponent } from '../../../shared/components/selection-tabs/selection-tabs.component';
 
 @Component({
   selector: 'app-market',
-  imports: [CommonModule, CoinCardComponent, MarketHeaderComponent],
+  imports: [
+    CommonModule,
+    CoinCardComponent,
+    MarketHeaderComponent,
+    SelectionTabsComponent,
+  ],
   templateUrl: './market.component.html',
   styleUrl: './market.component.scss',
 })
@@ -32,6 +38,8 @@ export class MarketComponent implements OnInit {
   private subscriptions: Subscription = new Subscription();
 
   averageChange24h: number | null = null;
+  options: string[] = ['all', 'gainers', 'losers'];
+  activeOption: string = 'all';
 
   private searchText$ = new BehaviorSubject<string>('');
 
@@ -56,16 +64,36 @@ export class MarketComponent implements OnInit {
     this.filteredCoins$ = combineLatest([
       this.coinList$,
       this.searchText$,
+      this.coinPrices$,
     ]).pipe(
-      map(([coins, search]) => {
-        if (!search) return coins;
-        return coins.filter(
-          (coin) =>
+      map(([coins, search, priceData]) => {
+        const filteredBySearch = coins.filter((coin) => {
+          return (
             coin.name.toLowerCase().includes(search) ||
             coin.symbol.toLowerCase().includes(search)
-        );
+          );
+        });
+        return this.filterByOption(filteredBySearch, priceData.data);
       })
     );
+  }
+
+  private filterByOption(
+    coins: CoinList[],
+    priceData: CoinPricesResponse
+  ): CoinList[] {
+    switch (this.activeOption) {
+      case 'gainers':
+        return coins.filter(
+          (coin) => priceData[coin.name.toLowerCase()]?.usd_24h_change > 0
+        );
+      case 'losers':
+        return coins.filter(
+          (coin) => priceData[coin.name.toLowerCase()]?.usd_24h_change < 0
+        );
+      default:
+        return coins;
+    }
   }
 
   ngOnDestroy(): void {
@@ -129,5 +157,10 @@ export class MarketComponent implements OnInit {
 
   onSearch(searchText: string) {
     this.searchText$.next(searchText.toLowerCase());
+  }
+
+  onFilterTransactions(option: string) {
+    this.activeOption = option;
+    this.searchText$.next(this.searchText$.value);
   }
 }
