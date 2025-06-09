@@ -5,6 +5,7 @@
 
   position: relative;
   width: 100dvw;
+  height: 100dvh;
   min-height: 100dvh;
 
   background-color: var(--color-white);
@@ -15,6 +16,7 @@
 
   width: 100%;
   max-width: 1024px;
+  overflow: auto;
 
   padding: 12px;
   margin-top: 48px;

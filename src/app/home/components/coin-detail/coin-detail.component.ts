@@ -16,12 +16,13 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { CoinGeckoService } from '../../../core/services/external/coin-gecko.service';
-import { Coin, CoinList, CoinListResponse } from '../../models/coin.model';
+import { Coin, CoinListResponse } from '../../models/coin.model';
 import { CoinListService } from '../../services/coin-list.service';
 import { CoinUpdateService } from '../../services/coin-update.service';
 import { CoinDetailChartComponent } from './coin-detail-chart/coin-detail-chart.component';
 import { CoinGeckoCacheService } from '../../../core/services/external/coin-gecko-cache.service';
 import { CoinDetailHoldingsComponent } from './coin-detail-holdings/coin-detail-holdings.component';
+import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
 
 @Component({
   selector: 'app-coin-detail',
@@ -30,6 +31,7 @@ import { CoinDetailHoldingsComponent } from './coin-detail-holdings/coin-detail-
     CommonModule,
     CoinDetailChartComponent,
     CoinDetailHoldingsComponent,
+    PrimaryButtonComponent,
   ],
   templateUrl: './coin-detail.component.html',
   styleUrl: './coin-detail.component.scss',
