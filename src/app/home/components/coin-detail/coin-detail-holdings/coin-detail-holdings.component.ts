@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CoinHolding } from '../../../models/coin.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CoinHoldingsService } from '../../../services/coin-holdings.service';
@@ -13,6 +13,8 @@ import { IconButtonComponent } from '../../../../shared/components/buttons/icon-
 })
 export class CoinDetailHoldingsComponent {
   @Input() coinPrice: number = 0;
+
+  @Output() holdingChanged = new EventEmitter<CoinHolding | null>();
 
   selectedCoinId: string | null = null;
   holding: CoinHolding | null = null;
@@ -35,10 +37,14 @@ export class CoinDetailHoldingsComponent {
 
   loadHolding(coinId: string): void {
     this.coinHoldingsService.getHoldingByCoin(coinId).subscribe({
-      next: (data) => (this.holding = data),
+      next: (data) => {
+        this.holding = data;
+        this.holdingChanged.emit(this.holding);
+      },
       error: (err) => {
         console.error('Error loading the holding:', err);
         this.holding = null;
+        this.holdingChanged.emit(null);
       },
     });
   }

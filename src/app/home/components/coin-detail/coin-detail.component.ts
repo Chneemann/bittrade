@@ -16,7 +16,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { CoinGeckoService } from '../../../core/services/external/coin-gecko.service';
-import { Coin, CoinListResponse } from '../../models/coin.model';
+import { Coin, CoinHolding, CoinListResponse } from '../../models/coin.model';
 import { CoinListService } from '../../services/coin-list.service';
 import { CoinUpdateService } from '../../services/coin-update.service';
 import { CoinDetailChartComponent } from './coin-detail-chart/coin-detail-chart.component';
@@ -44,6 +44,8 @@ export class CoinDetailComponent implements OnInit, OnDestroy {
 
   selectedTime: string = '1'; // default: 1 day
   chartData: { date: Date; price: number }[] = [];
+  userHolding: CoinHolding | null = null;
+  isHoldingLoading: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -152,5 +154,13 @@ export class CoinDetailComponent implements OnInit, OnDestroy {
       }),
       map((response) => response.data)
     );
+  }
+
+  buyCoin(): void {
+    // TODO
+  }
+
+  onUserHoldingLoaded(holding: CoinHolding | null) {
+    this.userHolding = holding;
   }
 }

@@ -76,4 +76,5 @@ export interface CoinHolding {
   coin: BaseCoin;
   amount: number;
   average_buy_price: number;
+  not_holding: boolean;
 }
