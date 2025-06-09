@@ -14,11 +14,18 @@
 
   <!-- Search bar -->
   <div class="search-container" #searchBox>
-    <img
-      src="assets/img/search.svg"
-      alt="Search icon"
+    <app-icon-button
+      icon="search"
+      tooltip="Open Search"
       (click)="toggleSearch()"
-    />
+      [hidden]="searchActive"
+    ></app-icon-button>
+    <app-icon-button
+      icon="close"
+      tooltip="Close Search"
+      (click)="toggleSearch()"
+      [hidden]="!searchActive"
+    ></app-icon-button>
     <input
       id="marketSearch"
       name="marketSearch"

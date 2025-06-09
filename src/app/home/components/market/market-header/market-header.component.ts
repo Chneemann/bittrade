@@ -8,10 +8,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IconButtonComponent } from '../../../../shared/components/buttons/icon-button/icon-button.component';
 
 @Component({
   selector: 'app-market-header',
-  imports: [CommonModule],
+  imports: [CommonModule, IconButtonComponent],
   templateUrl: './market-header.component.html',
   styleUrl: './market-header.component.scss',
 })

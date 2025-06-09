@@ -3,10 +3,11 @@ import { CoinHolding } from '../../../models/coin.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CoinHoldingsService } from '../../../services/coin-holdings.service';
 import { CommonModule } from '@angular/common';
+import { IconButtonComponent } from '../../../../shared/components/buttons/icon-button/icon-button.component';
 
 @Component({
   selector: 'app-coin-detail-holdings',
-  imports: [CommonModule],
+  imports: [CommonModule, IconButtonComponent],
   templateUrl: './coin-detail-holdings.component.html',
   styleUrl: './coin-detail-holdings.component.scss',
 })

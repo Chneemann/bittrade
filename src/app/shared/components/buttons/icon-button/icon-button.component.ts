@@ -11,13 +11,13 @@ export class IconButtonComponent {
   @Input() tooltip?: string = '';
   @Input() disabled?: boolean = false;
 
-  VALID_ICONS = ['back', 'refresh'];
+  VALID_ICONS = ['back', 'refresh', 'forward', 'search', 'close'];
 
   isValidIcon(): boolean {
     return this.VALID_ICONS.includes(this.icon);
   }
 
   getIconPath(): string {
-    return `assets/img/small-button/${this.icon}.svg`;
+    return `assets/img/icon-button/${this.icon}.svg`;
   }
 }
