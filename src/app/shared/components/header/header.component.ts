@@ -51,6 +51,10 @@ export class HeaderComponent {
       dataKey: null,
       title: 'Transactions',
     },
+    'home/profile': {
+      dataKey: null,
+      title: 'Profile',
+    },
   };
 
   constructor(

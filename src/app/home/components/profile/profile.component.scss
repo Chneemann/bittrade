@@ -1,0 +1,104 @@
+.profile {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  gap: 16px;
+
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-radius: 10px;
+  width: 100%;
+  height: fit-content;
+  padding: 12px 24px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .user-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 64px;
+      height: 64px;
+      margin-right: 16px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 50%;
+      padding: 8px;
+      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  .user-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+
+      .name {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--color-font-primary);
+      }
+
+      .email {
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--color-font-secondary);
+      }
+    }
+  }
+}
+
+// Button container
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  width: 100%;
+  margin-top: auto;
+
+  app-primary-button {
+    flex: 1;
+    margin-top: 20px;
+  }
+}
+
+// Media queries
+@media (max-width: 450px) {
+  .user {
+    padding: 8px 12px;
+    .user-icon {
+      img {
+        width: 42px;
+        height: 42px;
+        margin-right: 12px;
+        padding: 6px;
+      }
+    }
+    .user-info .user-details {
+      gap: 4px;
+    }
+  }
+}
