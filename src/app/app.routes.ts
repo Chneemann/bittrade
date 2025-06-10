@@ -9,6 +9,7 @@ import { LogoutComponent } from './auth/components/logout/logout.component';
 import { MarketComponent } from './home/components/market/market.component';
 import { CoinDetailComponent } from './home/components/coin-detail/coin-detail.component';
 import { TransactionsComponent } from './home/components/transactions/transactions.component';
+import { ProfileComponent } from './home/components/profile/profile.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -30,6 +31,7 @@ export const routes: Routes = [
     component: HomeComponent,
     canActivate: [AuthGuard],
     children: [
+      { path: 'profile', component: ProfileComponent },
       { path: 'market', component: MarketComponent },
       { path: 'coin/:id', component: CoinDetailComponent },
       { path: 'transactions', component: TransactionsComponent },

@@ -4,8 +4,13 @@
     routerLink="/home/market"
     routerLinkActive="link--active"
     [routerLinkActiveOptions]="{ exact: true }"
-    >Market</a
-  >
-  <a class="link link--nav" (click)="reloadPage()">Reload</a>
-  <a class="link link--nav" routerLink="/auth/logout">Logout</a>
+    ><img src="assets/img/navigation/market.svg" alt="Market icon"
+  /></a>
+  <a
+    class="link link--nav"
+    routerLink="/home/profile"
+    routerLinkActive="link--active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    ><img src="assets/img/navigation/profile.svg" alt="Profile icon"
+  /></a>
 </nav>

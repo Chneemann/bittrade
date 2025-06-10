@@ -36,8 +36,4 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.currentPath = this.router.url.substring(1);
       });
   }
-
-  reloadPage(): void {
-    window.location.reload();
-  }
 }
