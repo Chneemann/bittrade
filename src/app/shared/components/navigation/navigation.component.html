@@ -1,6 +1,13 @@
 <nav>
   <a
     class="link link--nav"
+    routerLink="/home/portfolio"
+    routerLinkActive="link--active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    ><img src="assets/img/navigation/portfolio.svg" alt="Portfolio icon"
+  /></a>
+  <a
+    class="link link--nav"
     routerLink="/home/market"
     routerLinkActive="link--active"
     [routerLinkActiveOptions]="{ exact: true }"
