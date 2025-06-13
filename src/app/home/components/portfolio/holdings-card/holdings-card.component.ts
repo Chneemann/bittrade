@@ -31,7 +31,6 @@ export class HoldingsCardComponent {
     let totalValueYesterday = 0;
 
     for (const holding of holdings) {
-      const symbol = holding.coin.symbol;
       const slug = holding.coin.name.toLowerCase();
       const price = prices[slug]?.usd ?? 0;
       const changePercent = prices[slug]?.usd_24h_change ?? 0;
@@ -49,5 +48,11 @@ export class HoldingsCardComponent {
     const change =
       ((totalValue - totalValueYesterday) / totalValueYesterday) * 100;
     return change;
+  }
+
+  getTotalInvestedValue(holdings: CoinHolding[]): number {
+    return holdings.reduce((total, holding) => {
+      return total + holding.amount * holding.average_buy_price;
+    }, 0);
   }
 }
