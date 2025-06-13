@@ -2,8 +2,14 @@
   <div class="holding-value">
     <span class="label">Holding value</span>
     <div class="holding-detail">
-      <span class="amount">$ 2,198.75</span>
-      <span class="percentage">+1.4%</span>
+      <span class="amount"
+        >${{
+          getTotalPortfolioAmount(prices, holdings) | number : "1.2-2"
+        }}</span
+      >
+      <span class="percentage">{{
+        (getTotalPortfolioChange24h(prices, holdings) | number : "1.2-2") + "%"
+      }}</span>
     </div>
   </div>
   <div class="details">
