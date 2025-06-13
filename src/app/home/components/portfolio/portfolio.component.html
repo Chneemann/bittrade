@@ -1,27 +1,7 @@
 @if (coinPrices$ | async; as prices) {
 <div class="coin-list">
   @if (holdings$ | async; as holdings) {
-
-  <div class="portfolio-card">
-    <div class="holding-value">
-      <span class="label">Holding value</span>
-      <div class="holding-detail">
-        <span class="amount">$ 2,198.75</span>
-        <span class="percentage">+1.4%</span>
-      </div>
-    </div>
-    <div class="details">
-      <div class="detail-item">
-        <span class="label">Invested value</span>
-        <span class="value">$1,618.75</span>
-      </div>
-      <div class="divider"></div>
-      <div class="detail-item">
-        <span class="label">Available USD</span>
-        <span class="value">$1,589.00</span>
-      </div>
-    </div>
-  </div>
+  <app-holdings-card></app-holdings-card>
   @if (filteredCoins$ | async; as coins) { @if (coins.length > 0) { @for (coin
   of coins; track coin.symbol) {
   <div class="coin-details" (click)="onCoinClick(coin)">

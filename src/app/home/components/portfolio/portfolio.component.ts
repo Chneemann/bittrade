@@ -21,10 +21,11 @@ import { CoinCardComponent } from '../../../shared/components/coins/coin-card/co
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CoinHoldingsService } from '../../services/coin-holdings.service';
+import { HoldingsCardComponent } from './holdings-card/holdings-card.component';
 
 @Component({
   selector: 'app-portfolio',
-  imports: [CommonModule, CoinCardComponent],
+  imports: [CommonModule, CoinCardComponent, HoldingsCardComponent],
   templateUrl: './portfolio.component.html',
   styleUrl: './portfolio.component.scss',
 })
