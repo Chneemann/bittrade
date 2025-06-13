@@ -1,1 +1,26 @@
-<p>portfolio works!</p>
+@if (coinPrices$ | async; as prices) {
+<div class="coin-list">
+  @if (holdings$ | async; as holdings) { @if (filteredCoins$ | async; as coins)
+  { @if (coins.length > 0) { @for (coin of coins; track coin.symbol) {
+  <div class="coin-details" (click)="onCoinClick(coin)">
+    <app-coin-card
+      [coin]="{
+        name: coin.name,
+        symbol: coin.symbol,
+        price: getPriceAmount(coin.name, coin.symbol, prices.data, holdings),
+        change: prices.data[coin.name.toLowerCase()].usd_24h_change,
+        holding: getHoldingAmount(coin.symbol, holdings)
+      }"
+    ></app-coin-card>
+  </div>
+  } } @else {
+  <div class="no-holdings-container">
+    <span>You currently have no coins.</span>
+  </div>
+  } } } @else {
+  <div class="loading-container">
+    <span>Loading, please wait...</span>
+  </div>
+  }
+</div>
+}

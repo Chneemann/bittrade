@@ -2,12 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { CoinGeckoService } from '../../../../core/services/external/coin-gecko.service';
 import { SimpleChartComponent } from '../../charts/simple-chart/simple-chart.component';
+import { CoinHolding } from '../../../../home/models/coin.model';
 
 export interface CoinData {
   name: string;
   symbol: string;
   price: number;
   change: number;
+  holding?: number;
 }
 
 @Component({

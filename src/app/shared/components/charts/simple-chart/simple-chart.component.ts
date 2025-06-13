@@ -22,6 +22,7 @@ export class SimpleChartComponent implements OnChanges {
   @Input() dynamicClass = 'coin-card-chart';
   @Input() chartData: { date: Date; price: number }[] = [];
   @Input() isPositiveTrend: boolean = true; // Used to determine line color
+  @Input() coinHolding: number | undefined;
 
   chartSeries: ChartSeries[] = [];
 
@@ -65,13 +66,18 @@ export class SimpleChartComponent implements OnChanges {
       this.chartSeries = [];
       return;
     }
+    const seriesName = this.coinHolding !== undefined ? 'Value' : 'Price';
 
     this.chartSeries = [
       {
-        name: 'Price',
+        name: seriesName,
         series: this.chartData.map((item) => ({
           name: item.date,
-          value: item.price,
+          value: +(
+            this.coinHolding !== undefined
+              ? item.price * this.coinHolding
+              : item.price
+          ).toFixed(2),
         })),
       },
     ];
