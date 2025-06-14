@@ -12,47 +12,39 @@ export class HoldingsCardComponent {
   @Input() prices: CoinPricesResponse = {};
   @Input() holdings: CoinHolding[] = [];
 
-  getTotalPortfolioAmount(
-    prices: CoinPricesResponse,
-    holdings: CoinHolding[]
-  ): number {
-    return holdings.reduce((total, holding) => {
-      const slug = holding.coin.name.toLowerCase();
-      const coinPrice = prices[slug]?.usd ?? 0;
-      return total + coinPrice * holding.amount;
+  private getSlug(name: string): string {
+    return name.toLowerCase();
+  }
+
+  get totalPortfolioAmount(): number {
+    return this.holdings.reduce((total, holding) => {
+      const price = this.prices[this.getSlug(holding.coin.name)]?.usd ?? 0;
+      return total + price * holding.amount;
     }, 0);
   }
 
-  getTotalPortfolioChange24h(
-    prices: CoinPricesResponse,
-    holdings: CoinHolding[]
-  ): number {
-    let totalValue = 0;
-    let totalValueYesterday = 0;
+  get totalPortfolioChange24h(): number {
+    let current = 0;
+    let previous = 0;
 
-    for (const holding of holdings) {
-      const slug = holding.coin.name.toLowerCase();
-      const price = prices[slug]?.usd ?? 0;
-      const changePercent = prices[slug]?.usd_24h_change ?? 0;
-      const amount = holding.amount;
+    for (const { coin, amount } of this.holdings) {
+      const data = this.prices[this.getSlug(coin.name)];
+      if (!data) continue;
 
-      const currentValue = price * amount;
-      const valueYesterday = currentValue / (1 + changePercent / 100);
+      const valueNow = data.usd * amount;
+      const valueBefore = valueNow / (1 + (data.usd_24h_change ?? 0) / 100);
 
-      totalValue += currentValue;
-      totalValueYesterday += valueYesterday;
+      current += valueNow;
+      previous += valueBefore;
     }
 
-    if (totalValueYesterday === 0) return 0;
-
-    const change =
-      ((totalValue - totalValueYesterday) / totalValueYesterday) * 100;
-    return change;
+    return previous === 0 ? 0 : ((current - previous) / previous) * 100;
   }
 
-  getTotalInvestedValue(holdings: CoinHolding[]): number {
-    return holdings.reduce((total, holding) => {
-      return total + holding.amount * holding.average_buy_price;
-    }, 0);
+  get totalInvestedValue(): number {
+    return this.holdings.reduce(
+      (sum, h) => sum + h.amount * h.average_buy_price,
+      0
+    );
   }
 }
