@@ -3,7 +3,9 @@
   <div class="holding-value">
     <span class="label">Holding value</span>
     <div class="holding-detail">
-      <span class="amount">${{ totalPortfolioAmount | number : "1.2-2" }}</span>
+      <span class="amount">{{
+        totalPortfolioAmount | currency : "USD" : "symbol" : "1.2-2"
+      }}</span>
       <span class="percentage"
         >{{ totalPortfolioChange24h | number : "1.2-2" }}%</span
       >
@@ -14,12 +16,16 @@
   <div class="details">
     <div class="detail-item">
       <span class="label">Invested value</span>
-      <span class="value">${{ totalInvestedValue | number : "1.2-2" }}</span>
+      <span class="value">{{
+        totalInvestedValue | currency : "USD" : "symbol" : "1.2-2"
+      }}</span>
     </div>
     <div class="divider"></div>
     <div class="detail-item">
       <span class="label">Available USD</span>
-      <span class="value">$0</span>
+      @if (wallet$ | async; as wallet) {
+      <span class="value">{{ wallet.balance | currency : "$" }}</span>
+      }
     </div>
   </div>
 </div>

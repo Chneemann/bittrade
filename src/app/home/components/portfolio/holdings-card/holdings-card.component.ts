@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { CoinHolding, CoinPricesResponse } from '../../../models/coin.model';
 import { CommonModule } from '@angular/common';
+import { Wallet, WalletService } from '../../../services/wallet.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-holdings-card',
@@ -11,6 +13,14 @@ import { CommonModule } from '@angular/common';
 export class HoldingsCardComponent {
   @Input() prices: CoinPricesResponse = {};
   @Input() holdings: CoinHolding[] = [];
+
+  wallet$!: Observable<Wallet>;
+
+  constructor(private walletService: WalletService) {}
+
+  ngOnInit(): void {
+    this.wallet$ = this.walletService.getWallet();
+  }
 
   private getSlug(name: string): string {
     return name.toLowerCase();
