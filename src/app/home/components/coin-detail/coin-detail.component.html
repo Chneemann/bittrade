@@ -33,12 +33,13 @@
       <app-primary-button
         type="button"
         value="BUY"
-        (click)="buyCoin()"
+        routerLink="/home/buy/"
       ></app-primary-button>
       <app-primary-button
         type="button"
         value="SELL"
         [disabled]="holding.not_holding"
+        routerLink="/home/sell/"
       ></app-primary-button>
     </div>
     }

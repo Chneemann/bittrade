@@ -12,6 +12,7 @@ import { TransactionsComponent } from './home/components/transactions/transactio
 import { ProfileComponent } from './home/components/profile/profile.component';
 import { PortfolioComponent } from './home/components/portfolio/portfolio.component';
 import { DepositWithdrawComponent } from './home/components/portfolio/deposit-withdraw/deposit-withdraw.component';
+import { BuySellComponent } from './home/components/coin-detail/buy-sell/buy-sell.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -41,6 +42,8 @@ export const routes: Routes = [
       { path: 'transactions/:id', component: TransactionsComponent },
       { path: 'deposit', component: DepositWithdrawComponent },
       { path: 'withdraw', component: DepositWithdrawComponent },
+      { path: 'buy', component: BuySellComponent },
+      { path: 'sell', component: BuySellComponent },
     ],
   },
 

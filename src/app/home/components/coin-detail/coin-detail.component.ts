@@ -13,7 +13,7 @@ import {
   tap,
   throwError,
 } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { CoinGeckoService } from '../../../core/services/external/coin-gecko.service';
 import { Coin, CoinHolding, CoinListResponse } from '../../models/coin.model';
@@ -29,6 +29,7 @@ import { PrimaryButtonComponent } from '../../../shared/components/buttons/prima
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     CoinDetailChartComponent,
     CoinDetailHoldingsComponent,
     PrimaryButtonComponent,
@@ -154,10 +155,6 @@ export class CoinDetailComponent implements OnInit, OnDestroy {
       }),
       map((response) => response.data)
     );
-  }
-
-  buyCoin(): void {
-    // TODO
   }
 
   onUserHoldingLoaded(holding: CoinHolding | null) {
