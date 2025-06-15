@@ -122,7 +122,7 @@ export class LoginComponent {
 
     try {
       await firstValueFrom(this.authService.login(credentials));
-      await this.router.navigate(['/home/']);
+      await this.router.navigate(['/home/portfolio/']);
     } catch (error: unknown) {
       this.httpErrorMessage = this.extractErrorMessage(error);
     } finally {
