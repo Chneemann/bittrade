@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { CoinHolding, CoinPricesResponse } from '../../../models/coin.model';
 import { CommonModule } from '@angular/common';
-import { Wallet, WalletService } from '../../../services/wallet.service';
+import { WalletService } from '../../../services/wallet.service';
 import { Observable } from 'rxjs';
+import { Wallet } from '../../../models/wallet.model';
 
 @Component({
   selector: 'app-holdings-card',

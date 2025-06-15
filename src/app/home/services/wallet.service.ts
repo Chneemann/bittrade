@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BackendApiService } from '../../core/services/backend-api.service';
-
-export interface Wallet {
-  id: string;
-  balance: number;
-}
+import { Wallet } from '../models/wallet.model';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
