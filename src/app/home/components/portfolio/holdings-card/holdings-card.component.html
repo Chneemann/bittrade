@@ -8,12 +8,12 @@
         {{ totalPortfolioAmount | currency : "USD" : "symbol" : "1.2-2" }}
       </span>
       <span class="percentage">
-        {{ totalPortfolioChange24h | number : "1.2-2" }}%
+        {{ totalPortfolioChange24h | percent : "1.2-2" }}
       </span>
     </div>
   </div>
 
-  <!-- Invested value & available USD -->
+  <!-- Invested value & Cash balance -->
   <div class="details">
     <div class="detail-item">
       <span class="label">Invested value</span>
@@ -23,7 +23,7 @@
     </div>
     <div class="divider"></div>
     <div class="detail-item">
-      <span class="label">Available USD</span>
+      <span class="label">Cash balance</span>
       <span class="value">
         {{ wallet.balance | currency : "USD" : "symbol" : "1.2-2" }}
       </span>
