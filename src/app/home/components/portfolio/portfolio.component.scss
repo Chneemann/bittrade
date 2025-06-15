@@ -12,6 +12,21 @@ app-holdings-card {
   width: 100%;
 }
 
+// Button container
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  width: 100%;
+  margin-top: auto;
+
+  app-primary-button {
+    flex: 1;
+  }
+}
+
+// Loading and no holdings container
 .loading-container,
 .no-holdings-container {
   display: flex;
