@@ -11,6 +11,7 @@ import { CoinDetailComponent } from './home/components/coin-detail/coin-detail.c
 import { TransactionsComponent } from './home/components/transactions/transactions.component';
 import { ProfileComponent } from './home/components/profile/profile.component';
 import { PortfolioComponent } from './home/components/portfolio/portfolio.component';
+import { DepositWithdrawComponent } from './home/components/portfolio/deposit-withdraw/deposit-withdraw.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -38,6 +39,8 @@ export const routes: Routes = [
       { path: 'coin/:id', component: CoinDetailComponent },
       { path: 'transactions', component: TransactionsComponent },
       { path: 'transactions/:id', component: TransactionsComponent },
+      { path: 'deposit', component: DepositWithdrawComponent },
+      { path: 'withdraw', component: DepositWithdrawComponent },
     ],
   },
 

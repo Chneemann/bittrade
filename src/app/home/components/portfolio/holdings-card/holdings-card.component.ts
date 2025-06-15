@@ -5,10 +5,11 @@ import { WalletService } from '../../../services/wallet.service';
 import { Observable } from 'rxjs';
 import { Wallet } from '../../../models/wallet.model';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-holdings-card',
-  imports: [CommonModule, PrimaryButtonComponent],
+  imports: [CommonModule, RouterLink, PrimaryButtonComponent],
   templateUrl: './holdings-card.component.html',
   styleUrl: './holdings-card.component.scss',
 })
