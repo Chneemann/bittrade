@@ -59,6 +59,14 @@ export class HeaderComponent {
       dataKey: null,
       title: 'Portfolio',
     },
+    'home/deposit': {
+      dataKey: null,
+      title: 'Deposit',
+    },
+    'home/withdraw': {
+      dataKey: null,
+      title: 'Withdraw',
+    },
   };
 
   constructor(
@@ -190,7 +198,12 @@ export class HeaderComponent {
   }
 
   get showBackButton(): boolean {
-    const backButtonPaths = ['home/coin', 'home/transactions'];
+    const backButtonPaths = [
+      'home/coin',
+      'home/transactions',
+      'home/deposit',
+      'home/withdraw',
+    ];
     return backButtonPaths.some(
       (path) =>
         this.currentPath === path || this.currentPath.startsWith(path + '/')
