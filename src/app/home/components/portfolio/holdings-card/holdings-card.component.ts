@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { WalletService } from '../../../services/wallet.service';
 import { Observable } from 'rxjs';
 import { Wallet } from '../../../models/wallet.model';
+import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
 
 @Component({
   selector: 'app-holdings-card',
-  imports: [CommonModule],
+  imports: [CommonModule, PrimaryButtonComponent],
   templateUrl: './holdings-card.component.html',
   styleUrl: './holdings-card.component.scss',
 })

@@ -26,12 +26,7 @@ import { PrimaryButtonComponent } from '../../../shared/components/buttons/prima
 
 @Component({
   selector: 'app-portfolio',
-  imports: [
-    CommonModule,
-    CoinCardComponent,
-    HoldingsCardComponent,
-    PrimaryButtonComponent,
-  ],
+  imports: [CommonModule, CoinCardComponent, HoldingsCardComponent],
   templateUrl: './portfolio.component.html',
   styleUrl: './portfolio.component.scss',
 })

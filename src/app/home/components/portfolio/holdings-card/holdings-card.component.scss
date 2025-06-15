@@ -67,6 +67,21 @@
   }
 }
 
+// Button container
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  width: 100%;
+  margin-top: auto;
+
+  app-primary-button {
+    flex: 1;
+    margin-top: 20px;
+  }
+}
+
 @media (max-width: 600px) {
   .holdings-card {
     flex-direction: column;
