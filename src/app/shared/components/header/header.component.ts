@@ -15,7 +15,7 @@ import {
 import { IconButtonComponent } from '../buttons/icon-button/icon-button.component';
 import { CoinUpdateService } from '../../../home/services/coin-update.service';
 import { CommonModule } from '@angular/common';
-import { CoinListResponse } from '../../../home/models/coin.model';
+import { CoinList, CoinListResponse } from '../../../home/models/coin.model';
 import { CoinListService } from '../../../home/services/coin-list.service';
 import { TooltipDirective } from '../../../core/directives/tooltip.directive';
 
@@ -110,22 +110,48 @@ export class HeaderComponent {
       .subscribe();
   }
 
+  private addCoinsFromList(response: CoinListResponse): void {
+    response.forEach((coin) => {
+      this.addCoinRoute(coin);
+      this.addBuyRoute(coin);
+      this.addSellRoute(coin);
+    });
+  }
+
+  private addCoinRoute(coin: CoinList): void {
+    const cleanName = coin.name.trim().toLowerCase();
+    const path = `home/coin/${cleanName}`;
+    this.routeConfigs[path] = {
+      dataKey: `cachedCoin${coin.name}`,
+      title: `${coin.name} (${coin.symbol})`,
+      icon: cleanName,
+    };
+  }
+
+  private addBuyRoute(coin: CoinList): void {
+    const cleanName = coin.name.trim().toLowerCase();
+    const path = `home/buy/${cleanName}`;
+    this.routeConfigs[path] = {
+      dataKey: null,
+      title: `Buy ${coin.name} (${coin.symbol})`,
+      icon: cleanName,
+    };
+  }
+
+  private addSellRoute(coin: CoinList): void {
+    const cleanName = coin.name.trim().toLowerCase();
+    const path = `home/sell/${cleanName}`;
+    this.routeConfigs[path] = {
+      dataKey: null,
+      title: `Sell ${coin.name} (${coin.symbol})`,
+      icon: cleanName,
+    };
+  }
+
   private loadCoinList(): Observable<CoinListResponse> {
     return this.coinListService
       .getCoinList()
       .pipe(shareReplay({ bufferSize: 1, refCount: true }));
-  }
-
-  private addCoinsFromList(response: CoinListResponse): void {
-    response.forEach((coin) => {
-      const cleanName = coin.name.trim().toLowerCase();
-      const path = `home/coin/${cleanName}`;
-      this.routeConfigs[path] = {
-        dataKey: `cachedCoin${coin.name}`,
-        title: `${coin.name} (${coin.symbol})`,
-        icon: cleanName,
-      };
-    });
   }
 
   private findMatchingConfig(): [string, RouteConfig] | undefined {
@@ -203,6 +229,8 @@ export class HeaderComponent {
       'home/transactions',
       'home/deposit',
       'home/withdraw',
+      'home/buy',
+      'home/sell',
     ];
     return backButtonPaths.some(
       (path) =>

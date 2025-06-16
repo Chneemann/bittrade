@@ -33,13 +33,13 @@
       <app-primary-button
         type="button"
         value="BUY"
-        routerLink="/home/buy/"
+        routerLink="/home/buy/{{ coin.id }}"
       ></app-primary-button>
       <app-primary-button
         type="button"
         value="SELL"
         [disabled]="holding.not_holding"
-        routerLink="/home/sell/"
+        routerLink="/home/sell/{{ coin.id }}"
       ></app-primary-button>
     </div>
     }

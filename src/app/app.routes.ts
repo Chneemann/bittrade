@@ -42,8 +42,8 @@ export const routes: Routes = [
       { path: 'transactions/:id', component: TransactionsComponent },
       { path: 'deposit', component: DepositWithdrawComponent },
       { path: 'withdraw', component: DepositWithdrawComponent },
-      { path: 'buy', component: BuySellComponent },
-      { path: 'sell', component: BuySellComponent },
+      { path: 'buy/:id', component: BuySellComponent },
+      { path: 'sell/:id', component: BuySellComponent },
     ],
   },
 
