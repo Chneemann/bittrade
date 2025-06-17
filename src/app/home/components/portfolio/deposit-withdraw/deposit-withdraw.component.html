@@ -1,1 +1,40 @@
-<p>deposit-withdraw works!</p>
+<div class="deposit-withdraw">
+  <div class="amount-display">
+    <p class="label">Enter Amount in USD</p>
+
+    <div class="input-wrapper" [class.invalid]="isInvalid">
+      <span class="prefix">$</span>
+
+      <input
+        type="text"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        [value]="displayValue"
+        (input)="onInputChange($event)"
+        (keydown)="blockNonNumeric($event)"
+        (blur)="onBlur()"
+      />
+    </div>
+
+    <p class="range">min. ${{ min }} – max. ${{ max.toLocaleString() }}</p>
+    <p class="balance">Current Balance: ${{ balance.toLocaleString() }}</p>
+  </div>
+
+  <div class="percent-button-container">
+    <button
+      *ngFor="let p of [0, 10, 25, 50, 75, 100]"
+      (click)="applyPercentage(p)"
+    >
+      {{ p }} %
+    </button>
+  </div>
+
+  <div class="submit-button-container">
+    <app-primary-button
+      type="button"
+      [value]="mode === 'deposit' ? 'DEPOSIT' : 'WITHDRAW'"
+      [disabled]="isInvalid"
+      (click)="submit()"
+    ></app-primary-button>
+  </div>
+</div>

@@ -1,0 +1,134 @@
+.deposit-withdraw {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  max-width: 480px;
+  height: 100%;
+  margin: 0 auto;
+
+  .amount-display {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+
+    .label {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--color-font-secondary);
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+
+      width: 50%;
+
+      border-bottom: 2px solid var(--color-gray);
+      margin: 0 auto;
+
+      &.invalid {
+        border-color: var(--color-red);
+      }
+
+      .prefix {
+        font-size: 40px;
+        color: var(--color-font-primary);
+        user-select: none;
+      }
+
+      input {
+        flex-grow: 1;
+        font-size: 40px;
+        font-weight: 500;
+
+        background: transparent;
+        border: none;
+        outline: none;
+
+        text-align: center;
+
+        padding: 0;
+        margin: 0;
+
+        min-width: 40px;
+        max-width: 300px;
+      }
+    }
+
+    .range {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--color-font-secondary);
+    }
+
+    .balance {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-font-secondary);
+    }
+  }
+}
+
+// Percent button container
+.percent-button-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+
+  width: 90%;
+  margin-top: 28px;
+
+  button {
+    flex: 1;
+    padding: 6px 12px;
+
+    border: 1px solid #e3e6e8;
+    border-radius: 16px;
+
+    background: #f8f9fa;
+    color: #6c757d;
+
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    .span {
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    &.active {
+      background-color: #ecf4ff;
+      border-color: #0063f5;
+      color: #0063f5;
+    }
+
+    &:hover:not(.active) {
+      background-color: #f0f2f4;
+      border-color: #d0d2d4;
+      color: #495057;
+    }
+
+    &:active:not(.active) {
+      transform: scale(0.9);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+// Submit button container
+.submit-button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  width: 100%;
+  margin-top: auto;
+
+  app-primary-button {
+    flex: 1;
+    margin-top: 20px;
+  }
+}
