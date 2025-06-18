@@ -2,7 +2,7 @@
   <div class="amount-display">
     <p class="label">Enter Amount in USD</p>
 
-    <div class="input-wrapper" [class.invalid]="isInvalid">
+    <div class="input-wrapper">
       <span class="prefix">$</span>
 
       <input
@@ -13,6 +13,7 @@
         (input)="onInputChange($event)"
         (keydown)="blockNonNumeric($event)"
         (blur)="onBlur()"
+        [class.invalid]="isInvalid"
       />
     </div>
 
@@ -21,12 +22,11 @@
   </div>
 
   <div class="percent-button-container">
-    <button
-      *ngFor="let p of [0, 10, 25, 50, 75, 100]"
-      (click)="applyPercentage(p)"
-    >
-      {{ p }} %
+    @for (p of [10, 25, 50, 75, 100]; track $index) {
+    <button (click)="applyPercentage(p)">
+      <span>{{ p }} %</span>
     </button>
+    }
   </div>
 
   <div class="submit-button-container">
