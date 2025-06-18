@@ -4,6 +4,8 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
 import { OptionButtonComponent } from '../../../../shared/components/buttons/option-button/option-button.component';
+import { WalletService } from '../../../services/wallet.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-deposit-withdraw',
@@ -18,11 +20,12 @@ import { OptionButtonComponent } from '../../../../shared/components/buttons/opt
   styleUrl: './deposit-withdraw.component.scss',
 })
 export class DepositWithdrawComponent implements OnInit {
+  private readonly destroy$ = new Subject<void>();
   amountControl = new FormControl('10');
 
-  balance = 1000;
-  min = 10;
-  max = 10000;
+  walletBalance = 0;
+  minValue = 10;
+  maxValue = 10000;
   mode: 'deposit' | 'withdraw' = 'deposit';
 
   percentages = [
@@ -34,10 +37,25 @@ export class DepositWithdrawComponent implements OnInit {
   ];
   selectedPercent = '0';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private walletService: WalletService) {}
 
   ngOnInit(): void {
     this.updateMode();
+    this.loadWalletBalance();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private loadWalletBalance(): void {
+    this.walletService
+      .getWallet()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((wallet) => {
+        this.walletBalance = wallet.balance;
+      });
   }
 
   get rawAmount(): string {
@@ -53,7 +71,7 @@ export class DepositWithdrawComponent implements OnInit {
   }
 
   get isInvalid(): boolean {
-    return this.amount < this.min || this.amount > this.max;
+    return this.amount < this.minValue || this.amount > this.maxValue;
   }
 
   get formattedAmount(): string {
@@ -73,10 +91,10 @@ export class DepositWithdrawComponent implements OnInit {
   }
 
   onBlur() {
-    if (this.amount < this.min) {
-      this.amountControl.setValue(this.min.toString());
-    } else if (this.amount > this.max) {
-      this.amountControl.setValue(this.max.toString());
+    if (this.amount < this.minValue) {
+      this.amountControl.setValue(this.minValue.toString());
+    } else if (this.amount > this.maxValue) {
+      this.amountControl.setValue(this.maxValue.toString());
     }
   }
 
@@ -107,11 +125,11 @@ export class DepositWithdrawComponent implements OnInit {
 
   applyPercentage(percent: number) {
     if (percent === 0) {
-      this.amountControl.setValue(this.min.toString());
+      this.amountControl.setValue(this.minValue.toString());
       return;
     }
 
-    const base = this.mode === 'deposit' ? this.max : this.balance;
+    const base = this.mode === 'deposit' ? this.maxValue : this.walletBalance;
     const value = Math.floor((base * percent) / 100);
     this.amountControl.setValue(value.toString());
   }
@@ -119,7 +137,8 @@ export class DepositWithdrawComponent implements OnInit {
   submit() {
     if (!this.isInvalid) {
       console.log(`${this.mode.toUpperCase()}: $${this.formattedAmount}`);
-      this.amountControl.setValue('0');
+      this.amountControl.setValue('10');
+      this.selectedPercent = '0';
     }
   }
 }

@@ -17,8 +17,12 @@
       />
     </div>
 
-    <p class="range">min. ${{ min }} – max. ${{ max.toLocaleString() }}</p>
-    <p class="balance">Current Balance: ${{ balance.toLocaleString() }}</p>
+    <p class="range">
+      min. ${{ minValue }} – max. ${{ maxValue.toLocaleString() }}
+    </p>
+    <p class="balance">
+      Current Balance: ${{ walletBalance.toLocaleString() }}
+    </p>
   </div>
 
   <app-option-button
