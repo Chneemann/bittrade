@@ -1,0 +1,13 @@
+<div class="option-button-container">
+  @for (option of options; track $index) {
+  <button
+    [class.active]="selectedValue === option.value"
+    (click)="onSelect(option.value)"
+  >
+    <span class="desktop-label">{{ option.label }}</span>
+    @if (option.mobileLabel) {
+    <span class="mobile-label">{{ option.mobileLabel }}</span>
+    }
+  </button>
+  }
+</div>

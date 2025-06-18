@@ -1,0 +1,53 @@
+.option-button-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  width: 100%;
+
+  button {
+    flex: 1;
+    padding: 6px 9px;
+    border: 1px solid #e3e6e8;
+    background: #f8f9fa;
+    color: #6c757d;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &.active {
+      background-color: #ecf4ff;
+      border-color: #0063f5;
+      color: #0063f5;
+    }
+
+    &:hover:not(.active) {
+      background-color: #f0f2f4;
+      border-color: #d0d2d4;
+      color: #495057;
+    }
+
+    &:active:not(.active) {
+      transform: scale(0.95);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .desktop-label {
+      display: inline;
+    }
+
+    .mobile-label {
+      display: none;
+    }
+
+    @media (max-width: 450px) {
+      .desktop-label {
+        display: none;
+      }
+      .mobile-label {
+        display: inline;
+      }
+    }
+  }
+}
