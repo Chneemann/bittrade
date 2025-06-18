@@ -21,13 +21,11 @@
     <p class="balance">Current Balance: ${{ balance.toLocaleString() }}</p>
   </div>
 
-  <div class="percent-button-container">
-    @for (p of [10, 25, 50, 75, 100]; track $index) {
-    <button (click)="applyPercentage(p)">
-      <span>{{ p }} %</span>
-    </button>
-    }
-  </div>
+  <app-option-button
+    [options]="percentages"
+    [selectedValue]="selectedPercent"
+    (selectionChange)="onPercentageChange($event)"
+  ></app-option-button>
 
   <div class="submit-button-container">
     <app-primary-button

@@ -7,6 +7,11 @@
   height: 100%;
   margin: 0 auto;
 
+  app-option-button {
+    width: 100%;
+    margin-top: 20px;
+  }
+
   .range {
     font-size: 14px;
     font-weight: 400;
@@ -69,52 +74,6 @@
       &.invalid {
         border-color: var(--color-red);
       }
-    }
-  }
-}
-
-// Percent button container
-.percent-button-container {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-
-  width: 100%;
-  margin-top: 28px;
-
-  button {
-    flex: 1;
-    padding: 6px 9px;
-
-    border: 1px solid #e3e6e8;
-    border-radius: 16px;
-
-    background: #f8f9fa;
-    color: #6c757d;
-
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-
-    span {
-      font-size: 14px;
-      font-weight: 400;
-    }
-
-    &.active {
-      background-color: #ecf4ff;
-      border-color: #0063f5;
-      color: #0063f5;
-    }
-
-    &:hover:not(.active) {
-      background-color: #f0f2f4;
-      border-color: #d0d2d4;
-      color: #495057;
-    }
-
-    &:active:not(.active) {
-      transform: scale(0.9);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
   }
 }

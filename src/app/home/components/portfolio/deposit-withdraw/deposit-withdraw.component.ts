@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
+import { OptionButtonComponent } from '../../../../shared/components/buttons/option-button/option-button.component';
 
 @Component({
   selector: 'app-deposit-withdraw',
@@ -11,17 +12,27 @@ import { PrimaryButtonComponent } from '../../../../shared/components/buttons/pr
     FormsModule,
     ReactiveFormsModule,
     PrimaryButtonComponent,
+    OptionButtonComponent,
   ],
   templateUrl: './deposit-withdraw.component.html',
   styleUrl: './deposit-withdraw.component.scss',
 })
 export class DepositWithdrawComponent implements OnInit {
-  amountControl = new FormControl('100');
+  amountControl = new FormControl('10');
 
   balance = 1000;
   min = 10;
   max = 10000;
   mode: 'deposit' | 'withdraw' = 'deposit';
+
+  percentages = [
+    { value: '10', label: '10%', mobileLabel: '10%' },
+    { value: '25', label: '25%', mobileLabel: '25%' },
+    { value: '50', label: '50%', mobileLabel: '50%' },
+    { value: '75', label: '75%', mobileLabel: '75%' },
+    { value: '100', label: '100%', mobileLabel: '100%' },
+  ];
+  selectedPercent = '0';
 
   constructor(private router: Router) {}
 
@@ -87,6 +98,11 @@ export class DepositWithdrawComponent implements OnInit {
     if (!/^[0-9]$/.test(event.key)) {
       event.preventDefault();
     }
+  }
+
+  onPercentageChange(value: string) {
+    this.selectedPercent = value;
+    this.applyPercentage(+value);
   }
 
   applyPercentage(percent: number) {
