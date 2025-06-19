@@ -3,18 +3,38 @@ nav {
   align-items: center;
   justify-content: center;
   gap: 24px;
-
   height: 100%;
 
   font-size: 18px;
   font-weight: 500;
 
-  img {
+  a {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
+  }
 
+  img {
     width: 32px;
     height: 32px;
+
+    &:hover {
+      filter: var(--filter-color-primary);
+    }
+  }
+
+  .nav-text {
+    display: none;
+  }
+}
+
+// Media Queries
+@media (min-width: 768px) {
+  nav img {
+    display: none;
+  }
+
+  nav .nav-text {
+    display: inline;
   }
 }
