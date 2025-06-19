@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
 import { OptionButtonComponent } from '../../../../shared/components/buttons/option-button/option-button.component';
 import { WalletService } from '../../../services/wallet.service';
-import { Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-deposit-withdraw',
@@ -27,6 +27,7 @@ export class DepositWithdrawComponent implements OnInit {
   minValue = 10;
   maxValue = 10000;
   mode: 'deposit' | 'withdraw' = 'deposit';
+  isUpdating = false;
 
   percentages = [
     { value: '10', label: '10%', mobileLabel: '10%' },
@@ -135,18 +136,32 @@ export class DepositWithdrawComponent implements OnInit {
   }
 
   submit() {
-    if (this.isInvalid) return;
+    if (this.isInvalid || this.isUpdating) return;
 
     const amount = Number(this.amountControl.value);
-    if (isNaN(amount)) return;
+    if (amount === null) return;
+
+    this.updateWalletBalance(amount);
+  }
+
+  private updateWalletBalance(amount: number) {
+    this.isUpdating = true;
 
     this.walletService
       .changeWalletBalance(amount, this.mode)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((wallet) => {
-        this.walletBalance = wallet.balance;
-        this.amountControl.setValue('10');
-        this.selectedPercent = '0';
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => (this.isUpdating = false))
+      )
+      .subscribe({
+        next: (wallet) => {
+          this.walletBalance = wallet.balance;
+          this.amountControl.setValue('10');
+          this.selectedPercent = '0';
+        },
+        error: (error) => {
+          console.error('Error during wallet update:', error);
+        },
       });
   }
 }
