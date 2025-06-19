@@ -135,10 +135,18 @@ export class DepositWithdrawComponent implements OnInit {
   }
 
   submit() {
-    if (!this.isInvalid) {
-      console.log(`${this.mode.toUpperCase()}: $${this.formattedAmount}`);
-      this.amountControl.setValue('10');
-      this.selectedPercent = '0';
-    }
+    if (this.isInvalid) return;
+
+    const amount = Number(this.amountControl.value);
+    if (isNaN(amount)) return;
+
+    this.walletService
+      .changeWalletBalance(amount, this.mode)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((wallet) => {
+        this.walletBalance = wallet.balance;
+        this.amountControl.setValue('10');
+        this.selectedPercent = '0';
+      });
   }
 }

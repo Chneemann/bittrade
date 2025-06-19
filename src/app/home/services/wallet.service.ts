@@ -10,4 +10,14 @@ export class WalletService {
   getWallet(): Observable<Wallet> {
     return this.backendApi.get<Wallet>('/api/me/wallet/');
   }
+
+  changeWalletBalance(
+    amount: number,
+    operation: 'deposit' | 'withdraw'
+  ): Observable<Wallet> {
+    const endpoint = `/api/me/wallet/${operation}/`;
+    return this.backendApi.post<Wallet, { amount: number }>(endpoint, {
+      amount: amount,
+    });
+  }
 }
