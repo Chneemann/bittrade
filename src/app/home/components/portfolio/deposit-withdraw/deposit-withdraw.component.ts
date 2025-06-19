@@ -96,6 +96,8 @@ export class DepositWithdrawComponent implements OnInit {
       this.amountControl.setValue(this.minValue.toString());
     } else if (this.amount > this.maxValue) {
       this.amountControl.setValue(this.maxValue.toString());
+    } else if (this.amount > this.walletBalance) {
+      this.amountControl.setValue(this.walletBalance.toString());
     }
   }
 

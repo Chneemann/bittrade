@@ -17,8 +17,12 @@
       />
     </div>
 
-    <p class="range">min. ${{ minValue }} – max. ${{ maxValue }}</p>
-    <p class="balance">Current Balance: ${{ walletBalance }}</p>
+    <p class="range">
+      min. ${{ minValue }} – max. ${{ maxValue | number : "1.0-2" }}
+    </p>
+    <p class="balance">
+      Current Balance: ${{ walletBalance | number : "1.0-2" }}
+    </p>
   </div>
 
   <app-option-button
