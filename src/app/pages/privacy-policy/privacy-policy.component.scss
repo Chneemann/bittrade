@@ -29,6 +29,10 @@ h2 {
   font-weight: 700;
 
   border-bottom: 2px solid var(--color-gray);
+
+  &.no-top-margin {
+    margin-top: 0;
+  }
 }
 
 p {

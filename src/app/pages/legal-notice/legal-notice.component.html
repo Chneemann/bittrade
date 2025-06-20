@@ -2,7 +2,7 @@
   @if (!isHomeRoute) {
   <h1>Legal Notice</h1>
   }
-  <h2>Contact</h2>
+  <h2 [ngClass]="{ 'no-top-margin': isHomeRoute }">Contact</h2>
   <strong>Information according to §5 TMG</strong>
   <br />
   <br />
