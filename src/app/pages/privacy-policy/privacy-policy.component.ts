@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-privacy-policy',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
   templateUrl: './privacy-policy.component.html',
   styleUrl: './privacy-policy.component.scss',
 })
-export class PrivacyPolicyComponent {}
+export class PrivacyPolicyComponent {
+  constructor(private router: Router) {}
+
+  get isHomeRoute(): boolean {
+    return this.router.url.startsWith('/home');
+  }
+}
