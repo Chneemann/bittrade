@@ -34,6 +34,8 @@ export const routes: Routes = [
     component: HomeComponent,
     canActivate: [AuthGuard],
     children: [
+      { path: 'privacy-policy', component: PrivacyPolicyComponent },
+      { path: 'legal-notice', component: LegalNoticeComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'portfolio', component: PortfolioComponent },
       { path: 'market', component: MarketComponent },

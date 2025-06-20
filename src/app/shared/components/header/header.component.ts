@@ -67,6 +67,14 @@ export class HeaderComponent {
       dataKey: null,
       title: 'Withdraw',
     },
+    'home/legal-notice': {
+      dataKey: null,
+      title: 'Legal Notice',
+    },
+    'home/privacy-policy': {
+      dataKey: null,
+      title: 'Privacy Policy',
+    },
   };
 
   constructor(
@@ -231,6 +239,8 @@ export class HeaderComponent {
       'home/withdraw',
       'home/buy',
       'home/sell',
+      'home/legal-notice',
+      'home/privacy-policy',
     ];
     return backButtonPaths.some(
       (path) =>
