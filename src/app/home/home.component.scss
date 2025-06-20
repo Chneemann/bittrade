@@ -8,7 +8,7 @@
   height: 100dvh;
   min-height: 100dvh;
 
-  background-color: var(--color-white);
+  background-color: var(--color-background);
 }
 
 .content-wrapper {
@@ -31,7 +31,7 @@ app-header {
 
   height: 48px;
 
-  background-color: var(--color-white);
+  background-color: var(--color-background);
 
   z-index: 100;
 }
@@ -44,7 +44,7 @@ app-navigation {
 
   height: 48px;
 
-  background-color: var(--color-white);
+  background-color: var(--color-background);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
 
   z-index: 100;
