@@ -1,0 +1,94 @@
+.buy-sell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  max-width: 480px;
+  height: 100%;
+  margin: 0 auto;
+
+  app-option-button {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .range {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-font-secondary);
+  }
+
+  .balance {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-font-secondary);
+  }
+}
+
+.amount-display {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 12px;
+
+  .label {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--color-font-secondary);
+  }
+
+  .input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    width: 50%;
+
+    margin: 0 auto;
+
+    .prefix {
+      font-size: 40px;
+      color: var(--color-font-primary);
+      user-select: none;
+    }
+
+    input {
+      flex-grow: 1;
+      font-size: 40px;
+      font-weight: 500;
+
+      background: transparent;
+      border: none;
+      outline: none;
+
+      text-align: center;
+
+      padding: 0;
+      margin: 0;
+
+      min-width: 40px;
+      max-width: 300px;
+
+      border-bottom: 2px solid var(--color-gray);
+
+      &.invalid {
+        border-color: var(--color-red);
+      }
+    }
+  }
+}
+
+// Submit button container
+.submit-button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  width: 100%;
+  margin-top: auto;
+
+  app-primary-button {
+    flex: 1;
+    margin-top: 20px;
+  }
+}

@@ -1,1 +1,62 @@
-<p>buy-sell works!</p>
+<div class="buy-sell">
+  <div class="amount-display">
+    <p class="label">
+      @if (mode === 'buy') { Enter Amount in USD } @else if (mode === 'sell') {
+      Enter Amount in {{ holding?.coin?.name }} }
+    </p>
+
+    <div class="input-wrapper">
+      @if (mode === 'buy') {
+      <span class="prefix">$</span>
+      }
+
+      <input
+        id="amountInput"
+        name="amountInput"
+        type="text"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        [value]="displayValue"
+        (input)="onInputChange($event)"
+        (keydown)="blockNonNumeric($event)"
+        (blur)="onBlur()"
+        [class.invalid]="isInvalid"
+      />
+    </div>
+
+    <p class="range">
+      @if (mode === 'buy') { min. ${{ minValue }} – max. ${{
+        maxValue | number : "1.0-2"
+      }}
+      } @else if (mode === 'sell') { min. {{ minValue }} – max.
+      {{ maxValue | number : "1.0-6" }} {{ holding?.coin?.symbol }} }
+    </p>
+    <p class="balance">
+      @if (mode === 'buy') { Current Balance: ${{
+        walletBalance | number : "1.0-2"
+      }}
+
+      } @else if (mode === 'sell') { Coin Balance:
+      {{ cryptoBalance | number : "1.0-6" }}
+      {{ holding?.coin?.symbol }}
+      }
+    </p>
+  </div>
+
+  <app-option-button
+    [options]="percentages"
+    [selectedValue]="selectedPercent"
+    (selectionChange)="onPercentageChange($event)"
+  ></app-option-button>
+
+  <div class="submit-button-container">
+    <app-primary-button
+      type="button"
+      [value]="mode === 'buy' ? 'BUY' : 'SELL'"
+      [loading]="isUpdating"
+      [loadingMessage]="'Processing...'"
+      [disabled]="isInvalid"
+      (click)="submit()"
+    ></app-primary-button>
+  </div>
+</div>

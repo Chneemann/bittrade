@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { delay, Observable, of, tap } from 'rxjs';
 import { BackendApiService } from '../../core/services/backend-api.service';
 import { CoinTransaction } from '../models/coin.model';
 
@@ -14,6 +14,20 @@ export class CoinTransactionService {
   getTransactionByCoin(symbol: string): Observable<CoinTransaction[]> {
     return this.backendApi.get<CoinTransaction[]>(
       `/api/me/transactions/${symbol}/`
+    );
+  }
+
+  buyCoin(coinId: string, amountUSD: number): Observable<void> {
+    return of(void 0).pipe(
+      delay(1000),
+      tap(() => console.log('buyCoin', coinId, amountUSD))
+    );
+  }
+
+  sellCoin(coinId: string, amountUSD: number): Observable<void> {
+    return of(void 0).pipe(
+      delay(1000),
+      tap(() => console.log('sellCoin', coinId, amountUSD))
     );
   }
 }
