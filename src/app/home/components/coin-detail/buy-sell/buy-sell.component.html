@@ -35,7 +35,6 @@
       @if (mode === 'buy') { Current Balance: ${{
         walletBalance | number : "1.0-2"
       }}
-
       } @else if (mode === 'sell') { Coin Balance:
       {{ cryptoBalance | number : "1.0-6" }}
       {{ holding?.coin?.symbol }}
@@ -48,6 +47,26 @@
     [selectedValue]="selectedPercent"
     (selectionChange)="onPercentageChange($event)"
   ></app-option-button>
+
+  <div class="received-amount">
+    @if (currentCoin$ | async; as coin) { @if
+    (coin?.market_data?.current_price?.['usd']; as usdPrice) { @let symbol =
+    coin.symbol.toUpperCase(); @if (mode === 'buy') {
+    <span class="label">You will receive:</span>
+    <span class="value">
+      {{ amount / usdPrice | number : "1.0-6" }} {{ symbol }}
+    </span>
+    <span class="price">
+      (1 {{ symbol }} = ${{ usdPrice | number : "1.2-2" }})
+    </span>
+    } @else if (mode === 'sell') {
+    <span class="label">You will receive:</span>
+    <span class="value"> ${{ amount * usdPrice | number : "1.2-2" }} </span>
+    <span class="price">
+      (1 {{ symbol }} = ${{ usdPrice | number : "1.2-2" }})
+    </span>
+    } } }
+  </div>
 
   <div class="submit-button-container">
     <app-primary-button

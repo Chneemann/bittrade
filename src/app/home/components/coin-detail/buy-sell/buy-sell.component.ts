@@ -5,10 +5,27 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
 import { OptionButtonComponent } from '../../../../shared/components/buttons/option-button/option-button.component';
 import { WalletService } from '../../../services/wallet.service';
-import { finalize, Subject, takeUntil } from 'rxjs';
-import { CoinHolding } from '../../../models/coin.model';
+import {
+  catchError,
+  EMPTY,
+  finalize,
+  forkJoin,
+  map,
+  Observable,
+  Subject,
+  switchMap,
+  takeUntil,
+  tap,
+  throwError,
+} from 'rxjs';
+import {
+  Coin,
+  CoinHolding,
+  CoinTransactionCreateDto,
+} from '../../../models/coin.model';
 import { CoinHoldingsService } from '../../../services/coin-holdings.service';
 import { CoinTransactionService } from '../../../services/coin-transactions.service';
+import { CoinGeckoService } from '../../../../core/services/external/coin-gecko.service';
 
 @Component({
   selector: 'app-buy-sell',
@@ -46,26 +63,20 @@ export class BuySellComponent {
   ];
   selectedPercent = '0';
 
+  currentCoin$!: Observable<Coin>;
+
   constructor(
     private walletService: WalletService,
     private coinTransactionService: CoinTransactionService,
     private coinHoldingsService: CoinHoldingsService,
+    private coinGeckoService: CoinGeckoService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.updateMode();
-
-    this.route.paramMap.subscribe((params) => {
-      const coin = params.get('id');
-
-      if (coin) {
-        this.coinId = coin;
-        this.loadHolding(coin);
-      }
-    });
-
+    this.loadCurrentCoin();
     this.loadWalletBalance();
   }
 
@@ -82,6 +93,36 @@ export class BuySellComponent {
   resetAmountInput(): void {
     const resetValue = this.mode === 'buy' ? '10' : '0.0001';
     this.amountControl.setValue(resetValue);
+  }
+
+  loadCurrentCoin() {
+    return (this.currentCoin$ = this.route.paramMap.pipe(
+      map((params) => params.get('id')?.toLowerCase() ?? ''),
+      switchMap((coinId) => {
+        if (!coinId) {
+          return throwError(() => new Error('Coin ID missing'));
+        }
+        this.coinId = coinId;
+
+        return forkJoin({
+          coin: this.coinGeckoService.getCoinData(coinId),
+          holding: this.coinHoldingsService.getHoldingByCoin(coinId),
+        });
+      }),
+      tap(({ holding }) => {
+        this.holding = holding;
+        this.cryptoBalance = holding.amount;
+        this.updateMaxValue();
+      }),
+      map(({ coin }) => coin.data),
+      catchError((err) => {
+        console.error('Error loading coin or holding', err);
+        this.holding = null;
+        this.cryptoBalance = 0;
+        this.updateMaxValue();
+        return EMPTY;
+      })
+    ));
   }
 
   private loadWalletBalance(): void {
@@ -223,9 +264,15 @@ export class BuySellComponent {
 
   private processTransaction(amount: number): void {
     this.isUpdating = true;
-    const action = this.mode === 'buy' ? 'buyCoin' : 'sellCoin';
 
-    this.coinTransactionService[action](this.coinId, amount)
+    const transaction: CoinTransactionCreateDto = {
+      transaction_type: this.mode,
+      amount: 0,
+      price_per_coin: 0,
+    };
+
+    this.coinTransactionService
+      .addTransaction(this.coinId, transaction)
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => (this.isUpdating = false))

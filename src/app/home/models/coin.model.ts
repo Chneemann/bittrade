@@ -62,12 +62,15 @@ export interface BaseCoin {
   slug: string;
 }
 
-export interface CoinTransaction {
-  id: string;
-  coin: BaseCoin;
+export interface CoinTransactionCreateDto {
   transaction_type: 'buy' | 'sell';
   amount: number;
   price_per_coin: number;
+}
+
+export interface CoinTransaction extends CoinTransactionCreateDto {
+  id: string;
+  coin: string;
   created_at: string;
 }
 

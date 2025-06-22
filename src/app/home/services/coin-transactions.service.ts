@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { delay, Observable, of, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { BackendApiService } from '../../core/services/backend-api.service';
-import { CoinTransaction } from '../models/coin.model';
+import {
+  CoinTransaction,
+  CoinTransactionCreateDto,
+} from '../models/coin.model';
 
 @Injectable({ providedIn: 'root' })
 export class CoinTransactionService {
@@ -17,17 +20,13 @@ export class CoinTransactionService {
     );
   }
 
-  buyCoin(coinId: string, amountUSD: number): Observable<void> {
-    return of(void 0).pipe(
-      delay(1000),
-      tap(() => console.log('buyCoin', coinId, amountUSD))
-    );
-  }
-
-  sellCoin(coinId: string, amountUSD: number): Observable<void> {
-    return of(void 0).pipe(
-      delay(1000),
-      tap(() => console.log('sellCoin', coinId, amountUSD))
-    );
+  addTransaction(
+    coinId: string,
+    tx: Omit<CoinTransactionCreateDto, 'coin_id'>
+  ): Observable<CoinTransaction> {
+    return this.backendApi.post<
+      CoinTransaction,
+      Omit<CoinTransactionCreateDto, 'coin_id'>
+    >(`/api/me/transactions/${coinId}/`, tx);
   }
 }
