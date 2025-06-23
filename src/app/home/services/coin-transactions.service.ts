@@ -22,11 +22,11 @@ export class CoinTransactionService {
 
   addTransaction(
     coinId: string,
-    tx: Omit<CoinTransactionCreateDto, 'coin_id'>
+    tx: CoinTransactionCreateDto
   ): Observable<CoinTransaction> {
-    return this.backendApi.post<
-      CoinTransaction,
-      Omit<CoinTransactionCreateDto, 'coin_id'>
-    >(`/api/me/transactions/${coinId}/`, tx);
+    return this.backendApi.post<CoinTransaction, CoinTransactionCreateDto>(
+      `/api/me/transactions/${coinId}/`,
+      tx
+    );
   }
 }

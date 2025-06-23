@@ -43,7 +43,7 @@ export class BuySellComponent {
   private readonly destroy$ = new Subject<void>();
   amountControl = new FormControl('');
 
-  coinId = '';
+  currentCoin!: Coin;
   holding: CoinHolding | null = null;
 
   walletBalance = 0;
@@ -102,16 +102,16 @@ export class BuySellComponent {
         if (!coinId) {
           return throwError(() => new Error('Coin ID missing'));
         }
-        this.coinId = coinId;
-
         return forkJoin({
           coin: this.coinGeckoService.getCoinData(coinId),
           holding: this.coinHoldingsService.getHoldingByCoin(coinId),
         });
       }),
-      tap(({ holding }) => {
+      tap(({ holding, coin }) => {
         this.holding = holding;
         this.cryptoBalance = holding.amount;
+        this.currentCoin = coin.data;
+        this.updateMinValue(coin.data);
         this.updateMaxValue();
       }),
       map(({ coin }) => coin.data),
@@ -151,12 +151,32 @@ export class BuySellComponent {
     });
   }
 
-  private updateMaxValue(): void {
+  private updateMinValue(coin: Coin): void {
+    const price = coin.market_data?.current_price?.['usd'] ?? 0;
+
     if (this.mode === 'buy') {
       this.minValue = 10;
+    } else if (this.mode === 'sell') {
+      if (price < 100) {
+        this.minValue = 0.1;
+      } else if (price >= 100 && price < 1000) {
+        this.minValue = 0.01;
+      } else if (price >= 1000 && price < 10000) {
+        this.minValue = 0.001;
+      } else {
+        this.minValue = 0.0001;
+      }
+
+      if (this.amount < this.minValue) {
+        this.amountControl.setValue(this.minValue.toString());
+      }
+    }
+  }
+
+  private updateMaxValue(): void {
+    if (this.mode === 'buy') {
       this.maxValue = Math.max(this.walletBalance, this.minValue);
     } else if (this.mode === 'sell') {
-      this.minValue = 0.0001;
       this.maxValue = Math.max(this.cryptoBalance, this.minValue);
     }
   }
@@ -265,14 +285,18 @@ export class BuySellComponent {
   private processTransaction(amount: number): void {
     this.isUpdating = true;
 
+    const priceUSD = this.currentCoin.market_data.current_price['usd'];
+    const amountInCoins = amount / priceUSD;
+    const roundedAmount = Number(amountInCoins.toFixed(8));
+
     const transaction: CoinTransactionCreateDto = {
       transaction_type: this.mode,
-      amount: 0,
-      price_per_coin: 0,
+      amount: roundedAmount,
+      price_per_coin: priceUSD,
     };
 
     this.coinTransactionService
-      .addTransaction(this.coinId, transaction)
+      .addTransaction(this.currentCoin.web_slug, transaction)
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => (this.isUpdating = false))
