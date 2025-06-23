@@ -9,7 +9,7 @@
       <div class="name">{{ coin.name }}</div>
       <div class="symbol">
         @if (coin.holding && coin.holding > 0) {
-        {{ coin.holding | number : "1.2-2" }} {{ coin.symbol }} } @else {
+        {{ coin.holding | number : "1.0-8" }} {{ coin.symbol }} } @else {
         {{ coin.symbol }}}
       </div>
     </div>

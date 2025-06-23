@@ -13,7 +13,7 @@
         {{ transaction.coin.name }} ({{ transaction.coin.symbol }})
       </p>
       <span class="label-amount"
-        >Amount: {{ transaction.amount | number : "1.2-2" }}</span
+        >Amount: {{ transaction.amount | number : "1.0-8" }}</span
       >
       <span class="label-price"
         >Price: ${{ transaction.price_per_coin | number : "1.2-2" }}</span
