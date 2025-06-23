@@ -43,7 +43,7 @@ export class BuySellComponent {
   private readonly destroy$ = new Subject<void>();
   amountControl = new FormControl('');
 
-  currentCoin!: Coin;
+  currentCoin: Coin | null = null;
   holding: CoinHolding | null = null;
 
   walletBalance = 0;
@@ -281,6 +281,7 @@ export class BuySellComponent {
   }
 
   private processTransaction(amount: number): void {
+    if (!this.currentCoin) return;
     this.isUpdating = true;
 
     const priceUSD = this.currentCoin.market_data.current_price['usd'];
