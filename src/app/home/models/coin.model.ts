@@ -70,7 +70,7 @@ export interface CoinTransactionCreateDto {
 
 export interface CoinTransaction extends CoinTransactionCreateDto {
   id: string;
-  coin: string;
+  coin: BaseCoin;
   created_at: string;
 }
 
