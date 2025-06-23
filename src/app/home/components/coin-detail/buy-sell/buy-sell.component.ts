@@ -111,15 +111,13 @@ export class BuySellComponent {
         this.holding = holding;
         this.cryptoBalance = holding.amount;
         this.currentCoin = coin.data;
-        this.updateMinValue(coin.data);
-        this.updateMaxValue();
+        this.updateMinMaxValue(coin.data);
       }),
       map(({ coin }) => coin.data),
       catchError((err) => {
         console.error('Error loading coin or holding', err);
         this.holding = null;
         this.cryptoBalance = 0;
-        this.updateMaxValue();
         return EMPTY;
       })
     ));
@@ -131,7 +129,6 @@ export class BuySellComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((wallet) => {
         this.walletBalance = wallet.balance;
-        this.updateMaxValue();
       });
   }
 
@@ -140,44 +137,39 @@ export class BuySellComponent {
       next: (data) => {
         this.holding = data;
         this.cryptoBalance = data?.amount || 0;
-        this.updateMaxValue();
       },
       error: (err) => {
         console.error('Error loading the holding:', err);
         this.holding = null;
         this.cryptoBalance = 0;
-        this.updateMaxValue();
       },
     });
   }
 
-  private updateMinValue(coin: Coin): void {
+  private updateMinMaxValue(coin: Coin): void {
     const price = coin.market_data?.current_price?.['usd'] ?? 0;
 
     if (this.mode === 'buy') {
       this.minValue = 10;
+      this.maxValue = 10000;
     } else if (this.mode === 'sell') {
       if (price < 100) {
         this.minValue = 0.1;
+        this.maxValue = 10000;
       } else if (price >= 100 && price < 1000) {
         this.minValue = 0.01;
+        this.maxValue = 1000;
       } else if (price >= 1000 && price < 10000) {
         this.minValue = 0.001;
+        this.maxValue = 100;
       } else {
         this.minValue = 0.0001;
+        this.maxValue = 10;
       }
 
       if (this.amount < this.minValue) {
         this.amountControl.setValue(this.minValue.toString());
       }
-    }
-  }
-
-  private updateMaxValue(): void {
-    if (this.mode === 'buy') {
-      this.maxValue = Math.max(this.walletBalance, this.minValue);
-    } else if (this.mode === 'sell') {
-      this.maxValue = Math.max(this.cryptoBalance, this.minValue);
     }
   }
 
@@ -197,7 +189,13 @@ export class BuySellComponent {
   }
 
   get isInvalid(): boolean {
-    return this.amount < this.minValue || this.amount > this.maxValue;
+    return (
+      !this.amount ||
+      isNaN(this.amount) ||
+      this.amount < this.minValue ||
+      this.amount > this.maxValue ||
+      (this.mode === 'sell' && this.amount > this.cryptoBalance)
+    );
   }
 
   onInputChange(event: Event): void {
