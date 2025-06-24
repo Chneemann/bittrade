@@ -194,7 +194,8 @@ export class BuySellComponent {
       isNaN(this.amount) ||
       this.amount < this.minValue ||
       this.amount > this.maxValue ||
-      (this.mode === 'sell' && this.amount > this.cryptoBalance)
+      (this.mode === 'sell' && this.amount > this.cryptoBalance) ||
+      (this.mode === 'buy' && this.amount > this.walletBalance)
     );
   }
 
