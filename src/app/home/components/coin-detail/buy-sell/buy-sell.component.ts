@@ -278,22 +278,35 @@ export class BuySellComponent {
     const amount = Number(this.amountControl.value);
     if (!amount) return;
 
-    this.processTransaction(amount);
-  }
-
-  private processTransaction(amount: number): void {
     if (!this.currentCoin) return;
-    this.isUpdating = true;
-
     const priceUSD = this.currentCoin.market_data.current_price['usd'];
-    const amountInCoins = amount / priceUSD;
-    const roundedAmount = Number(amountInCoins.toFixed(8));
+    const amountInCoins = Number((amount / priceUSD).toFixed(8));
+    const amountInFiat = Number((amount * priceUSD).toFixed(2));
 
     const transaction: CoinTransactionCreateDto = {
       transaction_type: this.mode,
-      amount: roundedAmount,
+      amount: amountInCoins,
       price_per_coin: priceUSD,
     };
+
+    this.isUpdating = true;
+
+    if (this.mode === 'buy') {
+      this.processTransaction(transaction, () => {
+        this.updateWalletBalance(amount, 'withdraw');
+      });
+    } else if (this.mode === 'sell') {
+      this.updateWalletBalance(amountInFiat, 'deposit', () => {
+        this.processTransaction(transaction);
+      });
+    }
+  }
+
+  private processTransaction(
+    transaction: CoinTransactionCreateDto,
+    onSuccess?: () => void
+  ): void {
+    if (!this.currentCoin) return;
 
     this.coinTransactionService
       .addTransaction(this.currentCoin.web_slug, transaction)
@@ -305,9 +318,34 @@ export class BuySellComponent {
         next: () => {
           this.resetAmountInput();
           this.selectedPercent = '0';
+          if (onSuccess) onSuccess();
         },
         error: (error) => {
           console.error('Crypto transaction error:', error);
+        },
+      });
+  }
+
+  private updateWalletBalance(
+    amount: number,
+    mode: 'deposit' | 'withdraw',
+    onSuccess?: () => void
+  ): void {
+    this.walletService
+      .changeWalletBalance(amount, mode, 'coin')
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => (this.isUpdating = false))
+      )
+      .subscribe({
+        next: (wallet) => {
+          this.walletBalance = wallet.balance;
+          this.amountControl.setValue('10');
+          this.selectedPercent = '0';
+          if (onSuccess) onSuccess();
+        },
+        error: (error) => {
+          console.error('Error during wallet update:', error);
         },
       });
   }

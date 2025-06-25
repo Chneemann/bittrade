@@ -13,11 +13,16 @@ export class WalletService {
 
   changeWalletBalance(
     amount: number,
-    operation: 'deposit' | 'withdraw'
+    transactionType: 'deposit' | 'withdraw',
+    transactionSource: 'fiat' | 'coin'
   ): Observable<Wallet> {
-    const endpoint = `/api/me/wallet/${operation}/`;
-    return this.backendApi.post<Wallet, { amount: number }>(endpoint, {
+    const endpoint = `/api/me/wallet/${transactionType}/`;
+    return this.backendApi.post<
+      Wallet,
+      { amount: number; transaction_source: string }
+    >(endpoint, {
       amount: amount,
+      transaction_source: transactionSource,
     });
   }
 }

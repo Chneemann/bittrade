@@ -150,7 +150,7 @@ export class DepositWithdrawComponent implements OnInit {
     this.isUpdating = true;
 
     this.walletService
-      .changeWalletBalance(amount, this.mode)
+      .changeWalletBalance(amount, this.mode, 'fiat')
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => (this.isUpdating = false))
