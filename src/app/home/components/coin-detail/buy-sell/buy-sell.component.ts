@@ -8,7 +8,6 @@ import { WalletService } from '../../../services/wallet.service';
 import {
   catchError,
   EMPTY,
-  finalize,
   forkJoin,
   map,
   Observable,
@@ -327,15 +326,15 @@ export class BuySellComponent {
     onSuccess?: () => void
   ): void {
     if (!this.currentCoin) return;
+    const coinSlug = this.currentCoin.web_slug;
 
     this.coinTransactionService
-      .addTransaction(this.currentCoin.web_slug, transaction)
+      .addTransaction(coinSlug, transaction)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (result) => {
+          this.loadHolding(coinSlug);
           this.transactionResult = result;
-          console.log('Transaction result:', result);
-
           this.resetAmountInput();
           this.selectedPercent = '0';
           if (onSuccess) onSuccess();
@@ -351,8 +350,6 @@ export class BuySellComponent {
     mode: 'deposit' | 'withdraw',
     onSuccess?: () => void
   ): void {
-    console.log(amount);
-
     this.walletService
       .changeWalletBalance(amount, mode, 'coin')
       .pipe(takeUntil(this.destroy$))
