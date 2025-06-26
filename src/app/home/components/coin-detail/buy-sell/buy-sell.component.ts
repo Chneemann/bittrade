@@ -45,6 +45,7 @@ export class BuySellComponent {
 
   currentCoin: Coin | null = null;
   holding: CoinHolding | null = null;
+  transactionResult: CoinTransactionCreateDto | null = null;
 
   walletBalance = 0;
   cryptoBalance = 0;
@@ -53,6 +54,7 @@ export class BuySellComponent {
   maxValue = 10000;
   mode: 'buy' | 'sell' = 'buy';
   isUpdating = false;
+  showSuccessModal = false;
 
   percentages = [
     { value: '10', label: '10%', mobileLabel: '10%' },
@@ -272,6 +274,10 @@ export class BuySellComponent {
     this.amountControl.setValue(value.toString());
   }
 
+  closeSuccess(): void {
+    this.showSuccessModal = false;
+  }
+
   submit(): void {
     if (this.isInvalid || this.isUpdating) return;
 
@@ -283,21 +289,35 @@ export class BuySellComponent {
     const amountInCoins = Number((amount / priceUSD).toFixed(8));
     const amountInFiat = Number((amount * priceUSD).toFixed(2));
 
-    const transaction: CoinTransactionCreateDto = {
-      transaction_type: this.mode,
-      amount: amountInCoins,
-      price_per_coin: priceUSD,
-    };
+    let transaction: CoinTransactionCreateDto;
 
     this.isUpdating = true;
 
     if (this.mode === 'buy') {
+      transaction = {
+        transaction_type: this.mode,
+        amount: amountInCoins,
+        price_per_coin: priceUSD,
+      };
+
       this.processTransaction(transaction, () => {
-        this.updateWalletBalance(amount, 'withdraw');
+        this.updateWalletBalance(amount, 'withdraw', () => {
+          this.showSuccessModal = true;
+          this.isUpdating = false;
+        });
       });
     } else if (this.mode === 'sell') {
+      transaction = {
+        transaction_type: this.mode,
+        amount: amount,
+        price_per_coin: priceUSD,
+      };
+
       this.updateWalletBalance(amountInFiat, 'deposit', () => {
-        this.processTransaction(transaction);
+        this.processTransaction(transaction, () => {
+          this.showSuccessModal = true;
+          this.isUpdating = false;
+        });
       });
     }
   }
@@ -310,12 +330,12 @@ export class BuySellComponent {
 
     this.coinTransactionService
       .addTransaction(this.currentCoin.web_slug, transaction)
-      .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => (this.isUpdating = false))
-      )
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => {
+        next: (result) => {
+          this.transactionResult = result;
+          console.log('Transaction result:', result);
+
           this.resetAmountInput();
           this.selectedPercent = '0';
           if (onSuccess) onSuccess();
@@ -331,12 +351,11 @@ export class BuySellComponent {
     mode: 'deposit' | 'withdraw',
     onSuccess?: () => void
   ): void {
+    console.log(amount);
+
     this.walletService
       .changeWalletBalance(amount, mode, 'coin')
-      .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => (this.isUpdating = false))
-      )
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (wallet) => {
           this.walletBalance = wallet.balance;
