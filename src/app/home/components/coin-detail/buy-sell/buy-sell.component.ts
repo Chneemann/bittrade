@@ -1,6 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
 import { OptionButtonComponent } from '../../../../shared/components/buttons/option-button/option-button.component';
@@ -26,6 +33,11 @@ import { CoinHoldingsService } from '../../../services/coin-holdings.service';
 import { CoinTransactionService } from '../../../services/coin-transactions.service';
 import { CoinGeckoService } from '../../../../core/services/external/coin-gecko.service';
 
+enum TradeMode {
+  BUY = 'buy',
+  SELL = 'sell',
+}
+
 @Component({
   selector: 'app-buy-sell',
   imports: [
@@ -38,20 +50,21 @@ import { CoinGeckoService } from '../../../../core/services/external/coin-gecko.
   templateUrl: './buy-sell.component.html',
   styleUrl: './buy-sell.component.scss',
 })
-export class BuySellComponent {
+export class BuySellComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
-  amountControl = new FormControl('');
+  amountControl: FormControl = new FormControl();
 
   currentCoin: Coin | null = null;
   holding: CoinHolding | null = null;
   transactionResult: CoinTransactionCreateDto | null = null;
+  TradeMode = TradeMode;
+  mode: TradeMode = TradeMode.BUY;
 
   walletBalance = 0;
   cryptoBalance = 0;
 
   minValue = 10;
   maxValue = 10000;
-  mode: 'buy' | 'sell' = 'buy';
   isUpdating = false;
   showSuccessModal = false;
 
@@ -72,10 +85,12 @@ export class BuySellComponent {
     private coinHoldingsService: CoinHoldingsService,
     private coinGeckoService: CoinGeckoService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
+    this.amountControl = this.fb.control('', this.getAmountValidators());
     this.updateMode();
     this.loadCurrentCoin();
     this.loadWalletBalance();
@@ -86,13 +101,23 @@ export class BuySellComponent {
     this.destroy$.complete();
   }
 
+  private getAmountValidators(): ValidatorFn[] {
+    return [
+      Validators.required,
+      Validators.min(this.minValue),
+      Validators.max(this.maxValue),
+    ];
+  }
+
   updateMode(): void {
-    this.mode = this.router.url.includes('sell') ? 'sell' : 'buy';
+    this.mode = this.router.url.includes(TradeMode.SELL)
+      ? TradeMode.SELL
+      : TradeMode.BUY;
     this.resetAmountInput();
   }
 
   resetAmountInput(): void {
-    const resetValue = this.mode === 'buy' ? '10' : '0.0001';
+    const resetValue = this.mode === TradeMode.BUY ? '10' : '0.0001';
     this.amountControl.setValue(resetValue);
   }
 
@@ -147,30 +172,28 @@ export class BuySellComponent {
     });
   }
 
+  private calculateMinMaxValues(price: number): { min: number; max: number } {
+    if (this.mode === TradeMode.BUY) {
+      return { min: 10, max: 10000 };
+    }
+
+    if (price < 100) return { min: 0.1, max: 10000 };
+    if (price < 1000) return { min: 0.01, max: 1000 };
+    if (price < 10000) return { min: 0.001, max: 100 };
+    return { min: 0.0001, max: 10 };
+  }
+
   private updateMinMaxValue(coin: Coin): void {
     const price = coin.market_data?.current_price?.['usd'] ?? 0;
+    const { min, max } = this.calculateMinMaxValues(price);
+    this.minValue = min;
+    this.maxValue = max;
 
-    if (this.mode === 'buy') {
-      this.minValue = 10;
-      this.maxValue = 10000;
-    } else if (this.mode === 'sell') {
-      if (price < 100) {
-        this.minValue = 0.1;
-        this.maxValue = 10000;
-      } else if (price >= 100 && price < 1000) {
-        this.minValue = 0.01;
-        this.maxValue = 1000;
-      } else if (price >= 1000 && price < 10000) {
-        this.minValue = 0.001;
-        this.maxValue = 100;
-      } else {
-        this.minValue = 0.0001;
-        this.maxValue = 10;
-      }
+    this.amountControl.setValidators(this.getAmountValidators());
+    this.amountControl.updateValueAndValidity();
 
-      if (this.amount < this.minValue) {
-        this.amountControl.setValue(this.minValue.toString());
-      }
+    if (this.amount < this.minValue) {
+      this.amountControl.setValue(this.minValue.toString());
     }
   }
 
@@ -184,7 +207,7 @@ export class BuySellComponent {
 
   get displayValue(): string {
     if (this.amount === 0) return '0';
-    return this.mode === 'buy'
+    return this.mode === TradeMode.BUY
       ? this.amount.toLocaleString('en-US', { maximumFractionDigits: 0 })
       : this.amount.toFixed(8).replace(/\.?0+$/, '');
   }
@@ -195,15 +218,15 @@ export class BuySellComponent {
       isNaN(this.amount) ||
       this.amount < this.minValue ||
       this.amount > this.maxValue ||
-      (this.mode === 'sell' && this.amount > this.cryptoBalance) ||
-      (this.mode === 'buy' && this.amount > this.walletBalance)
+      (this.mode === TradeMode.SELL && this.amount > this.cryptoBalance) ||
+      (this.mode === TradeMode.BUY && this.amount > this.walletBalance)
     );
   }
 
   onInputChange(event: Event): void {
     let input = (event.target as HTMLInputElement).value;
 
-    if (this.mode === 'buy') {
+    if (this.mode === TradeMode.BUY) {
       input = input.replace(/[^0-9]/g, '');
     } else {
       input = input.replace(/[^0-9.,]/g, '').replace(/[,]/g, '.');
@@ -241,7 +264,10 @@ export class BuySellComponent {
       return;
     }
 
-    if (this.mode === 'sell' && (event.key === '.' || event.key === ',')) {
+    if (
+      this.mode === TradeMode.SELL &&
+      (event.key === '.' || event.key === ',')
+    ) {
       return;
     }
 
@@ -256,21 +282,16 @@ export class BuySellComponent {
   }
 
   applyPercentage(percent: number): void {
-    if (percent === 0) {
-      this.amountControl.setValue(this.minValue.toString());
-      return;
-    }
+    const base =
+      this.mode === TradeMode.BUY ? this.walletBalance : this.cryptoBalance;
+    const value = (base * percent) / 100;
 
-    const base = this.mode === 'buy' ? this.walletBalance : this.cryptoBalance;
-    let value = (base * percent) / 100;
+    const rounded =
+      this.mode === TradeMode.BUY
+        ? Math.floor(value)
+        : parseFloat(value.toFixed(8));
 
-    if (this.mode === 'buy') {
-      value = Math.floor(value);
-    } else {
-      value = parseFloat(value.toFixed(8));
-    }
-
-    this.amountControl.setValue(value.toString());
+    this.amountControl.setValue(rounded.toString());
   }
 
   closeSuccess(): void {
@@ -278,47 +299,49 @@ export class BuySellComponent {
   }
 
   submit(): void {
-    if (this.isInvalid || this.isUpdating) return;
-
-    const amount = Number(this.amountControl.value);
-    if (!amount) return;
-
-    if (!this.currentCoin) return;
-    const priceUSD = this.currentCoin.market_data.current_price['usd'];
-    const amountInCoins = Number((amount / priceUSD).toFixed(8));
-    const amountInFiat = Number((amount * priceUSD).toFixed(2));
-
-    let transaction: CoinTransactionCreateDto;
+    if (this.isInvalid || this.isUpdating || !this.currentCoin) return;
 
     this.isUpdating = true;
 
-    if (this.mode === 'buy') {
-      transaction = {
-        transaction_type: this.mode,
-        amount: amountInCoins,
-        price_per_coin: priceUSD,
-      };
+    const priceUSD = this.currentCoin.market_data.current_price['usd'];
+    const transactionHandler =
+      this.mode === TradeMode.BUY
+        ? this.handleBuyTransaction.bind(this)
+        : this.handleSellTransaction.bind(this);
 
+    transactionHandler(this.amount, priceUSD);
+  }
+
+  private handleBuyTransaction(amount: number, priceUSD: number) {
+    const amountInCoins = parseFloat((amount / priceUSD).toFixed(8));
+    const transaction: CoinTransactionCreateDto = {
+      transaction_type: TradeMode.BUY,
+      amount: amountInCoins,
+      price_per_coin: priceUSD,
+    };
+
+    this.processTransaction(transaction, () => {
+      this.updateWalletBalance(amount, 'withdraw', () => {
+        this.showSuccessModal = true;
+        this.isUpdating = false;
+      });
+    });
+  }
+
+  private handleSellTransaction(amount: number, priceUSD: number) {
+    const amountInFiat = parseFloat((amount * priceUSD).toFixed(2));
+    const transaction: CoinTransactionCreateDto = {
+      transaction_type: TradeMode.SELL,
+      amount: amount,
+      price_per_coin: priceUSD,
+    };
+
+    this.updateWalletBalance(amountInFiat, 'deposit', () => {
       this.processTransaction(transaction, () => {
-        this.updateWalletBalance(amount, 'withdraw', () => {
-          this.showSuccessModal = true;
-          this.isUpdating = false;
-        });
+        this.showSuccessModal = true;
+        this.isUpdating = false;
       });
-    } else if (this.mode === 'sell') {
-      transaction = {
-        transaction_type: this.mode,
-        amount: amount,
-        price_per_coin: priceUSD,
-      };
-
-      this.updateWalletBalance(amountInFiat, 'deposit', () => {
-        this.processTransaction(transaction, () => {
-          this.showSuccessModal = true;
-          this.isUpdating = false;
-        });
-      });
-    }
+    });
   }
 
   private processTransaction(
