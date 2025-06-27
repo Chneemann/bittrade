@@ -120,6 +120,11 @@ export class DepositWithdrawComponent implements OnInit {
     this.showSuccessModal = false;
   }
 
+  goToPortfolio(): void {
+    this.closeSuccess();
+    this.router.navigate(['/home/portfolio/']);
+  }
+
   onInputChange(event: Event) {
     const input = (event.target as HTMLInputElement).value.replace(
       /[^0-9]/g,

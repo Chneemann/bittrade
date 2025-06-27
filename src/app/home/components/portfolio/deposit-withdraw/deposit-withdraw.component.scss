@@ -127,6 +127,19 @@
       font-weight: 600;
     }
   }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+    align-items: center;
+    width: 100%;
+
+    app-primary-button {
+      width: 100%;
+    }
+  }
 }
 
 // Submit button container

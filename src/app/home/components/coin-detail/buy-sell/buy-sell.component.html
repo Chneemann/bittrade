@@ -93,11 +93,20 @@
           }}</strong
         >
       </div>
-      <app-primary-button
-        type="button"
-        [value]="'Done'"
-        (click)="closeSuccess()"
-      ></app-primary-button>
+
+      <div class="actions">
+        <app-primary-button
+          type="button"
+          [value]="'Go to Portfolio'"
+          (click)="goToPortfolio()"
+        ></app-primary-button>
+
+        <app-primary-button
+          type="button"
+          [value]="'Another Transaction'"
+          (click)="closeSuccess()"
+        ></app-primary-button>
+      </div>
     </div>
   </div>
   }

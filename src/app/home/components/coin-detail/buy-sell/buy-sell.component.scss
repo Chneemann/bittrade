@@ -118,9 +118,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: var(--color-white);
   width: 80%;
-  max-width: 420px;
+  max-width: 380px;
   padding: 32px 24px;
   border-radius: 20px;
   text-align: center;
@@ -137,16 +137,16 @@
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 8px;
-    color: #1a1a1a;
+    color: var(--color-font-primary);
   }
 
   .message {
     font-size: 16px;
-    margin-bottom: 4px;
-    color: #333;
+    margin-bottom: 12px;
+    color: var(--color-font-primary);
 
     strong {
-      color: #000;
+      color: var(--color-font-primary);
       font-weight: 600;
     }
   }
@@ -154,11 +154,24 @@
   .amount-detail {
     font-size: 15px;
     margin-bottom: 24px;
-    color: #555;
+    color: var(--color-font-primary);
 
     strong {
       font-weight: 600;
-      color: #111;
+      color: var(--color-font-primary);
+    }
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+    align-items: center;
+    width: 100%;
+
+    app-primary-button {
+      width: 100%;
     }
   }
 }

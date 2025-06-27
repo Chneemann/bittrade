@@ -302,6 +302,11 @@ export class BuySellComponent implements OnInit, OnDestroy {
     this.showSuccessModal = false;
   }
 
+  goToPortfolio(): void {
+    this.closeSuccess();
+    this.router.navigate(['/home/portfolio/']);
+  }
+
   submit(): void {
     if (this.isInvalid || this.isUpdating || !this.currentCoin) return;
 
