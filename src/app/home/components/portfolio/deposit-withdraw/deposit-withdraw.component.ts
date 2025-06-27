@@ -12,12 +12,11 @@ import { Router } from '@angular/router';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
 import { OptionButtonComponent } from '../../../../shared/components/buttons/option-button/option-button.component';
 import { WalletService } from '../../../services/wallet.service';
+import {
+  WalletTransactionSource,
+  WalletTransactionType,
+} from '../../../models/wallet.model';
 import { Subject, takeUntil } from 'rxjs';
-
-enum WalletAction {
-  WITHDRAW = 'withdraw',
-  DEPOSIT = 'deposit',
-}
 
 @Component({
   selector: 'app-deposit-withdraw',
@@ -35,8 +34,8 @@ export class DepositWithdrawComponent implements OnInit {
   private readonly destroy$ = new Subject<void>();
   amountControl: FormControl = new FormControl();
 
-  WalletAction = WalletAction;
-  mode: WalletAction = WalletAction.WITHDRAW;
+  WalletTransactionType = WalletTransactionType;
+  mode: WalletTransactionType = WalletTransactionType.WITHDRAW;
   transactionResult: number | null = null;
 
   walletBalance = 0;
@@ -105,9 +104,9 @@ export class DepositWithdrawComponent implements OnInit {
   }
 
   updateMode() {
-    this.mode = this.router.url.includes(WalletAction.WITHDRAW)
-      ? WalletAction.WITHDRAW
-      : WalletAction.DEPOSIT;
+    this.mode = this.router.url.includes(WalletTransactionType.WITHDRAW)
+      ? WalletTransactionType.WITHDRAW
+      : WalletTransactionType.DEPOSIT;
 
     this.amountControl.setValidators(this.getAmountValidators());
     this.amountControl.updateValueAndValidity();
@@ -172,7 +171,9 @@ export class DepositWithdrawComponent implements OnInit {
     }
 
     const base =
-      this.mode === WalletAction.DEPOSIT ? this.maxValue : this.walletBalance;
+      this.mode === WalletTransactionType.DEPOSIT
+        ? this.maxValue
+        : this.walletBalance;
     const value = Math.floor((base * percent) / 100);
     this.amountControl.setValue(value.toString());
   }
@@ -191,11 +192,11 @@ export class DepositWithdrawComponent implements OnInit {
 
   private updateWalletBalance(
     amount: number,
-    mode: WalletAction.DEPOSIT | WalletAction.WITHDRAW,
+    mode: WalletTransactionType.DEPOSIT | WalletTransactionType.WITHDRAW,
     onSuccess?: () => void
   ): void {
     this.walletService
-      .changeWalletBalance(amount, mode, 'fiat')
+      .changeWalletBalance(amount, mode, WalletTransactionSource.FIAT)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (wallet: any) => {

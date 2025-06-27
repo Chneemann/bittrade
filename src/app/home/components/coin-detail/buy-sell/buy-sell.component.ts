@@ -32,11 +32,11 @@ import {
 import { CoinHoldingsService } from '../../../services/coin-holdings.service';
 import { CoinTransactionService } from '../../../services/coin-transactions.service';
 import { CoinGeckoService } from '../../../../core/services/external/coin-gecko.service';
-
-enum TradeMode {
-  BUY = 'buy',
-  SELL = 'sell',
-}
+import {
+  CoinTransactionType,
+  WalletTransactionSource,
+  WalletTransactionType,
+} from '../../../models/wallet.model';
 
 @Component({
   selector: 'app-buy-sell',
@@ -57,8 +57,8 @@ export class BuySellComponent implements OnInit, OnDestroy {
   currentCoin: Coin | null = null;
   holding: CoinHolding | null = null;
   transactionResult: CoinTransactionCreateDto | null = null;
-  TradeMode = TradeMode;
-  mode: TradeMode = TradeMode.BUY;
+  CoinTransactionType = CoinTransactionType;
+  mode: CoinTransactionType = CoinTransactionType.BUY;
 
   walletBalance = 0;
   cryptoBalance = 0;
@@ -110,14 +110,14 @@ export class BuySellComponent implements OnInit, OnDestroy {
   }
 
   updateMode(): void {
-    this.mode = this.router.url.includes(TradeMode.SELL)
-      ? TradeMode.SELL
-      : TradeMode.BUY;
+    this.mode = this.router.url.includes(CoinTransactionType.SELL)
+      ? CoinTransactionType.SELL
+      : CoinTransactionType.BUY;
     this.resetAmountInput();
   }
 
   resetAmountInput(): void {
-    const resetValue = this.mode === TradeMode.BUY ? '10' : '0.0001';
+    const resetValue = this.mode === CoinTransactionType.BUY ? '10' : '0.0001';
     this.amountControl.setValue(resetValue);
   }
 
@@ -173,7 +173,7 @@ export class BuySellComponent implements OnInit, OnDestroy {
   }
 
   private calculateMinMaxValues(price: number): { min: number; max: number } {
-    if (this.mode === TradeMode.BUY) {
+    if (this.mode === CoinTransactionType.BUY) {
       return { min: 10, max: 10000 };
     }
 
@@ -207,7 +207,7 @@ export class BuySellComponent implements OnInit, OnDestroy {
 
   get displayValue(): string {
     if (this.amount === 0) return '0';
-    return this.mode === TradeMode.BUY
+    return this.mode === CoinTransactionType.BUY
       ? this.amount.toLocaleString('en-US', { maximumFractionDigits: 0 })
       : this.amount.toFixed(8).replace(/\.?0+$/, '');
   }
@@ -218,15 +218,17 @@ export class BuySellComponent implements OnInit, OnDestroy {
       isNaN(this.amount) ||
       this.amount < this.minValue ||
       this.amount > this.maxValue ||
-      (this.mode === TradeMode.SELL && this.amount > this.cryptoBalance) ||
-      (this.mode === TradeMode.BUY && this.amount > this.walletBalance)
+      (this.mode === CoinTransactionType.SELL &&
+        this.amount > this.cryptoBalance) ||
+      (this.mode === CoinTransactionType.BUY &&
+        this.amount > this.walletBalance)
     );
   }
 
   onInputChange(event: Event): void {
     let input = (event.target as HTMLInputElement).value;
 
-    if (this.mode === TradeMode.BUY) {
+    if (this.mode === CoinTransactionType.BUY) {
       input = input.replace(/[^0-9]/g, '');
     } else {
       input = input.replace(/[^0-9.,]/g, '').replace(/[,]/g, '.');
@@ -265,7 +267,7 @@ export class BuySellComponent implements OnInit, OnDestroy {
     }
 
     if (
-      this.mode === TradeMode.SELL &&
+      this.mode === CoinTransactionType.SELL &&
       (event.key === '.' || event.key === ',')
     ) {
       return;
@@ -283,11 +285,13 @@ export class BuySellComponent implements OnInit, OnDestroy {
 
   applyPercentage(percent: number): void {
     const base =
-      this.mode === TradeMode.BUY ? this.walletBalance : this.cryptoBalance;
+      this.mode === CoinTransactionType.BUY
+        ? this.walletBalance
+        : this.cryptoBalance;
     const value = (base * percent) / 100;
 
     const rounded =
-      this.mode === TradeMode.BUY
+      this.mode === CoinTransactionType.BUY
         ? Math.floor(value)
         : parseFloat(value.toFixed(8));
 
@@ -305,7 +309,7 @@ export class BuySellComponent implements OnInit, OnDestroy {
 
     const priceUSD = this.currentCoin.market_data.current_price['usd'];
     const transactionHandler =
-      this.mode === TradeMode.BUY
+      this.mode === CoinTransactionType.BUY
         ? this.handleBuyTransaction.bind(this)
         : this.handleSellTransaction.bind(this);
 
@@ -315,13 +319,13 @@ export class BuySellComponent implements OnInit, OnDestroy {
   private handleBuyTransaction(amount: number, priceUSD: number) {
     const amountInCoins = parseFloat((amount / priceUSD).toFixed(8));
     const transaction: CoinTransactionCreateDto = {
-      transaction_type: TradeMode.BUY,
+      transaction_type: CoinTransactionType.BUY,
       amount: amountInCoins,
       price_per_coin: priceUSD,
     };
 
     this.processTransaction(transaction, () => {
-      this.updateWalletBalance(amount, 'withdraw', () => {
+      this.updateWalletBalance(amount, WalletTransactionType.WITHDRAW, () => {
         this.showSuccessModal = true;
         this.isUpdating = false;
       });
@@ -331,17 +335,21 @@ export class BuySellComponent implements OnInit, OnDestroy {
   private handleSellTransaction(amount: number, priceUSD: number) {
     const amountInFiat = parseFloat((amount * priceUSD).toFixed(2));
     const transaction: CoinTransactionCreateDto = {
-      transaction_type: TradeMode.SELL,
+      transaction_type: CoinTransactionType.SELL,
       amount: amount,
       price_per_coin: priceUSD,
     };
 
-    this.updateWalletBalance(amountInFiat, 'deposit', () => {
-      this.processTransaction(transaction, () => {
-        this.showSuccessModal = true;
-        this.isUpdating = false;
-      });
-    });
+    this.updateWalletBalance(
+      amountInFiat,
+      WalletTransactionType.DEPOSIT,
+      () => {
+        this.processTransaction(transaction, () => {
+          this.showSuccessModal = true;
+          this.isUpdating = false;
+        });
+      }
+    );
   }
 
   private processTransaction(
@@ -370,11 +378,11 @@ export class BuySellComponent implements OnInit, OnDestroy {
 
   private updateWalletBalance(
     amount: number,
-    mode: 'deposit' | 'withdraw',
+    mode: WalletTransactionType.DEPOSIT | WalletTransactionType.WITHDRAW,
     onSuccess?: () => void
   ): void {
     this.walletService
-      .changeWalletBalance(amount, mode, 'coin')
+      .changeWalletBalance(amount, mode, WalletTransactionSource.COIN)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (wallet) => {

@@ -41,7 +41,8 @@
       </div>
       <div class="headline">Transaction Successful</div>
       <div class="message">
-        You {{ mode === WalletAction.DEPOSIT ? "deposited" : "withdrew" }}
+        You
+        {{ mode === WalletTransactionType.DEPOSIT ? "deposited" : "withdrew" }}
         <strong>{{
           transactionResult | currency : "USD" : "symbol" : "1.2-2"
         }}</strong>
@@ -58,7 +59,7 @@
   <div class="submit-button-container">
     <app-primary-button
       type="button"
-      [value]="mode === WalletAction.DEPOSIT ? 'DEPOSIT' : 'WITHDRAW'"
+      [value]="mode === WalletTransactionType.DEPOSIT ? 'DEPOSIT' : 'WITHDRAW'"
       [loading]="isUpdating"
       [loadingMessage]="'In Progress...'"
       [disabled]="isInvalid"

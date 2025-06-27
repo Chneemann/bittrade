@@ -1,12 +1,13 @@
 <div class="buy-sell">
   <div class="amount-display">
     <p class="label">
-      @if (mode === TradeMode.BUY) { Enter Amount in USD } @else if (mode ===
-      TradeMode.SELL) { Enter Amount in {{ holding?.coin?.name }} }
+      @if (mode === CoinTransactionType.BUY) { Enter Amount in USD } @else if
+      (mode === CoinTransactionType.SELL) { Enter Amount in
+      {{ holding?.coin?.name }} }
     </p>
 
     <div class="input-wrapper">
-      @if (mode === TradeMode.BUY) {
+      @if (mode === CoinTransactionType.BUY) {
       <span class="prefix">$</span>
       }
 
@@ -25,17 +26,17 @@
     </div>
 
     <p class="range">
-      @if (mode === TradeMode.BUY) { min. ${{ minValue }} – max. ${{
+      @if (mode === CoinTransactionType.BUY) { min. ${{ minValue }} – max. ${{
         maxValue | number : "1.0-2"
       }}
-      } @else if (mode === TradeMode.SELL) { min. {{ minValue }} – max.
-      {{ maxValue | number : "1.0-6" }} {{ holding?.coin?.symbol }} }
+      } @else if (mode === CoinTransactionType.SELL) { min. {{ minValue }} –
+      max. {{ maxValue | number : "1.0-6" }} {{ holding?.coin?.symbol }} }
     </p>
     <p class="balance">
-      @if (mode === TradeMode.BUY) { Current Balance: ${{
+      @if (mode === CoinTransactionType.BUY) { Current Balance: ${{
         walletBalance | number : "1.0-2"
       }}
-      } @else if (mode === TradeMode.SELL) { Coin Balance:
+      } @else if (mode === CoinTransactionType.SELL) { Coin Balance:
       {{ cryptoBalance | number : "1.0-6" }}
       {{ holding?.coin?.symbol }}
       }
@@ -51,7 +52,8 @@
   @if (currentCoin$ | async; as coin) { @if
   (coin?.market_data?.current_price?.['usd']; as usdPrice) {
   <div class="received-amount">
-    @let symbol = coin.symbol.toUpperCase(); @if (mode === TradeMode.BUY) {
+    @let symbol = coin.symbol.toUpperCase(); @if (mode ===
+    CoinTransactionType.BUY) {
     <span class="label">You will receive:</span>
     <span class="value">
       {{ amount / usdPrice | number : "1.0-6" }} {{ symbol }}
@@ -59,7 +61,7 @@
     <span class="price">
       (1 {{ symbol }} = ${{ usdPrice | number : "1.2-2" }})
     </span>
-    } @else if (mode === TradeMode.SELL) {
+    } @else if (mode === CoinTransactionType.SELL) {
     <span class="label">You will receive:</span>
     <span class="value"> ${{ amount * usdPrice | number : "1.2-2" }} </span>
     <span class="price">
@@ -103,7 +105,7 @@
   <div class="submit-button-container">
     <app-primary-button
       type="button"
-      [value]="mode === TradeMode.BUY ? 'BUY' : 'SELL'"
+      [value]="mode === CoinTransactionType.BUY ? 'BUY' : 'SELL'"
       [loading]="isUpdating"
       [loadingMessage]="'Processing...'"
       [disabled]="isInvalid || showSuccessModal"
