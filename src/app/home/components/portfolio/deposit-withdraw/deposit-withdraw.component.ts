@@ -1,11 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
 import { OptionButtonComponent } from '../../../../shared/components/buttons/option-button/option-button.component';
 import { WalletService } from '../../../services/wallet.service';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+
+enum WalletAction {
+  WITHDRAW = 'withdraw',
+  DEPOSIT = 'deposit',
+}
 
 @Component({
   selector: 'app-deposit-withdraw',
@@ -21,12 +33,14 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 })
 export class DepositWithdrawComponent implements OnInit {
   private readonly destroy$ = new Subject<void>();
-  amountControl = new FormControl('10');
+  amountControl: FormControl = new FormControl();
+
+  WalletAction = WalletAction;
+  mode: WalletAction = WalletAction.WITHDRAW;
 
   walletBalance = 0;
   minValue = 10;
   maxValue = 10000;
-  mode: 'deposit' | 'withdraw' = 'deposit';
   isUpdating = false;
 
   percentages = [
@@ -38,9 +52,14 @@ export class DepositWithdrawComponent implements OnInit {
   ];
   selectedPercent = '0';
 
-  constructor(private router: Router, private walletService: WalletService) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private walletService: WalletService
+  ) {}
 
   ngOnInit(): void {
+    this.amountControl = this.fb.control('', this.getAmountValidators());
     this.updateMode();
     this.loadWalletBalance();
   }
@@ -48,6 +67,14 @@ export class DepositWithdrawComponent implements OnInit {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private getAmountValidators(): ValidatorFn[] {
+    return [
+      Validators.required,
+      Validators.min(this.minValue),
+      Validators.max(this.maxValue),
+    ];
   }
 
   private loadWalletBalance(): void {
@@ -75,12 +102,17 @@ export class DepositWithdrawComponent implements OnInit {
     return this.amount < this.minValue || this.amount > this.maxValue;
   }
 
-  get formattedAmount(): string {
-    return this.amount.toLocaleString('en-US');
-  }
-
   updateMode() {
-    this.mode = this.router.url.includes('withdraw') ? 'withdraw' : 'deposit';
+    this.mode = this.router.url.includes(WalletAction.WITHDRAW)
+      ? WalletAction.WITHDRAW
+      : WalletAction.DEPOSIT;
+
+    this.amountControl.setValidators(this.getAmountValidators());
+    this.amountControl.updateValueAndValidity();
+
+    if (this.amount < this.minValue) {
+      this.amountControl.setValue(this.minValue.toString());
+    }
   }
 
   onInputChange(event: Event) {
@@ -101,7 +133,7 @@ export class DepositWithdrawComponent implements OnInit {
     }
   }
 
-  blockNonNumeric(event: KeyboardEvent) {
+  blockNonNumeric(event: KeyboardEvent): void {
     const allowedKeys = [
       'Backspace',
       'Delete',
@@ -109,6 +141,7 @@ export class DepositWithdrawComponent implements OnInit {
       'ArrowRight',
       'Tab',
     ];
+
     if (
       allowedKeys.includes(event.key) ||
       (event.ctrlKey && ['a', 'c', 'v', 'x'].includes(event.key.toLowerCase()))
@@ -132,7 +165,8 @@ export class DepositWithdrawComponent implements OnInit {
       return;
     }
 
-    const base = this.mode === 'deposit' ? this.maxValue : this.walletBalance;
+    const base =
+      this.mode === WalletAction.DEPOSIT ? this.maxValue : this.walletBalance;
     const value = Math.floor((base * percent) / 100);
     this.amountControl.setValue(value.toString());
   }
@@ -143,23 +177,25 @@ export class DepositWithdrawComponent implements OnInit {
     const amount = Number(this.amountControl.value);
     if (amount === null) return;
 
-    this.updateWalletBalance(amount);
+    this.updateWalletBalance(amount, this.mode, () => {
+      this.isUpdating = false;
+    });
   }
 
-  private updateWalletBalance(amount: number) {
-    this.isUpdating = true;
-
+  private updateWalletBalance(
+    amount: number,
+    mode: WalletAction.DEPOSIT | WalletAction.WITHDRAW,
+    onSuccess?: () => void
+  ): void {
     this.walletService
-      .changeWalletBalance(amount, this.mode, 'fiat')
-      .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => (this.isUpdating = false))
-      )
+      .changeWalletBalance(amount, mode, 'fiat')
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (wallet) => {
+        next: (wallet: any) => {
           this.walletBalance = wallet.balance;
           this.amountControl.setValue('10');
           this.selectedPercent = '0';
+          if (onSuccess) onSuccess();
         },
         error: (error) => {
           console.error('Error during wallet update:', error);

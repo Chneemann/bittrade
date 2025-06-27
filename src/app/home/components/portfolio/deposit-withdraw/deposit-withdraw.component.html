@@ -36,7 +36,7 @@
   <div class="submit-button-container">
     <app-primary-button
       type="button"
-      [value]="mode === 'deposit' ? 'DEPOSIT' : 'WITHDRAW'"
+      [value]="mode === WalletAction.DEPOSIT ? 'DEPOSIT' : 'WITHDRAW'"
       [loading]="isUpdating"
       [loadingMessage]="'In Progress...'"
       [disabled]="isInvalid"
