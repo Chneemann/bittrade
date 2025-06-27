@@ -37,11 +37,13 @@ export class DepositWithdrawComponent implements OnInit {
 
   WalletAction = WalletAction;
   mode: WalletAction = WalletAction.WITHDRAW;
+  transactionResult: number | null = null;
 
   walletBalance = 0;
   minValue = 10;
   maxValue = 10000;
   isUpdating = false;
+  showSuccessModal = false;
 
   percentages = [
     { value: '10', label: '10%', mobileLabel: '10%' },
@@ -115,6 +117,10 @@ export class DepositWithdrawComponent implements OnInit {
     }
   }
 
+  closeSuccess(): void {
+    this.showSuccessModal = false;
+  }
+
   onInputChange(event: Event) {
     const input = (event.target as HTMLInputElement).value.replace(
       /[^0-9]/g,
@@ -178,6 +184,7 @@ export class DepositWithdrawComponent implements OnInit {
     if (amount === null) return;
 
     this.updateWalletBalance(amount, this.mode, () => {
+      this.showSuccessModal = true;
       this.isUpdating = false;
     });
   }
@@ -192,6 +199,7 @@ export class DepositWithdrawComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (wallet: any) => {
+          this.transactionResult = wallet.amount;
           this.walletBalance = wallet.balance;
           this.amountControl.setValue('10');
           this.selectedPercent = '0';
