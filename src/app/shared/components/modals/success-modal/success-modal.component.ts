@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PrimaryButtonComponent } from '../../buttons/primary-button/primary-button.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -23,17 +23,19 @@ export class SuccessModalComponent {
   @Input() coinSymbol?: string;
   @Input() show: boolean = false;
 
+  @Output() close = new EventEmitter<void>();
+
   WalletTransactionType = WalletTransactionType;
   CoinTransactionType = CoinTransactionType;
 
   constructor(private router: Router) {}
 
   closeSuccess(): void {
-    this.show = false;
+    this.close.emit();
   }
 
   goToPortfolio(): void {
-    this.closeSuccess();
+    this.close.emit();
     this.router.navigate(['/home/portfolio/']);
   }
 

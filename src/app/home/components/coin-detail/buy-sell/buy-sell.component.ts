@@ -37,6 +37,7 @@ import {
   WalletTransactionSource,
   WalletTransactionType,
 } from '../../../models/wallet.model';
+import { SuccessModalComponent } from '../../../../shared/components/modals/success-modal/success-modal.component';
 
 @Component({
   selector: 'app-buy-sell',
@@ -46,6 +47,7 @@ import {
     ReactiveFormsModule,
     PrimaryButtonComponent,
     OptionButtonComponent,
+    SuccessModalComponent,
   ],
   templateUrl: './buy-sell.component.html',
   styleUrl: './buy-sell.component.scss',
@@ -296,15 +298,6 @@ export class BuySellComponent implements OnInit, OnDestroy {
         : parseFloat(value.toFixed(8));
 
     this.amountControl.setValue(rounded.toString());
-  }
-
-  closeSuccess(): void {
-    this.showSuccessModal = false;
-  }
-
-  goToPortfolio(): void {
-    this.closeSuccess();
-    this.router.navigate(['/home/portfolio/']);
   }
 
   submit(): void {

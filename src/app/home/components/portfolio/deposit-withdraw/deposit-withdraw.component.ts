@@ -17,6 +17,7 @@ import {
   WalletTransactionType,
 } from '../../../models/wallet.model';
 import { Subject, takeUntil } from 'rxjs';
+import { SuccessModalComponent } from '../../../../shared/components/modals/success-modal/success-modal.component';
 
 @Component({
   selector: 'app-deposit-withdraw',
@@ -26,6 +27,7 @@ import { Subject, takeUntil } from 'rxjs';
     ReactiveFormsModule,
     PrimaryButtonComponent,
     OptionButtonComponent,
+    SuccessModalComponent,
   ],
   templateUrl: './deposit-withdraw.component.html',
   styleUrl: './deposit-withdraw.component.scss',
@@ -114,15 +116,6 @@ export class DepositWithdrawComponent implements OnInit {
     if (this.amount < this.minValue) {
       this.amountControl.setValue(this.minValue.toString());
     }
-  }
-
-  closeSuccess(): void {
-    this.showSuccessModal = false;
-  }
-
-  goToPortfolio(): void {
-    this.closeSuccess();
-    this.router.navigate(['/home/portfolio/']);
   }
 
   onInputChange(event: Event) {

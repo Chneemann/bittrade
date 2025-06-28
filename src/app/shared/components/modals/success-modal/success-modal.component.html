@@ -28,7 +28,7 @@
       <strong>
         {{
           transactionResult?.amount * transactionResult?.price_per_coin
-            | number : "1.2-2"
+            | currency : "USD" : "symbol" : "1.2-2"
         }}
       </strong>
     </div>
