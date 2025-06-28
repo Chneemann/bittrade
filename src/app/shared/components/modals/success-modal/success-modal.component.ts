@@ -2,6 +2,10 @@ import { Component, Input } from '@angular/core';
 import { PrimaryButtonComponent } from '../../buttons/primary-button/primary-button.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import {
+  CoinTransactionType,
+  WalletTransactionType,
+} from '../../../../home/models/wallet.model';
 
 @Component({
   selector: 'app-success-modal',
@@ -10,10 +14,17 @@ import { Router } from '@angular/router';
   styleUrl: './success-modal.component.scss',
 })
 export class SuccessModalComponent {
-  @Input() mode!: 'buy' | 'sell' | 'deposit' | 'withdraw';
+  @Input() mode!:
+    | CoinTransactionType.BUY
+    | CoinTransactionType.SELL
+    | WalletTransactionType.DEPOSIT
+    | WalletTransactionType.WITHDRAW;
   @Input() transactionResult: any;
   @Input() coinSymbol?: string;
   @Input() show: boolean = false;
+
+  WalletTransactionType = WalletTransactionType;
+  CoinTransactionType = CoinTransactionType;
 
   constructor(private router: Router) {}
 
@@ -27,10 +38,16 @@ export class SuccessModalComponent {
   }
 
   get isBuyOrSell(): boolean {
-    return this.mode === 'buy' || this.mode === 'sell';
+    return (
+      this.mode === CoinTransactionType.BUY ||
+      this.mode === CoinTransactionType.SELL
+    );
   }
 
   get isDepositOrWithdraw(): boolean {
-    return this.mode === 'deposit' || this.mode === 'withdraw';
+    return (
+      this.mode === WalletTransactionType.DEPOSIT ||
+      this.mode === WalletTransactionType.WITHDRAW
+    );
   }
 }

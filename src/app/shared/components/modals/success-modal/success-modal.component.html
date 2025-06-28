@@ -9,13 +9,13 @@
 
     <div class="message">
       You @if (isBuyOrSell) {
-      {{ mode === "buy" ? "bought" : "sold" }}
+      {{ mode === CoinTransactionType.BUY ? "bought" : "sold" }}
       <strong
         >{{ transactionResult?.amount | number : "1.0-6" }}
         {{ coinSymbol }}</strong
       >
       } @if (isDepositOrWithdraw) {
-      {{ mode === "deposit" ? "deposited" : "withdrew" }}
+      {{ mode === WalletTransactionType.DEPOSIT ? "deposited" : "withdrew" }}
       <strong>{{
         transactionResult | currency : "USD" : "symbol" : "1.2-2"
       }}</strong>
@@ -24,7 +24,7 @@
 
     @if (isBuyOrSell) {
     <div class="amount-detail">
-      {{ mode === "buy" ? "Spent" : "Received" }}:
+      {{ mode === CoinTransactionType.BUY ? "Spent" : "Received" }}:
       <strong>
         {{
           transactionResult?.amount * transactionResult?.price_per_coin
