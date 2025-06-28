@@ -1,0 +1,52 @@
+@if (show) {
+<div class="modal-overlay">
+  <div class="success-modal">
+    <div class="icon">
+      <img src="assets/img/success.svg" alt="Success icon" />
+    </div>
+
+    <div class="headline">Transaction Successful</div>
+
+    <div class="message">
+      You @if (isBuyOrSell) {
+      {{ mode === "buy" ? "bought" : "sold" }}
+      <strong
+        >{{ transactionResult?.amount | number : "1.0-6" }}
+        {{ coinSymbol }}</strong
+      >
+      } @if (isDepositOrWithdraw) {
+      {{ mode === "deposit" ? "deposited" : "withdrew" }}
+      <strong>{{
+        transactionResult | currency : "USD" : "symbol" : "1.2-2"
+      }}</strong>
+      }
+    </div>
+
+    @if (isBuyOrSell) {
+    <div class="amount-detail">
+      {{ mode === "buy" ? "Spent" : "Received" }}:
+      <strong>
+        {{
+          transactionResult?.amount * transactionResult?.price_per_coin
+            | number : "1.2-2"
+        }}
+      </strong>
+    </div>
+    }
+
+    <div class="actions">
+      <app-primary-button
+        type="button"
+        [value]="'Go to Portfolio'"
+        (click)="goToPortfolio()"
+      ></app-primary-button>
+
+      <app-primary-button
+        type="button"
+        [value]="'Another Transaction'"
+        (click)="closeSuccess()"
+      ></app-primary-button>
+    </div>
+  </div>
+</div>
+}
