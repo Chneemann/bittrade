@@ -8,13 +8,13 @@
     <div class="headline">Transaction Successful</div>
 
     <div class="message">
-      You @if (isBuyOrSell) {
+      You @if (isBuyOrSell && isCoinTransaction(transactionResult)) {
       {{ mode === CoinTransactionType.BUY ? "bought" : "sold" }}
-      <strong
-        >{{ transactionResult?.amount | number : "1.0-6" }}
-        {{ coinSymbol }}</strong
-      >
-      } @if (isDepositOrWithdraw) {
+      <strong>
+        {{ transactionResult.amount | number : "1.0-6" }} {{ coinSymbol }}
+      </strong>
+      } @else if (isDepositOrWithdraw && !isCoinTransaction(transactionResult))
+      {
       {{ mode === WalletTransactionType.DEPOSIT ? "deposited" : "withdrew" }}
       <strong>{{
         transactionResult | currency : "USD" : "symbol" : "1.2-2"
@@ -22,12 +22,12 @@
       }
     </div>
 
-    @if (isBuyOrSell) {
+    @if (isBuyOrSell && isCoinTransaction(transactionResult)) {
     <div class="amount-detail">
       {{ mode === CoinTransactionType.BUY ? "Spent" : "Received" }}:
       <strong>
         {{
-          transactionResult?.amount * transactionResult?.price_per_coin
+          transactionResult.amount * transactionResult.price_per_coin
             | currency : "USD" : "symbol" : "1.2-2"
         }}
       </strong>

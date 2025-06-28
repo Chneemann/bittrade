@@ -6,6 +6,7 @@ import {
   CoinTransactionType,
   WalletTransactionType,
 } from '../../../../home/models/wallet.model';
+import { CoinTransactionCreateDto } from '../../../../home/models/coin.model';
 
 @Component({
   selector: 'app-success-modal',
@@ -19,7 +20,7 @@ export class SuccessModalComponent {
     | CoinTransactionType.SELL
     | WalletTransactionType.DEPOSIT
     | WalletTransactionType.WITHDRAW;
-  @Input() transactionResult: any;
+  @Input() transactionResult!: CoinTransactionCreateDto | number | null;
   @Input() coinSymbol?: string;
   @Input() show: boolean = false;
 
@@ -37,6 +38,14 @@ export class SuccessModalComponent {
   goToPortfolio(): void {
     this.close.emit();
     this.router.navigate(['/home/portfolio/']);
+  }
+
+  isCoinTransaction(
+    result: CoinTransactionCreateDto | number | null
+  ): result is CoinTransactionCreateDto {
+    return (
+      result != null && typeof result === 'object' && 'price_per_coin' in result
+    );
   }
 
   get isBuyOrSell(): boolean {
