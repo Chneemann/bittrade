@@ -1,3 +1,4 @@
+@if (profile$ | async; as profile) {
 <div class="profile">
   <!-- User card -->
   <div class="user-card">
@@ -11,8 +12,8 @@
 
     <div class="user-info">
       <div class="user-details">
-        <p class="name">Guestaccount</p>
-        <p class="email">guest&#64;example.com</p>
+        <p class="name">{{ profile.username }}</p>
+        <p class="email">{{ profile.email }}</p>
       </div>
       <div class="user-verify">
         <picture>
@@ -32,15 +33,15 @@
     <div class="stat-grid">
       <div class="stat-box">
         <p class="label">Purchases</p>
-        <p class="value">12</p>
+        <p class="value">{{ profile.coin_purchases }}</p>
       </div>
       <div class="stat-box">
         <p class="label">Sales</p>
-        <p class="value">5</p>
+        <p class="value">{{ profile.coin_sales }}</p>
       </div>
       <div class="stat-box">
         <p class="label">Held Coins</p>
-        <p class="value">3</p>
+        <p class="value">{{ profile.held_coins }}</p>
       </div>
     </div>
   </div>
@@ -72,3 +73,4 @@
     ></app-primary-button>
   </div>
 </div>
+}
