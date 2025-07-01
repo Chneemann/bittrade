@@ -52,15 +52,23 @@
     <div class="stat-grid">
       <div class="stat-box">
         <p class="label">Deposits</p>
-        <p class="value">€1,250</p>
+        <p class="value">
+          {{ profile.wallet_deposits | currency : "USD" : "symbol" : "1.2-2" }}
+        </p>
       </div>
       <div class="stat-box">
         <p class="label">Withdrawals</p>
-        <p class="value">€830</p>
+        <p class="value">
+          {{
+            profile.wallet_withdrawals | currency : "USD" : "symbol" : "1.2-2"
+          }}
+        </p>
       </div>
       <div class="stat-box">
         <p class="label">Balance</p>
-        <p class="value">€420</p>
+        <p class="value">
+          {{ profile.wallet_balance | currency : "USD" : "symbol" : "1.2-2" }}
+        </p>
       </div>
     </div>
   </div>

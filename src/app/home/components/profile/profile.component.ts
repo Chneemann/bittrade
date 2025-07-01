@@ -29,6 +29,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
           coin_purchases: 0,
           coin_sales: 0,
           held_coins: 0,
+          wallet_deposits: 0,
+          wallet_withdrawals: 0,
+          wallet_balance: 0,
         });
       })
     );
