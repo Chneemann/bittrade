@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
 import { RouterLink } from '@angular/router';
-import { UserProfile, UserService } from '../../services/user.service';
+import { UserService } from '../../services/user.service';
 import { catchError, Observable, of, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { UserProfile } from '../../models/user.model';
 
 @Component({
   selector: 'app-profile',

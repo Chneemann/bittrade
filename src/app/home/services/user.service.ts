@@ -1,18 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BackendApiService } from '../../core/services/backend-api.service';
-
-export interface UserProfile {
-  id: string;
-  username: string;
-  email: string;
-  coin_purchases: number;
-  coin_sales: number;
-  held_coins: number;
-  wallet_deposits: number;
-  wallet_withdrawals: number;
-  wallet_balance: number;
-}
+import { UserProfile } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
