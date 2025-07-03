@@ -17,11 +17,22 @@
       </div>
       <div class="user-verify">
         <picture>
+          @if (profile.verified) {
           <source
             media="(max-width: 450px)"
-            srcset="assets/img/profile/verify-short.svg"
+            srcset="assets/img/profile/verified-short.svg"
           />
-          <img src="assets/img/profile/verify-long.svg" alt="Verify icon" />
+          <img src="assets/img/profile/verified-long.svg" alt="Verified icon" />
+          } @else {
+          <source
+            media="(max-width: 450px)"
+            srcset="assets/img/profile/unverified-short.svg"
+          />
+          <img
+            src="assets/img/profile/unverified-long.svg"
+            alt="Unverified icon"
+          />
+          }
         </picture>
       </div>
     </div>

@@ -1,0 +1,6 @@
+<svg width="118" height="36" viewBox="0 0 118 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="118" height="36" rx="14" fill="#FFCCCC"/>
+  <path d="M14 14L22 22M22 14L14 22" stroke="#C00000" stroke-width="1.6" stroke-linecap="round"/>
+  <circle cx="18" cy="18" r="9" stroke="#C00000" stroke-width="1.6"/>
+  <text x="36" y="24" fill="#11183C" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Unverified</text>
+</svg>

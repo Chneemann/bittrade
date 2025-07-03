@@ -27,6 +27,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           id: '',
           username: '',
           email: '',
+          verified: false,
           coin_purchases: 0,
           coin_sales: 0,
           held_coins: 0,
