@@ -80,6 +80,15 @@
     (close)="showSuccessModal = false"
   ></app-success-modal>
 
+  <app-confirmation-modal
+    [show]="showConfirmationModal"
+    [mode]="mode"
+    [previewTransaction]="previewTransaction"
+    [coinSymbol]="holding?.coin?.symbol"
+    (confirm)="onUserConfirmed()"
+    (cancel)="showConfirmationModal = false"
+  ></app-confirmation-modal>
+
   <div class="submit-button-container">
     <app-primary-button
       type="button"

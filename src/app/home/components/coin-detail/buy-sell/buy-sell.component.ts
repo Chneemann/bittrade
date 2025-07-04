@@ -38,6 +38,7 @@ import {
   WalletTransactionType,
 } from '../../../models/wallet.model';
 import { SuccessModalComponent } from '../../../../shared/components/modals/success-modal/success-modal.component';
+import { ConfirmationModalComponent } from '../../../../shared/components/modals/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-buy-sell',
@@ -48,6 +49,7 @@ import { SuccessModalComponent } from '../../../../shared/components/modals/succ
     PrimaryButtonComponent,
     OptionButtonComponent,
     SuccessModalComponent,
+    ConfirmationModalComponent,
   ],
   templateUrl: './buy-sell.component.html',
   styleUrl: './buy-sell.component.scss',
@@ -58,6 +60,8 @@ export class BuySellComponent implements OnInit, OnDestroy {
 
   currentCoin: Coin | null = null;
   holding: CoinHolding | null = null;
+
+  previewTransaction: CoinTransactionCreateDto | null = null;
   transactionResult: CoinTransactionCreateDto | null = null;
   CoinTransactionType = CoinTransactionType;
   mode: CoinTransactionType = CoinTransactionType.BUY;
@@ -67,8 +71,10 @@ export class BuySellComponent implements OnInit, OnDestroy {
 
   minValue = 10;
   maxValue = 10000;
+
   isUpdating = false;
   showSuccessModal = false;
+  showConfirmationModal = false;
 
   percentages = [
     { value: '10', label: '10%', mobileLabel: '10%' },
@@ -301,8 +307,28 @@ export class BuySellComponent implements OnInit, OnDestroy {
   }
 
   submit(): void {
-    if (this.isInvalid || this.isUpdating || !this.currentCoin) return;
+    if (this.isInvalid || this.isUpdating) return;
 
+    const priceUSD = this.currentCoin?.market_data?.current_price?.['usd'] ?? 0;
+
+    const transaction: CoinTransactionCreateDto = {
+      transaction_type: this.mode,
+      amount:
+        this.mode === CoinTransactionType.BUY
+          ? parseFloat((this.amount / priceUSD).toFixed(8))
+          : parseFloat(this.amount.toFixed(8)),
+      price_per_coin: priceUSD,
+    };
+
+    this.previewTransaction = transaction;
+    this.showConfirmationModal = true;
+  }
+
+  onUserConfirmed() {
+    console.log(!this.currentCoin);
+    if (!this.currentCoin) return;
+
+    this.showConfirmationModal = false;
     this.isUpdating = true;
 
     const priceUSD = this.currentCoin.market_data.current_price['usd'];

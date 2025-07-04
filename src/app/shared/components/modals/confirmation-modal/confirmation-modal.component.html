@@ -1,0 +1,44 @@
+@if (show) {
+<div class="modal-overlay" (click)="cancel.emit()">
+  <div class="confirmation-modal" (click)="$event.stopPropagation()">
+    <div class="icon">
+      <img src="assets/img/warning.svg" alt="Warning icon" />
+    </div>
+
+    <div class="headline">Confirm Transaction</div>
+
+    <div class="message">
+      You @if (isBuyOrSell && isCoinTransaction(previewTransaction)) {
+      {{ mode === CoinTransactionType.BUY ? "bought" : "sold" }}
+      <strong>
+        {{ previewTransaction.amount | number : "1.0-6" }} {{ coinSymbol }}
+      </strong>
+      for
+      <strong>
+        {{ totalPrice | currency : "USD" : "symbol" : "1.2-2" }}
+      </strong>
+      } @else if (isDepositOrWithdraw && !isCoinTransaction(previewTransaction))
+      {
+      {{ mode === WalletTransactionType.DEPOSIT ? "deposited" : "withdrew" }}
+      <strong>{{
+        previewTransaction | currency : "USD" : "symbol" : "1.2-2"
+      }}</strong>
+      }
+    </div>
+
+    <div class="actions">
+      <app-primary-button
+        type="button"
+        [value]="'Yes, Confirm'"
+        (click)="confirm.emit()"
+      ></app-primary-button>
+
+      <app-primary-button
+        type="button"
+        [value]="'Cancel'"
+        (click)="cancel.emit()"
+      ></app-primary-button>
+    </div>
+  </div>
+</div>
+}
