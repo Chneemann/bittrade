@@ -36,7 +36,7 @@ export class SuccessModalComponent {
   }
 
   goToPortfolio(): void {
-    this.close.emit();
+    this.closeSuccess();
     this.router.navigate(['/home/portfolio/']);
   }
 

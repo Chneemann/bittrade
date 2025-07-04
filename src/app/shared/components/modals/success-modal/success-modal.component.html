@@ -1,6 +1,6 @@
 @if (show) {
-<div class="modal-overlay">
-  <div class="success-modal">
+<div class="modal-overlay" (click)="closeSuccess()">
+  <div class="success-modal" (click)="$event.stopPropagation()">
     <div class="icon">
       <img src="assets/img/success.svg" alt="Success icon" />
     </div>
