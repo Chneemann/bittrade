@@ -56,7 +56,7 @@ export class HeaderComponent {
       title: 'Profile',
     },
     'home/portfolio': {
-      dataKey: null,
+      dataKey: 'cachedCoinPrices',
       title: 'Portfolio',
     },
     'home/deposit': {
@@ -140,7 +140,7 @@ export class HeaderComponent {
     const cleanName = coin.name.trim().toLowerCase();
     const path = `home/buy/${cleanName}`;
     this.routeConfigs[path] = {
-      dataKey: null,
+      dataKey: `cachedCoin${coin.name}`,
       title: `Buy ${coin.name} (${coin.symbol})`,
       icon: cleanName,
     };
@@ -150,7 +150,7 @@ export class HeaderComponent {
     const cleanName = coin.name.trim().toLowerCase();
     const path = `home/sell/${cleanName}`;
     this.routeConfigs[path] = {
-      dataKey: null,
+      dataKey: `cachedCoin${coin.name}`,
       title: `Sell ${coin.name} (${coin.symbol})`,
       icon: cleanName,
     };
