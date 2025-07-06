@@ -13,6 +13,7 @@ import { ProfileComponent } from './home/components/profile/profile.component';
 import { PortfolioComponent } from './home/components/portfolio/portfolio.component';
 import { DepositWithdrawComponent } from './home/components/portfolio/deposit-withdraw/deposit-withdraw.component';
 import { BuySellComponent } from './home/components/coin-detail/buy-sell/buy-sell.component';
+import { EditProfileComponent } from './home/components/profile/edit-profile/edit-profile.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -37,6 +38,7 @@ export const routes: Routes = [
       { path: 'privacy-policy', component: PrivacyPolicyComponent },
       { path: 'legal-notice', component: LegalNoticeComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'profile/edit', component: EditProfileComponent },
       { path: 'portfolio', component: PortfolioComponent },
       { path: 'market', component: MarketComponent },
       { path: 'coin/:id', component: CoinDetailComponent },

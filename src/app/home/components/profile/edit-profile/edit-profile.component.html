@@ -1,0 +1,143 @@
+@if (userProfile$ | async; as profile) {
+<div class="profile-edit-container">
+  <!-- Section: Personal Information -->
+  <div class="section-box">
+    <p class="section-title">Personal Information</p>
+    <form
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+      enctype="multipart/form-data"
+    >
+      <!-- Username field -->
+      <div class="input-field">
+        <input
+          formControlName="username"
+          type="username"
+          id="username"
+          name="username"
+          autocomplete="username"
+          (focus)="usernameFieldFocused = true"
+          (blur)="usernameFieldFocused = false"
+          [ngClass]="usernameInputClasses"
+          [attr.aria-describedby]="
+            getFormErrors('username').length ? 'username-errors' : null
+          "
+        />
+
+        <!-- Static username icon -->
+        <img
+          class="icon icon--base"
+          src="./assets/img/form/person.svg"
+          alt="username icon"
+          [ngClass]="usernameInputClasses"
+        />
+
+        @if (form.controls['username'].valid) {
+        <!-- Success icon -->
+        <img
+          class="icon icon--status"
+          src="./assets/img/form/success.svg"
+          alt="valid input"
+        />
+        } @else if (getFormErrors('username').length > 0) {
+        <!-- Error icon -->
+        <img
+          class="icon icon--status"
+          src="./assets/img/form/error.svg"
+          alt="invalid input"
+        />
+        }
+
+        <label for="username" [ngClass]="usernameInputClasses">
+          Username
+        </label>
+      </div>
+
+      <div
+        id="username-errors"
+        class="error-wrapper"
+        role="alert"
+        aria-live="assertive"
+      >
+        <!-- Frontend email error message -->
+        @if (getFormErrors('username').length) {
+        <div class="error-message">
+          @for (error of getFormErrors('username'); track $index) {
+          <p>{{ error }}</p>
+          }
+        </div>
+        }
+      </div>
+
+      <!-- Email field -->
+      <div class="input-field">
+        <input
+          formControlName="email"
+          type="email"
+          id="email"
+          name="email"
+          autocomplete="email"
+          (focus)="emailFieldFocused = true"
+          (blur)="emailFieldFocused = false"
+          [ngClass]="emailInputClasses"
+          [attr.aria-describedby]="
+            getFormErrors('email').length ? 'email-errors' : null
+          "
+        />
+
+        <!-- Static email icon -->
+        <img
+          class="icon icon--base"
+          src="./assets/img/form/email.svg"
+          alt="email icon"
+          [ngClass]="emailInputClasses"
+        />
+
+        @if (form.controls['email'].valid) {
+        <!-- Success icon -->
+        <img
+          class="icon icon--status"
+          src="./assets/img/form/success.svg"
+          alt="valid input"
+        />
+        } @else if (getFormErrors('email').length > 0) {
+        <!-- Error icon -->
+        <img
+          class="icon icon--status"
+          src="./assets/img/form/error.svg"
+          alt="invalid input"
+        />
+        }
+
+        <label for="email" [ngClass]="emailInputClasses">Email Address</label>
+      </div>
+
+      <div
+        id="email-errors"
+        class="error-wrapper"
+        role="alert"
+        aria-live="assertive"
+      >
+        <!-- Frontend email error message -->
+        @if (getFormErrors('email').length) {
+        <div class="error-message">
+          @for (error of getFormErrors('email'); track $index) {
+          <p>{{ error }}</p>
+          }
+        </div>
+        }
+      </div>
+    </form>
+  </div>
+
+  <!-- Button -->
+  <div class="button-container">
+    <app-primary-button
+      type="button"
+      value="Save Changes"
+      [disabled]="!form.valid || !hasProfileChanged()"
+      (click)="onSubmit()"
+    ></app-primary-button>
+  </div>
+</div>
+}
