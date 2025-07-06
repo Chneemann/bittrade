@@ -29,6 +29,15 @@ export class UserService {
     );
   }
 
+  updateProfile(updatedProfile: Partial<UserProfile>): Observable<UserProfile> {
+    return this.backendApi
+      .patch<UserProfile, Partial<UserProfile>>(
+        '/auth/me/update/',
+        updatedProfile
+      )
+      .pipe(tap((profile) => this.userProfileSubject.next(profile)));
+  }
+
   setProfile(profile: UserProfile): void {
     this.userProfileSubject.next(profile);
   }

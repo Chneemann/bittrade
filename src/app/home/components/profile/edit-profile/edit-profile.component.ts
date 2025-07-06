@@ -12,6 +12,10 @@ import { PrimaryButtonComponent } from '../../../../shared/components/buttons/pr
 import { Subject, Observable, takeUntil } from 'rxjs';
 import { UserProfile } from '../../../models/user.model';
 import { UserService } from '../../../services/user.service';
+import {
+  noSpecialCharsValidator,
+  strictEmailValidator,
+} from '../../../../shared/validators/form-validators';
 
 @Component({
   selector: 'app-edit-profile',
@@ -76,22 +80,28 @@ export class EditProfileComponent {
 
   private createProfileForm(): void {
     this.form = this.formBuilder.nonNullable.group({
-      username: ['', [Validators.minLength(8)]],
-      email: ['', [Validators.email]],
+      username: ['', [Validators.minLength(8), noSpecialCharsValidator]],
+      email: ['', [strictEmailValidator]],
     });
   }
 
   onSubmit() {
     if (this.form.invalid) return;
 
-    const updated = this.form.getRawValue();
-    this.originalProfile = {
-      ...this.originalProfile!,
-      ...updated,
-    };
+    const updated: Partial<UserProfile> = this.form.getRawValue();
 
-    this.form.markAsPristine();
-    console.log('Profile Updated:', updated);
+    this.userService
+      .updateProfile(updated)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (profile) => {
+          this.originalProfile = { ...profile };
+          this.form.markAsPristine();
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
   }
 
   getFormErrors(controlName: 'username' | 'email'): string[] {
@@ -104,6 +114,8 @@ export class EditProfileComponent {
           return `Please enter your ${controlName}`;
         case 'email':
           return 'This is not a valid email format';
+        case 'noSpecialChars':
+          return 'Special characters are not allowed';
         case 'minlength':
           return `Your ${controlName} is too short, min 8 characters`;
         default:

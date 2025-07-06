@@ -54,6 +54,20 @@ export class BackendApiService {
   }
 
   /**
+   * Sends a PATCH request to the backend API.
+   * @template T Response data type
+   * @template B Request body type
+   * @param endpoint API endpoint path (appended to base URL)
+   * @param body Request body data
+   * @returns Observable emitting the response data of type T
+   */
+  patch<T, B>(endpoint: string, body: B): Observable<T> {
+    return this.http
+      .patch<T>(`${this.baseUrl}${endpoint}`, body, { withCredentials: true })
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
    * Sends a DELETE request to the backend API.
    * @template T Response data type
    * @param endpoint API endpoint path (appended to base URL)
