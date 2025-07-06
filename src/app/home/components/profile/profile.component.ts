@@ -18,6 +18,6 @@ export class ProfileComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.userProfile$ = this.userService.loadProfile();
+    this.userProfile$ = this.userService.userProfile$;
   }
 }
