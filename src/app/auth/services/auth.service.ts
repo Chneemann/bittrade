@@ -3,6 +3,8 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap, shareReplay } from 'rxjs/operators';
 import { BackendApiService } from '../../core/services/backend-api.service';
 import { CoinGeckoCacheService } from '../../core/services/external/coin-gecko-cache.service';
+import { UserService } from '../../home/services/user.service';
+import { UserProfile } from '../../home/models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,19 +15,22 @@ export class AuthService {
 
   constructor(
     private backendApiService: BackendApiService,
-    private coinGeckoCacheService: CoinGeckoCacheService
+    private coinGeckoCacheService: CoinGeckoCacheService,
+    private userService: UserService
   ) {}
 
   initAuthCheck(): Observable<boolean> {
-    if (this.authCheck$) {
-      return this.authCheck$;
-    }
+    if (this.authCheck$) return this.authCheck$;
 
-    this.authCheck$ = this.backendApiService.get('/auth/me/').pipe(
-      tap(() => this.loggedInSubject.next(true)),
+    this.authCheck$ = this.backendApiService.get<UserProfile>('/auth/me/').pipe(
+      tap((profile) => {
+        this.loggedInSubject.next(true);
+        this.userService.setProfile(profile);
+      }),
       map(() => true),
       catchError(() => {
         this.loggedInSubject.next(false);
+        this.userService.clearProfile();
         return of(false);
       }),
       shareReplay(1)

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { UserService } from '../../../home/services/user.service';
 
 @Component({
   selector: 'app-logout',
@@ -9,7 +10,11 @@ import { firstValueFrom } from 'rxjs';
   styleUrl: './logout.component.scss',
 })
 export class LogoutComponent implements OnInit {
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
     this.handleLogout();
@@ -21,6 +26,7 @@ export class LogoutComponent implements OnInit {
     } catch (error) {
       console.error('Logout failed', error);
     } finally {
+      this.userService.clearProfile();
       this.redirectToLogin();
     }
   }
