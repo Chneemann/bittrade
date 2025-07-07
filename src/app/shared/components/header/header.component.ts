@@ -51,6 +51,10 @@ export class HeaderComponent {
       dataKey: null,
       title: 'Transactions',
     },
+    'home/profile/edit': {
+      dataKey: null,
+      title: 'Edit Profile',
+    },
     'home/profile': {
       dataKey: null,
       title: 'Profile',
@@ -241,6 +245,7 @@ export class HeaderComponent {
       'home/sell',
       'home/legal-notice',
       'home/privacy-policy',
+      'home/profile/edit',
     ];
     return backButtonPaths.some(
       (path) =>
