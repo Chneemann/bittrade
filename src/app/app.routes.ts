@@ -14,6 +14,7 @@ import { PortfolioComponent } from './home/components/portfolio/portfolio.compon
 import { DepositWithdrawComponent } from './home/components/portfolio/deposit-withdraw/deposit-withdraw.component';
 import { BuySellComponent } from './home/components/coin-detail/buy-sell/buy-sell.component';
 import { EditProfileComponent } from './home/components/profile/edit-profile/edit-profile.component';
+import { EmailVerificationComponent } from './auth/components/email-verification/email-verification.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -26,6 +27,7 @@ export const routes: Routes = [
       { path: 'logout', component: LogoutComponent },
       { path: 'login/privacy-policy', component: PrivacyPolicyComponent },
       { path: 'login/legal-notice', component: LegalNoticeComponent },
+      { path: 'verify-email', component: EmailVerificationComponent },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
     ],
   },
