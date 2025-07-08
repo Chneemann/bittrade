@@ -97,37 +97,44 @@ export class EditProfileComponent {
     });
   }
 
-  onSubmit(): void {
+  onSubmit() {
     if (this.form.invalid || this.loadingSubject.value) return;
 
+    this.loadingSubject.next(true);
     this.emailFeedbackMessage = '';
     this.errorMessage = '';
 
-    this.loadingSubject.next(true);
+    const updated = this.form.getRawValue();
 
-    const updated: Partial<UserProfile> = this.form.getRawValue();
+    this.updateUserProfile(updated);
+  }
 
+  private updateUserProfile(updated: Partial<UserProfile>) {
     this.userService
       .updateProfile(updated)
       .pipe(
         takeUntil(this.destroy$),
-        tap((profile) => {
-          this.originalProfile = { ...profile };
-          this.form.markAsPristine();
-
-          if ((profile as any).email_verification_required) {
-            this.emailFeedbackMessage =
-              ' Please check your email to confirm the new address.';
-          }
-        }),
-        catchError((err) => {
-          console.error(err);
-          this.errorMessage = 'Failed to update profile. Please try again.';
-          return EMPTY;
-        }),
+        tap((profile) => this.handleSuccess(profile)),
+        catchError((err) => this.handleError(err)),
         finalize(() => this.loadingSubject.next(false))
       )
       .subscribe();
+  }
+
+  private handleSuccess(profile: UserProfile) {
+    this.originalProfile = { ...profile };
+    this.form.markAsPristine();
+
+    if ((profile as any)?.email_verification_required) {
+      this.emailFeedbackMessage =
+        ' Please check your email to confirm the new address.';
+    }
+  }
+
+  private handleError(err: unknown): Observable<never> {
+    console.error(err);
+    this.errorMessage = 'Failed to update profile. Please try again.';
+    return EMPTY;
   }
 
   getFormErrors(controlName: 'username' | 'email'): string[] {
