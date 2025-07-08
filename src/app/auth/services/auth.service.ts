@@ -5,6 +5,7 @@ import { BackendApiService } from '../../core/services/backend-api.service';
 import { CoinGeckoCacheService } from '../../core/services/external/coin-gecko-cache.service';
 import { UserService } from '../../home/services/user.service';
 import { UserProfile } from '../../home/models/user.model';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -51,6 +52,13 @@ export class AuthService {
           this.authCheck$ = null;
         })
       );
+  }
+
+  verifyEmail(uid: string, token: string): Observable<{ detail: string }> {
+    return this.backendApiService.get<{ detail: string }>(
+      '/auth/verify-email/',
+      new HttpParams({ fromObject: { uid, token } })
+    );
   }
 
   logout(): Observable<void> {

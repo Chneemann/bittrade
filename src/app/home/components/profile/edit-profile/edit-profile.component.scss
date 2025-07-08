@@ -23,6 +23,14 @@
     font-weight: 600;
     color: var(--color-font-primary);
   }
+
+  .email-feedback-message {
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+    padding: 4px;
+    color: var(--color-red);
+  }
 }
 
 .button-container {

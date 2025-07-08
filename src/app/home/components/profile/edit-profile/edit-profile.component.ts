@@ -36,7 +36,7 @@ export class EditProfileComponent {
     email: FormControl<string>;
   }>;
 
-  successMessage = '';
+  emailFeedbackMessage = '';
   errorMessage = '';
 
   usernameFieldFocused = false;
@@ -97,6 +97,11 @@ export class EditProfileComponent {
         next: (profile) => {
           this.originalProfile = { ...profile };
           this.form.markAsPristine();
+
+          if ((profile as any).email_verification_required) {
+            this.emailFeedbackMessage =
+              ' Please check your email to confirm the new address.';
+          }
         },
         error: (err) => {
           console.error(err);
