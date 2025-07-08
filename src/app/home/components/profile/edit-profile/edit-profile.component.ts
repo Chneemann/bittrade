@@ -9,7 +9,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
-import { Subject, Observable, takeUntil } from 'rxjs';
+import {
+  Subject,
+  Observable,
+  takeUntil,
+  finalize,
+  BehaviorSubject,
+  catchError,
+  tap,
+  EMPTY,
+} from 'rxjs';
 import { UserProfile } from '../../../models/user.model';
 import { UserService } from '../../../services/user.service';
 import {
@@ -45,6 +54,9 @@ export class EditProfileComponent {
   private originalProfile: Partial<UserProfile> | null = null;
 
   userProfile$!: Observable<UserProfile | null>;
+
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  updatingProfile$ = this.loadingSubject.asObservable();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -85,16 +97,21 @@ export class EditProfileComponent {
     });
   }
 
-  onSubmit() {
-    if (this.form.invalid) return;
+  onSubmit(): void {
+    if (this.form.invalid || this.loadingSubject.value) return;
+
+    this.emailFeedbackMessage = '';
+    this.errorMessage = '';
+
+    this.loadingSubject.next(true);
 
     const updated: Partial<UserProfile> = this.form.getRawValue();
 
     this.userService
       .updateProfile(updated)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (profile) => {
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((profile) => {
           this.originalProfile = { ...profile };
           this.form.markAsPristine();
 
@@ -102,11 +119,15 @@ export class EditProfileComponent {
             this.emailFeedbackMessage =
               ' Please check your email to confirm the new address.';
           }
-        },
-        error: (err) => {
+        }),
+        catchError((err) => {
           console.error(err);
-        },
-      });
+          this.errorMessage = 'Failed to update profile. Please try again.';
+          return EMPTY;
+        }),
+        finalize(() => this.loadingSubject.next(false))
+      )
+      .subscribe();
   }
 
   getFormErrors(controlName: 'username' | 'email'): string[] {

@@ -20,7 +20,7 @@ export class PrimaryButtonComponent implements OnChanges, OnDestroy {
   @Input() type: string = '';
   @Input() value: string = '';
   @Input() disabled: boolean = false;
-  @Input() loading: boolean = false;
+  @Input() loading: boolean | null = false;
   @Input() loadingMessage: string = 'Loading...';
 
   displayedText$ = new BehaviorSubject<string>('');

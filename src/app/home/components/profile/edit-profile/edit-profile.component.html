@@ -127,19 +127,25 @@
         </div>
         }
       </div>
-      @if (emailFeedbackMessage) {
-      <div class="email-feedback-message">
-        {{ emailFeedbackMessage }}
-      </div>
-      }
     </form>
   </div>
+
+  <!-- Error messages -->
+  @if (emailFeedbackMessage) {
+  <div class="error-message">
+    {{ emailFeedbackMessage }}
+  </div>
+  } @else if (errorMessage) {
+  <div class="error-message">{{ errorMessage }}</div>
+  }
 
   <!-- Button -->
   <div class="button-container">
     <app-primary-button
       type="button"
       value="Save Changes"
+      [loading]="updatingProfile$ | async"
+      [loadingMessage]="'Updating profile...'"
       [disabled]="!form.valid || !hasProfileChanged()"
       (click)="onSubmit()"
     ></app-primary-button>
