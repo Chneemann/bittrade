@@ -32,6 +32,13 @@
   color: var(--color-red);
 }
 
+.hint-message {
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
+  color: var(--color-font-secondary);
+}
+
 .button-container {
   display: flex;
   flex-direction: column;

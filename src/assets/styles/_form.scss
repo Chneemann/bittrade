@@ -46,6 +46,11 @@ form {
       border-color: var(--color-red);
       color: var(--color-red);
     }
+
+    &:read-only {
+      border-style: dashed;
+      opacity: 0.5;
+    }
   }
 
   label {
@@ -106,6 +111,10 @@ form {
     &.invalid,
     &.invalid.focused {
       filter: var(--filter-color-red);
+    }
+
+    &:read-only {
+      opacity: 0.5;
     }
   }
 }

@@ -25,6 +25,7 @@ import {
   noSpecialCharsValidator,
   strictEmailValidator,
 } from '../../../../shared/validators/form-validators';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-edit-profile',
@@ -44,6 +45,8 @@ export class EditProfileComponent {
     username: FormControl<string>;
     email: FormControl<string>;
   }>;
+
+  environment = environment;
 
   emailFeedbackMessage = '';
   errorMessage = '';

@@ -22,6 +22,7 @@
           [attr.aria-describedby]="
             getFormErrors('username').length ? 'username-errors' : null
           "
+          [readonly]="profile.email === environment.guestEmail"
         />
 
         <!-- Static username icon -->
@@ -83,6 +84,7 @@
           [attr.aria-describedby]="
             getFormErrors('email').length ? 'email-errors' : null
           "
+          [readonly]="profile.email === environment.guestEmail"
         />
 
         <!-- Static email icon -->
@@ -128,6 +130,11 @@
         }
       </div>
     </form>
+
+    <!-- Hint message -->
+    @if (profile.email === environment.guestEmail) {
+    <p class="hint-message">Guest users cannot change the username.</p>
+    }
   </div>
 
   <!-- Error messages -->
