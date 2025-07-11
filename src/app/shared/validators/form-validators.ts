@@ -19,3 +19,14 @@ export function noSpecialCharsValidator(
   const regex = /^[a-zA-Z0-9_]+$/;
   return regex.test(value) ? null : { noSpecialChars: true };
 }
+
+export function passwordsMatchValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+  const newPassword = control.get('newPassword')?.value;
+  const confirmPassword = control.get('confirmPassword')?.value;
+  if (newPassword && confirmPassword && newPassword !== confirmPassword) {
+    return { passwordsMismatch: true };
+  }
+  return null;
+}

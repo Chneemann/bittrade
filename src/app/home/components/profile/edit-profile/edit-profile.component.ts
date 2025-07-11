@@ -23,6 +23,7 @@ import { UserProfile } from '../../../models/user.model';
 import { UserService } from '../../../services/user.service';
 import {
   noSpecialCharsValidator,
+  passwordsMatchValidator,
   strictEmailValidator,
 } from '../../../../shared/validators/form-validators';
 import { environment } from '../../../../../environments/environment';
@@ -44,6 +45,8 @@ export class EditProfileComponent {
   form!: FormGroup<{
     username: FormControl<string>;
     email: FormControl<string>;
+    newPassword: FormControl<string>;
+    confirmPassword: FormControl<string>;
   }>;
 
   environment = environment;
@@ -53,6 +56,8 @@ export class EditProfileComponent {
 
   usernameFieldFocused = false;
   emailFieldFocused = false;
+  newPasswordFieldFocused = false;
+  confirmPasswordFieldFocused = false;
 
   private originalProfile: Partial<UserProfile> | null = null;
 
@@ -94,10 +99,17 @@ export class EditProfileComponent {
   }
 
   private createProfileForm(): void {
-    this.form = this.formBuilder.nonNullable.group({
-      username: ['', [Validators.minLength(8), noSpecialCharsValidator]],
-      email: ['', [strictEmailValidator]],
-    });
+    this.form = this.formBuilder.nonNullable.group(
+      {
+        username: ['', [Validators.minLength(8), noSpecialCharsValidator]],
+        email: ['', [strictEmailValidator]],
+        newPassword: ['', [Validators.minLength(8)]],
+        confirmPassword: [''],
+      },
+      {
+        validators: [passwordsMatchValidator],
+      }
+    );
   }
 
   onSubmit() {
@@ -140,34 +152,67 @@ export class EditProfileComponent {
     return EMPTY;
   }
 
-  getFormErrors(controlName: 'username' | 'email'): string[] {
+  getFormErrors(controlName: keyof typeof this.form.controls): string[] {
     const control = this.form.controls[controlName];
-    if (!(control.touched && control.dirty) || !control.errors) return [];
+    const errors: string[] = [];
 
-    return Object.entries(control.errors).map(([key]) => {
-      switch (key) {
-        case 'required':
-          return `Please enter your ${controlName}`;
-        case 'email':
-          return 'This is not a valid email format';
-        case 'noSpecialChars':
-          return 'Special characters are not allowed';
-        case 'minlength':
-          return `Your ${controlName} is too short, min 8 characters`;
-        default:
-          return 'Invalid input';
+    const fieldLabels: Record<string, string> = {
+      username: 'Username',
+      email: 'Email',
+      newPassword: 'Password',
+      confirmPassword: 'Password',
+    };
+
+    const label = fieldLabels[controlName] ?? controlName;
+
+    if (control.touched && control.dirty && control.errors) {
+      for (const errorKey of Object.keys(control.errors)) {
+        switch (errorKey) {
+          case 'required':
+            errors.push(`Please enter your ${label}`);
+            break;
+          case 'email':
+            errors.push('This is not a valid email format');
+            break;
+          case 'noSpecialChars':
+            errors.push('Special characters are not allowed');
+            break;
+          case 'minlength':
+            errors.push(`${label} is too short, minimum 8 characters`);
+            break;
+          default:
+            errors.push('Invalid input');
+        }
       }
-    });
+    }
+
+    if (
+      controlName === 'confirmPassword' &&
+      this.form.errors?.['passwordsMismatch'] &&
+      (control.touched || this.form.controls['newPassword'].touched)
+    ) {
+      errors.push('Passwords do not match');
+    }
+
+    return errors;
   }
 
   private getInputClasses(
     control: FormControl,
-    focused: boolean
+    focused: boolean,
+    controlName?: string
   ): { [key: string]: boolean } {
+    const isPasswordMismatch =
+      controlName === 'confirmPassword' &&
+      this.form.errors?.['passwordsMismatch'] &&
+      (control.touched || this.form.controls['newPassword'].touched);
+
     return {
       focused: focused || !!control.value,
-      valid: control.valid && control.touched,
-      invalid: control.invalid && control.touched && control.dirty,
+      valid: control.valid && control.touched && !isPasswordMismatch,
+      invalid:
+        (control.invalid && control.touched && control.dirty) ||
+        isPasswordMismatch,
     };
   }
 
@@ -175,10 +220,15 @@ export class EditProfileComponent {
     if (!this.originalProfile) return false;
 
     const current = this.form.getRawValue();
-    return (
-      current.username !== this.originalProfile.username ||
-      current.email !== this.originalProfile.email
-    );
+
+    const usernameChanged = current.username !== this.originalProfile.username;
+    const emailChanged = current.email !== this.originalProfile.email;
+
+    const passwordChanged =
+      current.newPassword?.length > 0 &&
+      current.newPassword === current.confirmPassword;
+
+    return usernameChanged || emailChanged || passwordChanged;
   }
 
   get usernameInputClasses() {
@@ -191,6 +241,21 @@ export class EditProfileComponent {
     return this.getInputClasses(
       this.form.controls.email,
       this.emailFieldFocused
+    );
+  }
+
+  get newPasswordInputClasses() {
+    return this.getInputClasses(
+      this.form.controls.newPassword,
+      this.newPasswordFieldFocused
+    );
+  }
+
+  get confirmPasswordInputClasses() {
+    return this.getInputClasses(
+      this.form.controls.confirmPassword,
+      this.confirmPasswordFieldFocused,
+      'confirmPassword'
     );
   }
 }
