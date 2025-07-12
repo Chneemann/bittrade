@@ -51,8 +51,7 @@ export class EditProfileComponent {
 
   environment = environment;
 
-  emailFeedbackMessage = '';
-  errorMessage = '';
+  feedbackMessages: { type: 'success' | 'error'; message: string }[] = [];
 
   usernameFieldFocused = false;
   emailFieldFocused = false;
@@ -116,8 +115,7 @@ export class EditProfileComponent {
     if (this.form.invalid || this.loadingSubject.value) return;
 
     this.loadingSubject.next(true);
-    this.emailFeedbackMessage = '';
-    this.errorMessage = '';
+    this.feedbackMessages = [];
 
     const rawValue = this.form.getRawValue();
 
@@ -152,15 +150,34 @@ export class EditProfileComponent {
     this.originalProfile = { ...profile };
     this.form.markAsPristine();
 
+    const rawValue = this.form.getRawValue();
+
     if ((profile as any)?.email_verification_required) {
-      this.emailFeedbackMessage =
-        'Please check your email to confirm the new address.';
+      this.feedbackMessages.push({
+        type: 'success',
+        message: 'Please check your email to confirm the new address.',
+      });
+    }
+
+    if (
+      rawValue.newPassword &&
+      rawValue.newPassword === rawValue.confirmPassword
+    ) {
+      this.feedbackMessages.push({
+        type: 'success',
+        message: 'Password successfully updated.',
+      });
+      this.form.controls.newPassword.reset();
+      this.form.controls.confirmPassword.reset();
     }
   }
 
   private handleError(err: unknown): Observable<never> {
-    console.error(err);
-    this.errorMessage = 'Failed to update profile. Please try again.';
+    this.feedbackMessages.push({
+      type: 'error',
+      message: 'Failed to update profile. Please try again.',
+    });
+    console.error('Error updating profile:', err);
     return EMPTY;
   }
 
