@@ -51,10 +51,7 @@ export class EditProfileComponent {
 
   feedbackMessages: { type: 'success' | 'error'; message: string }[] = [];
 
-  usernameFieldFocused = false;
-  emailFieldFocused = false;
-  newPasswordFieldFocused = false;
-  confirmPasswordFieldFocused = false;
+  focusedFields: Record<keyof typeof this.form.controls, boolean> = {} as any;
 
   private originalProfile: Partial<UserProfileUpdate> | null = null;
 
@@ -107,6 +104,12 @@ export class EditProfileComponent {
         validators: [passwordsMatchValidator],
       }
     );
+
+    for (const key of Object.keys(this.focusedFields) as Array<
+      keyof typeof this.focusedFields
+    >) {
+      this.focusedFields[key] = false;
+    }
   }
 
   onSubmit() {
@@ -151,32 +154,36 @@ export class EditProfileComponent {
     const rawValue = this.form.getRawValue();
 
     if ((profile as any)?.email_verification_required) {
-      this.feedbackMessages.push({
-        type: 'success',
-        message: 'Please check your email to confirm the new address.',
-      });
+      this.showFeedbackMessage(
+        'success',
+        'Please check your email to confirm the new address.'
+      );
     }
 
     if (
       rawValue.newPassword &&
       rawValue.newPassword === rawValue.confirmPassword
     ) {
-      this.feedbackMessages.push({
-        type: 'success',
-        message: 'Password successfully updated.',
-      });
+      this.showFeedbackMessage('success', 'Password successfully updated.');
       this.form.controls.newPassword.reset();
       this.form.controls.confirmPassword.reset();
     }
   }
 
   private handleError(err: unknown): Observable<never> {
-    this.feedbackMessages.push({
-      type: 'error',
-      message: 'Failed to update profile. Please try again.',
-    });
+    this.showFeedbackMessage(
+      'error',
+      'Failed to update profile. Please try again.'
+    );
     console.error('Error updating profile:', err);
     return EMPTY;
+  }
+
+  private showFeedbackMessage(type: 'success' | 'error', message: string) {
+    this.feedbackMessages.push({ type, message });
+    setTimeout(() => {
+      this.feedbackMessages = [];
+    }, 5000);
   }
 
   getFormErrors(controlName: keyof typeof this.form.controls): string[] {
@@ -210,6 +217,7 @@ export class EditProfileComponent {
           default:
             errors.push('Invalid input');
         }
+        break;
       }
     }
 
@@ -218,24 +226,23 @@ export class EditProfileComponent {
       this.form.errors?.['passwordsMismatch'] &&
       (control.touched || this.form.controls['newPassword'].touched)
     ) {
-      errors.push('Passwords do not match');
+      return ['Passwords do not match'];
     }
 
     return errors;
   }
 
-  private getInputClasses(
-    control: FormControl,
-    focused: boolean,
-    controlName?: string
-  ): { [key: string]: boolean } {
+  getInputClasses(controlName: keyof typeof this.form.controls): {
+    [key: string]: boolean;
+  } {
+    const control = this.form.controls[controlName];
     const isPasswordMismatch =
       controlName === 'confirmPassword' &&
       this.form.errors?.['passwordsMismatch'] &&
       (control.touched || this.form.controls['newPassword'].touched);
 
     return {
-      focused: focused || !!control.value,
+      focused: this.focusedFields[controlName] || !!control.value,
       valid: control.valid && control.touched && !isPasswordMismatch,
       invalid:
         (control.invalid && control.touched && control.dirty) ||
@@ -258,35 +265,20 @@ export class EditProfileComponent {
     return usernameChanged || emailChanged || passwordChanged;
   }
 
+  onFocus(controlName: keyof typeof this.form.controls) {
+    this.focusedFields[controlName] = true;
+  }
+
+  onBlur(controlName: keyof typeof this.form.controls) {
+    this.focusedFields[controlName] = false;
+  }
+
   get isGuestUser(): boolean {
     return this.originalProfile?.email === environment.guestEmail;
   }
 
-  get usernameInputClasses() {
-    return this.getInputClasses(
-      this.form.controls.username,
-      this.usernameFieldFocused
-    );
-  }
-  get emailInputClasses() {
-    return this.getInputClasses(
-      this.form.controls.email,
-      this.emailFieldFocused
-    );
-  }
-
-  get newPasswordInputClasses() {
-    return this.getInputClasses(
-      this.form.controls.newPassword,
-      this.newPasswordFieldFocused
-    );
-  }
-
-  get confirmPasswordInputClasses() {
-    return this.getInputClasses(
-      this.form.controls.confirmPassword,
-      this.confirmPasswordFieldFocused,
-      'confirmPassword'
-    );
+  get passwordConfirmedSuccessfully(): boolean {
+    const { newPassword: np, confirmPassword: cp } = this.form.controls;
+    return this.form.valid && np.touched && cp.touched;
   }
 }
