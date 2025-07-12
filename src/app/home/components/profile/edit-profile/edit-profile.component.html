@@ -1,288 +1,284 @@
 @if (userProfile$ | async; as profile) {
-<div class="profile-edit-container">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+  <!-- Section: Personal Information -->
   <div class="section-box">
-    <form
-      [formGroup]="form"
-      (ngSubmit)="onSubmit()"
-      enctype="multipart/form-data"
+    <p class="section-title">Personal Information</p>
+    <!-- Username field -->
+    <div class="input-field">
+      <input
+        formControlName="username"
+        type="username"
+        id="username"
+        name="username"
+        autocomplete="username"
+        (focus)="usernameFieldFocused = true"
+        (blur)="usernameFieldFocused = false"
+        [ngClass]="usernameInputClasses"
+        [attr.aria-describedby]="
+          getFormErrors('username').length ? 'username-errors' : null
+        "
+        [readonly]="profile.email === environment.guestEmail"
+        required
+      />
+
+      <!-- Static username icon -->
+      <img
+        class="icon icon--base"
+        src="./assets/img/form/person.svg"
+        alt="username icon"
+        [ngClass]="usernameInputClasses"
+      />
+
+      @if (form.controls['username'].valid) {
+      <!-- Success icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/success.svg"
+        alt="valid input"
+      />
+      } @else if (getFormErrors('username').length > 0) {
+      <!-- Error icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/error.svg"
+        alt="invalid input"
+      />
+      }
+
+      <label for="username" [ngClass]="usernameInputClasses"> Username </label>
+    </div>
+
+    <div
+      id="username-errors"
+      class="error-wrapper"
+      role="alert"
+      aria-live="assertive"
     >
-      <!-- Section: Personal Information -->
-      <p class="section-title">Personal Information</p>
-      <!-- Username field -->
-      <div class="input-field">
-        <input
-          formControlName="username"
-          type="username"
-          id="username"
-          name="username"
-          autocomplete="username"
-          (focus)="usernameFieldFocused = true"
-          (blur)="usernameFieldFocused = false"
-          [ngClass]="usernameInputClasses"
-          [attr.aria-describedby]="
-            getFormErrors('username').length ? 'username-errors' : null
-          "
-          [readonly]="profile.email === environment.guestEmail"
-          required
-        />
-
-        <!-- Static username icon -->
-        <img
-          class="icon icon--base"
-          src="./assets/img/form/person.svg"
-          alt="username icon"
-          [ngClass]="usernameInputClasses"
-        />
-
-        @if (form.controls['username'].valid) {
-        <!-- Success icon -->
-        <img
-          class="icon icon--status"
-          src="./assets/img/form/success.svg"
-          alt="valid input"
-        />
-        } @else if (getFormErrors('username').length > 0) {
-        <!-- Error icon -->
-        <img
-          class="icon icon--status"
-          src="./assets/img/form/error.svg"
-          alt="invalid input"
-        />
-        }
-
-        <label for="username" [ngClass]="usernameInputClasses">
-          Username
-        </label>
-      </div>
-
-      <div
-        id="username-errors"
-        class="error-wrapper"
-        role="alert"
-        aria-live="assertive"
-      >
-        <!-- Frontend email error message -->
-        @if (getFormErrors('username').length) {
-        <div class="error-message">
-          @for (error of getFormErrors('username'); track $index) {
-          <p>{{ error }}</p>
-          }
-        </div>
+      <!-- Frontend email error message -->
+      @if (getFormErrors('username').length) {
+      <div class="error-message">
+        @for (error of getFormErrors('username'); track $index) {
+        <p>{{ error }}</p>
         }
       </div>
+      }
+    </div>
 
-      <!-- Email field -->
-      <div class="input-field">
-        <input
-          formControlName="email"
-          type="email"
-          id="email"
-          name="email"
-          autocomplete="email"
-          (focus)="emailFieldFocused = true"
-          (blur)="emailFieldFocused = false"
-          [ngClass]="emailInputClasses"
-          [attr.aria-describedby]="
-            getFormErrors('email').length ? 'email-errors' : null
-          "
-          [readonly]="profile.email === environment.guestEmail"
-          required
-        />
+    <!-- Email field -->
+    <div class="input-field">
+      <input
+        formControlName="email"
+        type="email"
+        id="email"
+        name="email"
+        autocomplete="email"
+        (focus)="emailFieldFocused = true"
+        (blur)="emailFieldFocused = false"
+        [ngClass]="emailInputClasses"
+        [attr.aria-describedby]="
+          getFormErrors('email').length ? 'email-errors' : null
+        "
+        [readonly]="profile.email === environment.guestEmail"
+        required
+      />
 
-        <!-- Static email icon -->
-        <img
-          class="icon icon--base"
-          src="./assets/img/form/email.svg"
-          alt="email icon"
-          [ngClass]="emailInputClasses"
-        />
+      <!-- Static email icon -->
+      <img
+        class="icon icon--base"
+        src="./assets/img/form/email.svg"
+        alt="email icon"
+        [ngClass]="emailInputClasses"
+      />
 
-        @if (form.controls['email'].valid) {
-        <!-- Success icon -->
-        <img
-          class="icon icon--status"
-          src="./assets/img/form/success.svg"
-          alt="valid input"
-        />
-        } @else if (getFormErrors('email').length > 0) {
-        <!-- Error icon -->
-        <img
-          class="icon icon--status"
-          src="./assets/img/form/error.svg"
-          alt="invalid input"
-        />
-        }
+      @if (form.controls['email'].valid) {
+      <!-- Success icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/success.svg"
+        alt="valid input"
+      />
+      } @else if (getFormErrors('email').length > 0) {
+      <!-- Error icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/error.svg"
+        alt="invalid input"
+      />
+      }
 
-        <label for="email" [ngClass]="emailInputClasses">Email Address</label>
-      </div>
+      <label for="email" [ngClass]="emailInputClasses">Email Address</label>
+    </div>
 
-      <div
-        id="email-errors"
-        class="error-wrapper"
-        role="alert"
-        aria-live="assertive"
-      >
-        <!-- Frontend email error message -->
-        @if (getFormErrors('email').length) {
-        <div class="error-message">
-          @for (error of getFormErrors('email'); track $index) {
-          <p>{{ error }}</p>
-          }
-        </div>
-        }
-      </div>
-
-      <!-- Section: Change Password Section -->
-      <p class="section-title">Change Password</p>
-      <div class="input-field">
-        <input
-          formControlName="newPassword"
-          type="password"
-          id="newPassword"
-          name="newPassword"
-          autocomplete="new-password"
-          (focus)="newPasswordFieldFocused = true"
-          (blur)="newPasswordFieldFocused = false"
-          [ngClass]="newPasswordInputClasses"
-          [attr.aria-describedby]="
-            getFormErrors('newPassword').length ? 'newPassword-errors' : null
-          "
-          required
-        />
-
-        <!-- Static password icon -->
-        <img
-          class="icon icon--base"
-          src="./assets/img/form/password.svg"
-          alt="password icon"
-          [ngClass]="newPasswordInputClasses"
-        />
-
-        @if (form.controls['newPassword'].valid) {
-        <!-- Success icon -->
-        <img
-          class="icon icon--status"
-          src="./assets/img/form/success.svg"
-          alt="valid input"
-        />
-        } @else if (getFormErrors('newPassword').length > 0) {
-        <!-- Error icon -->
-        <img
-          class="icon icon--status"
-          src="./assets/img/form/error.svg"
-          alt="invalid input"
-        />
-        }
-
-        <label for="newPassword" [ngClass]="newPasswordInputClasses">
-          New Password
-        </label>
-      </div>
-      <div
-        id="new-password-errors"
-        class="error-wrapper"
-        role="alert"
-        aria-live="assertive"
-      >
-        @if (getFormErrors('newPassword').length) {
-        <div class="error-message">
-          @for (error of getFormErrors('newPassword'); track $index) {
-          <p>{{ error }}</p>
-          }
-        </div>
+    <div
+      id="email-errors"
+      class="error-wrapper"
+      role="alert"
+      aria-live="assertive"
+    >
+      <!-- Frontend email error message -->
+      @if (getFormErrors('email').length) {
+      <div class="error-message">
+        @for (error of getFormErrors('email'); track $index) {
+        <p>{{ error }}</p>
         }
       </div>
-
-      <div class="input-field">
-        <input
-          formControlName="confirmPassword"
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          autocomplete="confirm-password"
-          (focus)="confirmPasswordFieldFocused = true"
-          (blur)="confirmPasswordFieldFocused = false"
-          [ngClass]="confirmPasswordInputClasses"
-          [attr.aria-describedby]="
-            getFormErrors('confirmPassword').length
-              ? 'confirm-password-errors'
-              : null
-          "
-          required
-        />
-
-        <!-- Static password icon -->
-        <img
-          class="icon icon--base"
-          src="./assets/img/form/password.svg"
-          alt="password icon"
-          [ngClass]="confirmPasswordInputClasses"
-        />
-
-        @if ( form.controls['newPassword'].valid &&
-        form.controls['newPassword'].touched &&
-        form.controls['confirmPassword'].valid &&
-        form.controls['newPassword'].value ===
-        form.controls['confirmPassword'].value ) {
-        <!-- Success icon -->
-        <img
-          class="icon icon--status"
-          src="./assets/img/form/success.svg"
-          alt="valid input"
-        />
-        } @else if ( form.controls['confirmPassword'].touched &&
-        form.errors?.['passwordsMismatch'] ) {
-        <!-- Error icon -->
-        <img
-          class="icon icon--status"
-          src="./assets/img/form/error.svg"
-          alt="invalid input"
-        />
-        }
-
-        <label for="confirmPassword" [ngClass]="confirmPasswordInputClasses">
-          Confirm Password
-        </label>
-      </div>
-      <div
-        id="confirm-password-errors"
-        class="error-wrapper"
-        role="alert"
-        aria-live="assertive"
-      >
-        @if (getFormErrors('confirmPassword').length) {
-        <div class="error-message">
-          @for (error of getFormErrors('confirmPassword'); track $index) {
-          <p>{{ error }}</p>
-          }
-        </div>
-        }
-      </div>
-    </form>
-
-    <!-- Hint message -->
-    @if (profile.email === environment.guestEmail) {
-    <p class="hint-message">Some fields are disabled in guest mode.</p>
-    }
+      }
+    </div>
   </div>
 
-  <!-- Feedback messages -->
-  @for (msg of feedbackMessages; track $index) {
-  <div [ngClass]="msg.type === 'success' ? 'success-message' : 'error-message'">
-    {{ msg.message }}
-  </div>
-  }
+  <!-- Section: Change Password Section -->
+  <div class="section-box">
+    <p class="section-title">Change Password</p>
+    <div class="input-field">
+      <input
+        formControlName="newPassword"
+        type="password"
+        id="newPassword"
+        name="newPassword"
+        autocomplete="new-password"
+        (focus)="newPasswordFieldFocused = true"
+        (blur)="newPasswordFieldFocused = false"
+        [ngClass]="newPasswordInputClasses"
+        [attr.aria-describedby]="
+          getFormErrors('newPassword').length ? 'newPassword-errors' : null
+        "
+        [readonly]="profile.email === environment.guestEmail"
+        required
+      />
 
-  <!-- Button -->
-  <div class="button-container">
-    <app-primary-button
-      type="button"
-      value="Save Changes"
-      [loading]="updatingProfile$ | async"
-      [loadingMessage]="'Updating profile...'"
-      [disabled]="!form.valid || !hasProfileChanged()"
-      (click)="onSubmit()"
-    ></app-primary-button>
+      <!-- Static password icon -->
+      <img
+        class="icon icon--base"
+        src="./assets/img/form/password.svg"
+        alt="password icon"
+        [ngClass]="newPasswordInputClasses"
+      />
+
+      @if (form.controls['newPassword'].valid) {
+      <!-- Success icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/success.svg"
+        alt="valid input"
+      />
+      } @else if (getFormErrors('newPassword').length > 0) {
+      <!-- Error icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/error.svg"
+        alt="invalid input"
+      />
+      }
+
+      <label for="newPassword" [ngClass]="newPasswordInputClasses">
+        New Password
+      </label>
+    </div>
+    <div
+      id="new-password-errors"
+      class="error-wrapper"
+      role="alert"
+      aria-live="assertive"
+    >
+      @if (getFormErrors('newPassword').length) {
+      <div class="error-message">
+        @for (error of getFormErrors('newPassword'); track $index) {
+        <p>{{ error }}</p>
+        }
+      </div>
+      }
+    </div>
+
+    <div class="input-field">
+      <input
+        formControlName="confirmPassword"
+        type="password"
+        id="confirmPassword"
+        name="confirmPassword"
+        autocomplete="confirm-password"
+        (focus)="confirmPasswordFieldFocused = true"
+        (blur)="confirmPasswordFieldFocused = false"
+        [ngClass]="confirmPasswordInputClasses"
+        [attr.aria-describedby]="
+          getFormErrors('confirmPassword').length
+            ? 'confirm-password-errors'
+            : null
+        "
+        [readonly]="profile.email === environment.guestEmail"
+        required
+      />
+
+      <!-- Static password icon -->
+      <img
+        class="icon icon--base"
+        src="./assets/img/form/password.svg"
+        alt="password icon"
+        [ngClass]="confirmPasswordInputClasses"
+      />
+
+      @if ( form.controls['newPassword'].valid &&
+      form.controls['newPassword'].touched &&
+      form.controls['confirmPassword'].valid &&
+      form.controls['newPassword'].value ===
+      form.controls['confirmPassword'].value ) {
+      <!-- Success icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/success.svg"
+        alt="valid input"
+      />
+      } @else if ( form.controls['confirmPassword'].touched &&
+      form.errors?.['passwordsMismatch'] ) {
+      <!-- Error icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/error.svg"
+        alt="invalid input"
+      />
+      }
+
+      <label for="confirmPassword" [ngClass]="confirmPasswordInputClasses">
+        Confirm Password
+      </label>
+    </div>
+    <div
+      id="confirm-password-errors"
+      class="error-wrapper"
+      role="alert"
+      aria-live="assertive"
+    >
+      @if (getFormErrors('confirmPassword').length) {
+      <div class="error-message">
+        @for (error of getFormErrors('confirmPassword'); track $index) {
+        <p>{{ error }}</p>
+        }
+      </div>
+      }
+    </div>
   </div>
+</form>
+
+<!-- Hint message -->
+@if (profile.email === environment.guestEmail) {
+<p class="message hint">Some fields are disabled in guest mode.</p>
+}
+
+<!-- Feedback messages -->
+@for (msg of feedbackMessages; track $index) {
+<div [ngClass]="msg.type === 'success' ? 'message success' : 'message error'">
+  {{ msg.message }}
+</div>
+}
+
+<!-- Button -->
+<div class="button-container">
+  <app-primary-button
+    type="button"
+    value="Save Changes"
+    [loading]="updatingProfile$ | async"
+    [loadingMessage]="'Updating profile...'"
+    [disabled]="!form.valid || !hasProfileChanged()"
+    (click)="onSubmit()"
+  ></app-primary-button>
 </div>
 }
