@@ -17,7 +17,7 @@
         [attr.aria-describedby]="
           getFormErrors('username').length ? 'username-errors' : null
         "
-        [readonly]="profile.email === environment.guestEmail"
+        [readonly]="isGuestUser"
         required
       />
 
@@ -29,7 +29,7 @@
         [ngClass]="usernameInputClasses"
       />
 
-      @if (form.controls['username'].valid) {
+      @if (form.controls['username'].valid && !isGuestUser) {
       <!-- Success icon -->
       <img
         class="icon icon--status"
@@ -78,7 +78,7 @@
         [attr.aria-describedby]="
           getFormErrors('email').length ? 'email-errors' : null
         "
-        [readonly]="profile.email === environment.guestEmail"
+        [readonly]="isGuestUser"
         required
       />
 
@@ -90,7 +90,7 @@
         [ngClass]="emailInputClasses"
       />
 
-      @if (form.controls['email'].valid) {
+      @if (form.controls['email'].valid && !isGuestUser) {
       <!-- Success icon -->
       <img
         class="icon icon--status"
@@ -142,7 +142,7 @@
         [attr.aria-describedby]="
           getFormErrors('newPassword').length ? 'newPassword-errors' : null
         "
-        [readonly]="profile.email === environment.guestEmail"
+        [readonly]="isGuestUser"
         required
       />
 
@@ -204,7 +204,7 @@
             ? 'confirm-password-errors'
             : null
         "
-        [readonly]="profile.email === environment.guestEmail"
+        [readonly]="isGuestUser"
         required
       />
 
@@ -259,7 +259,7 @@
 </form>
 
 <!-- Hint message -->
-@if (profile.email === environment.guestEmail) {
+@if (isGuestUser) {
 <p class="message hint">Some fields are disabled in guest mode.</p>
 }
 

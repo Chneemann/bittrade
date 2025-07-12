@@ -49,8 +49,6 @@ export class EditProfileComponent {
     confirmPassword: FormControl<string>;
   }>;
 
-  environment = environment;
-
   feedbackMessages: { type: 'success' | 'error'; message: string }[] = [];
 
   usernameFieldFocused = false;
@@ -258,6 +256,10 @@ export class EditProfileComponent {
       current.newPassword === current.confirmPassword;
 
     return usernameChanged || emailChanged || passwordChanged;
+  }
+
+  get isGuestUser(): boolean {
+    return this.originalProfile?.email === environment.guestEmail;
   }
 
   get usernameInputClasses() {
