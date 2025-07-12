@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { BackendApiService } from '../../core/services/backend-api.service';
-import { UserProfile } from '../models/user.model';
+import { UserProfile, UserProfileUpdate } from '../models/user.model';
 import { switchMap, take, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -29,9 +29,11 @@ export class UserService {
     );
   }
 
-  updateProfile(updatedProfile: Partial<UserProfile>): Observable<UserProfile> {
+  updateProfile(
+    updatedProfile: Partial<UserProfileUpdate>
+  ): Observable<UserProfile> {
     return this.backendApi
-      .patch<UserProfile, Partial<UserProfile>>(
+      .patch<UserProfile, Partial<UserProfileUpdate>>(
         '/auth/me/update/',
         updatedProfile
       )

@@ -19,7 +19,7 @@ import {
   tap,
   EMPTY,
 } from 'rxjs';
-import { UserProfile } from '../../../models/user.model';
+import { UserProfileUpdate } from '../../../models/user.model';
 import { UserService } from '../../../services/user.service';
 import {
   noSpecialCharsValidator,
@@ -59,9 +59,9 @@ export class EditProfileComponent {
   newPasswordFieldFocused = false;
   confirmPasswordFieldFocused = false;
 
-  private originalProfile: Partial<UserProfile> | null = null;
+  private originalProfile: Partial<UserProfileUpdate> | null = null;
 
-  userProfile$!: Observable<UserProfile | null>;
+  userProfile$!: Observable<UserProfileUpdate | null>;
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
   updatingProfile$ = this.loadingSubject.asObservable();
@@ -119,12 +119,24 @@ export class EditProfileComponent {
     this.emailFeedbackMessage = '';
     this.errorMessage = '';
 
-    const updated = this.form.getRawValue();
+    const rawValue = this.form.getRawValue();
+
+    const updated: UserProfileUpdate = {
+      username: rawValue.username,
+      email: rawValue.email,
+    };
+
+    if (
+      rawValue.newPassword &&
+      rawValue.newPassword === rawValue.confirmPassword
+    ) {
+      updated.password = rawValue.newPassword;
+    }
 
     this.updateUserProfile(updated);
   }
 
-  private updateUserProfile(updated: Partial<UserProfile>) {
+  private updateUserProfile(updated: Partial<UserProfileUpdate>) {
     this.userService
       .updateProfile(updated)
       .pipe(
@@ -136,13 +148,13 @@ export class EditProfileComponent {
       .subscribe();
   }
 
-  private handleSuccess(profile: UserProfile) {
+  private handleSuccess(profile: UserProfileUpdate) {
     this.originalProfile = { ...profile };
     this.form.markAsPristine();
 
     if ((profile as any)?.email_verification_required) {
       this.emailFeedbackMessage =
-        ' Please check your email to confirm the new address.';
+        'Please check your email to confirm the new address.';
     }
   }
 

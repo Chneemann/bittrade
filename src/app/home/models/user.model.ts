@@ -10,3 +10,9 @@ export interface UserProfile {
   wallet_withdrawals: number;
   wallet_balance: number;
 }
+
+export interface UserProfileUpdate {
+  username: string;
+  email: string;
+  password?: string;
+}
