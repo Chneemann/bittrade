@@ -17,3 +17,9 @@ export interface UserProfileUpdate {
   password?: string;
   verified?: boolean;
 }
+
+export enum UserProfileVerificationStatus {
+  UNVERIFIED = 'unverified',
+  PENDING = 'pending',
+  VERIFIED = 'verified',
+}

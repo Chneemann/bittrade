@@ -19,7 +19,10 @@ import {
   tap,
   EMPTY,
 } from 'rxjs';
-import { UserProfileUpdate } from '../../../models/user.model';
+import {
+  UserProfileUpdate,
+  UserProfileVerificationStatus,
+} from '../../../models/user.model';
 import { UserService } from '../../../services/user.service';
 import {
   noSpecialCharsValidator,
@@ -51,7 +54,12 @@ export class EditProfileComponent {
 
   feedbackMessages: { type: 'success' | 'error'; message: string }[] = [];
 
-  verificationStatus: 'unverified' | 'pending' | 'verified' = 'unverified';
+  UserProfileVerificationStatus = UserProfileVerificationStatus;
+  verificationStatus:
+    | UserProfileVerificationStatus.UNVERIFIED
+    | UserProfileVerificationStatus.PENDING
+    | UserProfileVerificationStatus.VERIFIED =
+    UserProfileVerificationStatus.UNVERIFIED;
 
   focusedFields: Record<keyof typeof this.form.controls, boolean> = {} as any;
 
@@ -253,12 +261,13 @@ export class EditProfileComponent {
   }
 
   onVerificationClick(): void {
-    if (this.verificationStatus !== 'unverified') return;
+    if (this.verificationStatus !== UserProfileVerificationStatus.UNVERIFIED)
+      return;
 
-    this.verificationStatus = 'pending';
+    this.verificationStatus = UserProfileVerificationStatus.PENDING;
 
     setTimeout(() => {
-      this.verificationStatus = 'verified';
+      this.verificationStatus = UserProfileVerificationStatus.VERIFIED;
     }, 5000);
   }
 

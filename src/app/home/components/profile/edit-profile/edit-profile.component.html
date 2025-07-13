@@ -272,20 +272,24 @@
     <div
       class="verify-field"
       (click)="onVerificationClick()"
-      [class.disabled]="verificationStatus !== 'unverified'"
+      [class.disabled]="
+        verificationStatus !== UserProfileVerificationStatus.UNVERIFIED
+      "
     >
-      @switch (verificationStatus) { @case ('verified') {
+      @switch (verificationStatus) { @case
+      (UserProfileVerificationStatus.VERIFIED) {
       <img class="icon" src="/assets/img/form/success.svg" alt="verified" />
-      } @case ('pending') {
+      } @case (UserProfileVerificationStatus.PENDING) {
       <img class="icon" src="/assets/img/form/pending.svg" alt="pending" />
       } @default {
       <img class="icon" src="/assets/img/form/password.svg" alt="unverified" />
       } }
 
       <span class="verify-label">
-        @switch (verificationStatus) { @case ('verified') { Verified } @case
-        ('pending') { Verification in progress } @default { Not verified - Click
-        here } }
+        @switch (verificationStatus) { @case
+        (UserProfileVerificationStatus.VERIFIED) { Verified } @case
+        (UserProfileVerificationStatus.PENDING) { Verification in progress }
+        @default { Not verified - Click here } }
       </span>
     </div>
     }
