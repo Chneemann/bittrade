@@ -15,4 +15,5 @@ export interface UserProfileUpdate {
   username: string;
   email: string;
   password?: string;
+  verified?: boolean;
 }

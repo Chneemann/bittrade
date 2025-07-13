@@ -51,6 +51,8 @@ export class EditProfileComponent {
 
   feedbackMessages: { type: 'success' | 'error'; message: string }[] = [];
 
+  verificationStatus: 'unverified' | 'pending' | 'verified' = 'unverified';
+
   focusedFields: Record<keyof typeof this.form.controls, boolean> = {} as any;
 
   private originalProfile: Partial<UserProfileUpdate> | null = null;
@@ -248,6 +250,16 @@ export class EditProfileComponent {
         (control.invalid && control.touched && control.dirty) ||
         isPasswordMismatch,
     };
+  }
+
+  onVerificationClick(): void {
+    if (this.verificationStatus !== 'unverified') return;
+
+    this.verificationStatus = 'pending';
+
+    setTimeout(() => {
+      this.verificationStatus = 'verified';
+    }, 5000);
   }
 
   hasProfileChanged(): boolean {

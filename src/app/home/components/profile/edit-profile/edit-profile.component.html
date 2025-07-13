@@ -259,6 +259,37 @@
       }
     </div>
   </div>
+
+  <!-- Section: Identity Verification -->
+  <div class="section-box">
+    <p class="section-title">Identity Verification</p>
+    @if (profile.verified) {
+    <div class="verify-field disabled">
+      <img class="icon" src="/assets/img/form/success.svg" alt="verified" />
+      <span class="verify-label">Verified</span>
+    </div>
+    } @else {
+    <div
+      class="verify-field"
+      (click)="onVerificationClick()"
+      [class.disabled]="verificationStatus !== 'unverified'"
+    >
+      @switch (verificationStatus) { @case ('verified') {
+      <img class="icon" src="/assets/img/form/success.svg" alt="verified" />
+      } @case ('pending') {
+      <img class="icon" src="/assets/img/form/pending.svg" alt="pending" />
+      } @default {
+      <img class="icon" src="/assets/img/form/password.svg" alt="unverified" />
+      } }
+
+      <span class="verify-label">
+        @switch (verificationStatus) { @case ('verified') { Verified } @case
+        ('pending') { Verification in progress } @default { Not verified - Click
+        here } }
+      </span>
+    </div>
+    }
+  </div>
 </form>
 
 <!-- Hint message -->
