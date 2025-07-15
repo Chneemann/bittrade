@@ -12,8 +12,8 @@ export interface UserProfile {
 }
 
 export interface UserProfileUpdate {
-  username: string;
-  email: string;
+  username?: string;
+  email?: string;
   password?: string;
   verified?: boolean;
 }

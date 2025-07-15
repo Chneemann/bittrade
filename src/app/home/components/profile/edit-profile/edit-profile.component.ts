@@ -31,6 +31,14 @@ import {
 } from '../../../../shared/validators/form-validators';
 import { environment } from '../../../../../environments/environment';
 
+enum FormControlNames {
+  Username = 'username',
+  Email = 'email',
+  NewPassword = 'newPassword',
+  ConfirmPassword = 'confirmPassword',
+  MismatchPassword = 'passwordsMismatch',
+}
+
 @Component({
   selector: 'app-edit-profile',
   imports: [
@@ -45,11 +53,13 @@ import { environment } from '../../../../../environments/environment';
 export class EditProfileComponent {
   private destroy$ = new Subject<void>();
 
+  FormControlNames = FormControlNames;
   form!: FormGroup<{
     username: FormControl<string>;
     email: FormControl<string>;
     newPassword: FormControl<string>;
     confirmPassword: FormControl<string>;
+    passwordsMismatch: FormControl<boolean>;
   }>;
 
   feedbackMessages: { type: 'success' | 'error'; message: string }[] = [];
@@ -109,6 +119,7 @@ export class EditProfileComponent {
         email: ['', [strictEmailValidator]],
         newPassword: ['', [Validators.minLength(8)]],
         confirmPassword: [''],
+        passwordsMismatch: [false],
       },
       {
         validators: [passwordsMatchValidator],
@@ -168,6 +179,10 @@ export class EditProfileComponent {
         'success',
         'Please check your email to confirm the new address.'
       );
+    }
+
+    if ((profile as any)?.verified === true) {
+      this.showFeedbackMessage('success', 'Profile successfully verified.');
     }
 
     if (
@@ -232,9 +247,10 @@ export class EditProfileComponent {
     }
 
     if (
-      controlName === 'confirmPassword' &&
-      this.form.errors?.['passwordsMismatch'] &&
-      (control.touched || this.form.controls['newPassword'].touched)
+      controlName === FormControlNames.ConfirmPassword &&
+      this.form.errors?.[FormControlNames.MismatchPassword] &&
+      (control.touched ||
+        this.form.controls[FormControlNames.NewPassword].touched)
     ) {
       return ['Passwords do not match'];
     }
@@ -247,9 +263,10 @@ export class EditProfileComponent {
   } {
     const control = this.form.controls[controlName];
     const isPasswordMismatch =
-      controlName === 'confirmPassword' &&
-      this.form.errors?.['passwordsMismatch'] &&
-      (control.touched || this.form.controls['newPassword'].touched);
+      controlName === FormControlNames.ConfirmPassword &&
+      this.form.errors?.[FormControlNames.MismatchPassword] &&
+      (control.touched ||
+        this.form.controls[FormControlNames.NewPassword].touched);
 
     return {
       focused: this.focusedFields[controlName] || !!control.value,
@@ -292,6 +309,12 @@ export class EditProfileComponent {
 
   onBlur(controlName: keyof typeof this.form.controls) {
     this.focusedFields[controlName] = false;
+  }
+
+  getErrorId(controlName: FormControlNames): string | null {
+    return this.getFormErrors(controlName).length
+      ? `${controlName}-errors`
+      : null;
   }
 
   get isGuestUser(): boolean {
