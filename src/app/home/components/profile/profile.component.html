@@ -44,15 +44,15 @@
     <div class="stat-grid">
       <div class="stat-box">
         <p class="label">Purchases</p>
-        <p class="value">{{ profile.coin_purchases }}</p>
+        <p class="value">{{ profile.coin_purchases || 0 }}</p>
       </div>
       <div class="stat-box">
         <p class="label">Sales</p>
-        <p class="value">{{ profile.coin_sales }}</p>
+        <p class="value">{{ profile.coin_sales || 0 }}</p>
       </div>
       <div class="stat-box">
         <p class="label">Held Coins</p>
-        <p class="value">{{ profile.held_coins }}</p>
+        <p class="value">{{ profile.held_coins || 0 }}</p>
       </div>
     </div>
   </div>
@@ -64,21 +64,26 @@
       <div class="stat-box">
         <p class="label">Deposits</p>
         <p class="value">
-          {{ profile.wallet_deposits | currency : "USD" : "symbol" : "1.2-2" }}
+          {{
+            profile.wallet_deposits || 0 | currency : "USD" : "symbol" : "1.2-2"
+          }}
         </p>
       </div>
       <div class="stat-box">
         <p class="label">Withdrawals</p>
         <p class="value">
           {{
-            profile.wallet_withdrawals | currency : "USD" : "symbol" : "1.2-2"
+            profile.wallet_withdrawals || 0
+              | currency : "USD" : "symbol" : "1.2-2"
           }}
         </p>
       </div>
       <div class="stat-box">
         <p class="label">Balance</p>
         <p class="value">
-          {{ profile.wallet_balance | currency : "USD" : "symbol" : "1.2-2" }}
+          {{
+            profile.wallet_balance || 0 | currency : "USD" : "symbol" : "1.2-2"
+          }}
         </p>
       </div>
     </div>
