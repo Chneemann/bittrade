@@ -285,6 +285,7 @@ export class EditProfileComponent {
 
     setTimeout(() => {
       this.verificationStatus = UserProfileVerificationStatus.VERIFIED;
+      this.updateUserProfile({ verified: true });
     }, 5000);
   }
 
