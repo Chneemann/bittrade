@@ -15,8 +15,8 @@
         (blur)="onBlur(FormControlNames.Username)"
         [ngClass]="getInputClasses(FormControlNames.Username)"
         [attr.aria-describedby]="getErrorId(FormControlNames.Username)"
+        [attr.required]="!isGuestUser"
         [readonly]="isGuestUser"
-        required
       />
 
       <!-- Static username icon -->
@@ -79,8 +79,8 @@
         (blur)="onBlur(FormControlNames.Email)"
         [ngClass]="getInputClasses(FormControlNames.Email)"
         [attr.aria-describedby]="getErrorId(FormControlNames.Email)"
+        [attr.required]="!isGuestUser"
         [readonly]="isGuestUser"
-        required
       />
 
       <!-- Static email icon -->
@@ -145,8 +145,8 @@
         (blur)="onBlur(FormControlNames.NewPassword)"
         [ngClass]="getInputClasses(FormControlNames.NewPassword)"
         [attr.aria-describedby]="getErrorId(FormControlNames.NewPassword)"
+        [attr.required]="!isGuestUser"
         [readonly]="isGuestUser"
-        required
       />
 
       <!-- Static password icon -->
@@ -207,8 +207,8 @@
         (blur)="onBlur(FormControlNames.ConfirmPassword)"
         [ngClass]="getInputClasses(FormControlNames.ConfirmPassword)"
         [attr.aria-describedby]="getErrorId(FormControlNames.ConfirmPassword)"
+        [attr.required]="!isGuestUser"
         [readonly]="isGuestUser"
-        required
       />
 
       <!-- Static password icon -->
