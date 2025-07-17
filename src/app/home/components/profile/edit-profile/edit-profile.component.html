@@ -157,7 +157,8 @@
         [ngClass]="getInputClasses(FormControlNames.NewPassword)"
       />
 
-      @if (form.controls[FormControlNames.NewPassword].valid) {
+      @if (form.controls[FormControlNames.NewPassword].valid &&
+      form.controls[FormControlNames.NewPassword].value) {
       <!-- Success icon -->
       <img
         class="icon icon--status"

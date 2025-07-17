@@ -262,6 +262,7 @@ export class EditProfileComponent {
     [key: string]: boolean;
   } {
     const control = this.form.controls[controlName];
+    const controlValue = control.value;
     const isPasswordMismatch =
       controlName === FormControlNames.ConfirmPassword &&
       this.form.errors?.[FormControlNames.MismatchPassword] &&
@@ -269,11 +270,16 @@ export class EditProfileComponent {
         this.form.controls[FormControlNames.NewPassword].touched);
 
     return {
-      focused: this.focusedFields[controlName] || !!control.value,
-      valid: control.valid && control.touched && !isPasswordMismatch,
+      focused: this.focusedFields[controlName] || !!controlValue,
+      valid:
+        control.valid &&
+        control.touched &&
+        !!controlValue &&
+        !isPasswordMismatch,
       invalid:
-        (control.invalid && control.touched && control.dirty) ||
-        isPasswordMismatch,
+        ((control.invalid && control.touched && control.dirty) ||
+          isPasswordMismatch) &&
+        !!controlValue,
     };
   }
 
@@ -324,6 +330,6 @@ export class EditProfileComponent {
 
   get passwordConfirmedSuccessfully(): boolean {
     const { newPassword: np, confirmPassword: cp } = this.form.controls;
-    return this.form.valid && np.touched && cp.touched;
+    return this.form.valid && np.touched && cp.touched && !!cp.value;
   }
 }
