@@ -31,14 +31,16 @@ import {
 } from '../../../../shared/validators/form-validators';
 import { environment } from '../../../../../environments/environment';
 
-enum FormControlNames {
-  Username = 'username',
-  Email = 'email',
-  NewPassword = 'newPassword',
-  ConfirmPassword = 'confirmPassword',
-  MismatchPassword = 'passwordsMismatch',
-  ConfirmWithoutPassword = 'confirmWithoutPassword',
-}
+const FormControlNames = {
+  Username: 'username',
+  Email: 'email',
+  NewPassword: 'newPassword',
+  ConfirmPassword: 'confirmPassword',
+  MismatchPassword: 'passwordsMismatch',
+  ConfirmWithoutPassword: 'confirmWithoutPassword',
+} as const;
+
+type FormControlName = (typeof FormControlNames)[keyof typeof FormControlNames];
 
 @Component({
   selector: 'app-edit-profile',
@@ -55,13 +57,14 @@ export class EditProfileComponent {
   private destroy$ = new Subject<void>();
 
   FormControlNames = FormControlNames;
+
   form!: FormGroup<{
-    username: FormControl<string>;
-    email: FormControl<string>;
-    newPassword: FormControl<string>;
-    confirmPassword: FormControl<string>;
-    passwordsMismatch: FormControl<boolean>;
-    confirmWithoutPassword: FormControl<boolean>;
+    [FormControlNames.Username]: FormControl<string>;
+    [FormControlNames.Email]: FormControl<string>;
+    [FormControlNames.NewPassword]: FormControl<string>;
+    [FormControlNames.ConfirmPassword]: FormControl<string>;
+    [FormControlNames.MismatchPassword]: FormControl<boolean>;
+    [FormControlNames.ConfirmWithoutPassword]: FormControl<boolean>;
   }>;
 
   feedbackMessages: { type: 'success' | 'error'; message: string }[] = [];
@@ -73,7 +76,14 @@ export class EditProfileComponent {
     | UserProfileVerificationStatus.VERIFIED =
     UserProfileVerificationStatus.UNVERIFIED;
 
-  focusedFields: Record<keyof typeof this.form.controls, boolean> = {} as any;
+  focusedFields: Record<FormControlName, boolean> = {
+    [FormControlNames.Username]: false,
+    [FormControlNames.Email]: false,
+    [FormControlNames.NewPassword]: false,
+    [FormControlNames.ConfirmPassword]: false,
+    [FormControlNames.MismatchPassword]: false,
+    [FormControlNames.ConfirmWithoutPassword]: false,
+  };
 
   private originalProfile: Partial<UserProfileUpdate> | null = null;
 
@@ -103,12 +113,11 @@ export class EditProfileComponent {
       if (profile) {
         this.originalProfile = { ...profile };
         this.form.patchValue({
-          username: profile.username,
-          email: profile.email,
+          [FormControlNames.Username]: profile.username,
+          [FormControlNames.Email]: profile.email,
         });
-        this.form.controls.username.markAsTouched();
-        this.form.controls.email.markAsTouched();
-
+        this.form.controls[FormControlNames.Username].markAsTouched();
+        this.form.controls[FormControlNames.Email].markAsTouched();
         this.form.markAsPristine();
       }
     });
@@ -117,43 +126,40 @@ export class EditProfileComponent {
   private createProfileForm(): void {
     this.form = this.formBuilder.nonNullable.group(
       {
-        username: ['', [Validators.minLength(8), noSpecialCharsValidator]],
-        email: ['', [strictEmailValidator]],
-        newPassword: ['', [Validators.minLength(8)]],
-        confirmPassword: [''],
-        passwordsMismatch: [false],
-        confirmWithoutPassword: [false],
+        [FormControlNames.Username]: [
+          '',
+          [Validators.minLength(8), noSpecialCharsValidator],
+        ],
+        [FormControlNames.Email]: ['', [strictEmailValidator]],
+        [FormControlNames.NewPassword]: ['', [Validators.minLength(8)]],
+        [FormControlNames.ConfirmPassword]: [''],
+        [FormControlNames.MismatchPassword]: [false],
+        [FormControlNames.ConfirmWithoutPassword]: [false],
       },
       {
         validators: [passwordsMatchValidator],
       }
     );
-
-    for (const key of Object.keys(this.focusedFields) as Array<
-      keyof typeof this.focusedFields
-    >) {
-      this.focusedFields[key] = false;
-    }
   }
 
   onSubmit() {
     if (this.form.invalid || this.loadingSubject.value) return;
-
     this.loadingSubject.next(true);
     this.feedbackMessages = [];
 
     const rawValue = this.form.getRawValue();
 
     const updated: UserProfileUpdate = {
-      username: rawValue.username,
-      email: rawValue.email,
+      username: rawValue[FormControlNames.Username],
+      email: rawValue[FormControlNames.Email],
     };
 
     if (
-      rawValue.newPassword &&
-      rawValue.newPassword === rawValue.confirmPassword
+      rawValue[FormControlNames.NewPassword] &&
+      rawValue[FormControlNames.NewPassword] ===
+        rawValue[FormControlNames.ConfirmPassword]
     ) {
-      updated.password = rawValue.newPassword;
+      updated.password = rawValue[FormControlNames.NewPassword];
     }
 
     this.updateUserProfile(updated);
@@ -189,12 +195,13 @@ export class EditProfileComponent {
     }
 
     if (
-      rawValue.newPassword &&
-      rawValue.newPassword === rawValue.confirmPassword
+      rawValue[FormControlNames.NewPassword] &&
+      rawValue[FormControlNames.NewPassword] ===
+        rawValue[FormControlNames.ConfirmPassword]
     ) {
       this.showFeedbackMessage('success', 'Password successfully updated.');
-      this.form.controls.newPassword.reset();
-      this.form.controls.confirmPassword.reset();
+      this.form.controls[FormControlNames.NewPassword].reset();
+      this.form.controls[FormControlNames.ConfirmPassword].reset();
     }
   }
 
@@ -214,15 +221,17 @@ export class EditProfileComponent {
     }, 5000);
   }
 
-  getFormErrors(controlName: keyof typeof this.form.controls): string[] {
+  getFormErrors(controlName: FormControlName): string[] {
     const control = this.form.controls[controlName];
     const errors: string[] = [];
 
-    const fieldLabels: Record<string, string> = {
-      username: 'Username',
-      email: 'Email',
-      newPassword: 'Password',
-      confirmPassword: 'Password',
+    const fieldLabels: Record<FormControlName, string> = {
+      [FormControlNames.Username]: 'Username',
+      [FormControlNames.Email]: 'Email',
+      [FormControlNames.NewPassword]: 'Password',
+      [FormControlNames.ConfirmPassword]: 'Password',
+      [FormControlNames.MismatchPassword]: '',
+      [FormControlNames.ConfirmWithoutPassword]: '',
     };
 
     const label = fieldLabels[controlName] ?? controlName;
@@ -269,9 +278,7 @@ export class EditProfileComponent {
     return errors;
   }
 
-  getInputClasses(controlName: keyof typeof this.form.controls): {
-    [key: string]: boolean;
-  } {
+  getInputClasses(controlName: FormControlName): { [key: string]: boolean } {
     const control = this.form.controls[controlName];
     const controlValue = control.value;
     const isConfirmWithoutNew =
@@ -315,26 +322,28 @@ export class EditProfileComponent {
     if (!this.originalProfile) return false;
 
     const current = this.form.getRawValue();
-
-    const usernameChanged = current.username !== this.originalProfile.username;
-    const emailChanged = current.email !== this.originalProfile.email;
+    const usernameChanged =
+      current[FormControlNames.Username] !== this.originalProfile.username;
+    const emailChanged =
+      current[FormControlNames.Email] !== this.originalProfile.email;
 
     const passwordChanged =
-      current.newPassword?.length > 0 &&
-      current.newPassword === current.confirmPassword;
+      current[FormControlNames.NewPassword]?.length > 0 &&
+      current[FormControlNames.NewPassword] ===
+        current[FormControlNames.ConfirmPassword];
 
     return usernameChanged || emailChanged || passwordChanged;
   }
 
-  onFocus(controlName: keyof typeof this.form.controls) {
+  onFocus(controlName: FormControlName) {
     this.focusedFields[controlName] = true;
   }
 
-  onBlur(controlName: keyof typeof this.form.controls) {
+  onBlur(controlName: FormControlName) {
     this.focusedFields[controlName] = false;
   }
 
-  getErrorId(controlName: FormControlNames): string | null {
+  getErrorId(controlName: FormControlName): string | null {
     return this.getFormErrors(controlName).length
       ? `${controlName}-errors`
       : null;
@@ -345,7 +354,8 @@ export class EditProfileComponent {
   }
 
   get passwordConfirmedSuccessfully(): boolean {
-    const { newPassword: np, confirmPassword: cp } = this.form.controls;
+    const np = this.form.controls[FormControlNames.NewPassword];
+    const cp = this.form.controls[FormControlNames.ConfirmPassword];
     return this.form.valid && np.touched && cp.touched && !!cp.value;
   }
 }
