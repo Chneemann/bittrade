@@ -37,6 +37,7 @@ enum FormControlNames {
   NewPassword = 'newPassword',
   ConfirmPassword = 'confirmPassword',
   MismatchPassword = 'passwordsMismatch',
+  ConfirmWithoutPassword = 'confirmWithoutPassword',
 }
 
 @Component({
@@ -60,6 +61,7 @@ export class EditProfileComponent {
     newPassword: FormControl<string>;
     confirmPassword: FormControl<string>;
     passwordsMismatch: FormControl<boolean>;
+    confirmWithoutPassword: FormControl<boolean>;
   }>;
 
   feedbackMessages: { type: 'success' | 'error'; message: string }[] = [];
@@ -120,6 +122,7 @@ export class EditProfileComponent {
         newPassword: ['', [Validators.minLength(8)]],
         confirmPassword: [''],
         passwordsMismatch: [false],
+        confirmWithoutPassword: [false],
       },
       {
         validators: [passwordsMatchValidator],
@@ -255,6 +258,14 @@ export class EditProfileComponent {
       return ['Passwords do not match'];
     }
 
+    if (
+      controlName === FormControlNames.ConfirmPassword &&
+      this.form.errors?.[FormControlNames.ConfirmWithoutPassword] &&
+      control.touched
+    ) {
+      return ['Please enter a new password first'];
+    }
+
     return errors;
   }
 
@@ -263,6 +274,10 @@ export class EditProfileComponent {
   } {
     const control = this.form.controls[controlName];
     const controlValue = control.value;
+    const isConfirmWithoutNew =
+      controlName === FormControlNames.ConfirmPassword &&
+      this.form.errors?.[FormControlNames.ConfirmWithoutPassword] &&
+      control.touched;
     const isPasswordMismatch =
       controlName === FormControlNames.ConfirmPassword &&
       this.form.errors?.[FormControlNames.MismatchPassword] &&
@@ -278,7 +293,8 @@ export class EditProfileComponent {
         !isPasswordMismatch,
       invalid:
         ((control.invalid && control.touched && control.dirty) ||
-          isPasswordMismatch) &&
+          isPasswordMismatch ||
+          isConfirmWithoutNew) &&
         !!controlValue,
     };
   }

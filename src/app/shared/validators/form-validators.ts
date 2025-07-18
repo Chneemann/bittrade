@@ -25,8 +25,14 @@ export function passwordsMatchValidator(
 ): ValidationErrors | null {
   const newPassword = control.get('newPassword')?.value;
   const confirmPassword = control.get('confirmPassword')?.value;
+
+  if (confirmPassword && !newPassword) {
+    return { confirmWithoutNew: true };
+  }
+
   if (newPassword && confirmPassword && newPassword !== confirmPassword) {
     return { passwordsMismatch: true };
   }
+
   return null;
 }
