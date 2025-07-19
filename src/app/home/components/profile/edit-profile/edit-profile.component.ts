@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -53,7 +53,7 @@ type FormControlName = (typeof FormControlNames)[keyof typeof FormControlNames];
   templateUrl: './edit-profile.component.html',
   styleUrl: './edit-profile.component.scss',
 })
-export class EditProfileComponent {
+export class EditProfileComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   FormControlNames = FormControlNames;
@@ -353,7 +353,7 @@ export class EditProfileComponent {
     return this.originalProfile?.email === environment.guestEmail;
   }
 
-  get passwordConfirmedSuccessfully(): boolean {
+  get passwordConfirmationValid(): boolean {
     const np = this.form.controls[FormControlNames.NewPassword];
     const cp = this.form.controls[FormControlNames.ConfirmPassword];
     return this.form.valid && np.touched && cp.touched && !!cp.value;
