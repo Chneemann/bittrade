@@ -10,14 +10,13 @@ import {
 } from '@angular/forms';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
 import {
-  Subject,
   Observable,
-  takeUntil,
   finalize,
   BehaviorSubject,
   catchError,
   tap,
   EMPTY,
+  timer,
 } from 'rxjs';
 import {
   UserProfileUpdate,
@@ -213,10 +212,14 @@ export class EditProfileComponent implements OnInit {
   }
 
   private showFeedbackMessage(type: 'success' | 'error', message: string) {
-    this.feedbackMessages.push({ type, message });
-    setTimeout(() => {
-      this.feedbackMessages = [];
-    }, 5000);
+    const msg = { type, message };
+    this.feedbackMessages.push(msg);
+
+    timer(5000)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.feedbackMessages = this.feedbackMessages.filter((m) => m !== msg);
+      });
   }
 
   getFormErrors(controlName: FormControlName): string[] {
@@ -310,10 +313,12 @@ export class EditProfileComponent implements OnInit {
 
     this.verificationStatus = UserProfileVerificationStatus.PENDING;
 
-    setTimeout(() => {
-      this.verificationStatus = UserProfileVerificationStatus.VERIFIED;
-      this.updateUserProfile({ verified: true });
-    }, 5000);
+    timer(5000)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.verificationStatus = UserProfileVerificationStatus.VERIFIED;
+        this.updateUserProfile({ verified: true });
+      });
   }
 
   hasProfileChanged(): boolean {
