@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -39,6 +39,7 @@ import {
 } from '../../../models/wallet.model';
 import { SuccessModalComponent } from '../../../../shared/components/modals/success-modal/success-modal.component';
 import { ConfirmationModalComponent } from '../../../../shared/components/modals/confirmation-modal/confirmation-modal.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-buy-sell',
@@ -54,8 +55,9 @@ import { ConfirmationModalComponent } from '../../../../shared/components/modals
   templateUrl: './buy-sell.component.html',
   styleUrl: './buy-sell.component.scss',
 })
-export class BuySellComponent implements OnInit, OnDestroy {
-  private readonly destroy$ = new Subject<void>();
+export class BuySellComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
+
   amountControl: FormControl = new FormControl();
 
   currentCoin: Coin | null = null;
@@ -102,11 +104,6 @@ export class BuySellComponent implements OnInit, OnDestroy {
     this.updateMode();
     this.loadCurrentCoin();
     this.loadWalletBalance();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   private getAmountValidators(): ValidatorFn[] {
@@ -160,7 +157,7 @@ export class BuySellComponent implements OnInit, OnDestroy {
   private loadWalletBalance(): void {
     this.walletService
       .getWallet()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((wallet) => {
         this.walletBalance = wallet.balance;
       });
@@ -385,7 +382,7 @@ export class BuySellComponent implements OnInit, OnDestroy {
 
     this.coinTransactionService
       .addTransaction(coinSlug, transaction)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (result) => {
           this.loadHolding(coinSlug);
@@ -407,7 +404,7 @@ export class BuySellComponent implements OnInit, OnDestroy {
   ): void {
     this.walletService
       .changeWalletBalance(amount, mode, WalletTransactionSource.COIN)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (wallet) => {
           this.walletBalance = wallet.balance;

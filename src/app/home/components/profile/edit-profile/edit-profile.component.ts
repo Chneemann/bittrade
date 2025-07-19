@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -30,6 +30,7 @@ import {
   strictEmailValidator,
 } from '../../../../shared/validators/form-validators';
 import { environment } from '../../../../../environments/environment';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const FormControlNames = {
   Username: 'username',
@@ -53,8 +54,8 @@ type FormControlName = (typeof FormControlNames)[keyof typeof FormControlNames];
   templateUrl: './edit-profile.component.html',
   styleUrl: './edit-profile.component.scss',
 })
-export class EditProfileComponent implements OnInit, OnDestroy {
-  private destroy$ = new Subject<void>();
+export class EditProfileComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
 
   FormControlNames = FormControlNames;
 
@@ -102,25 +103,22 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     this.loadUserProfile();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   private loadUserProfile(): void {
     this.userProfile$ = this.userService.userProfile$;
-    this.userProfile$.pipe(takeUntil(this.destroy$)).subscribe((profile) => {
-      if (profile) {
-        this.originalProfile = { ...profile };
-        this.form.patchValue({
-          [FormControlNames.Username]: profile.username,
-          [FormControlNames.Email]: profile.email,
-        });
-        this.form.controls[FormControlNames.Username].markAsTouched();
-        this.form.controls[FormControlNames.Email].markAsTouched();
-        this.form.markAsPristine();
-      }
-    });
+    this.userProfile$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((profile) => {
+        if (profile) {
+          this.originalProfile = { ...profile };
+          this.form.patchValue({
+            [FormControlNames.Username]: profile.username,
+            [FormControlNames.Email]: profile.email,
+          });
+          this.form.controls[FormControlNames.Username].markAsTouched();
+          this.form.controls[FormControlNames.Email].markAsTouched();
+          this.form.markAsPristine();
+        }
+      });
   }
 
   private createProfileForm(): void {
@@ -169,7 +167,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     this.userService
       .updateProfile(updated)
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         tap((profile) => this.handleSuccess(profile)),
         catchError((err) => this.handleError(err)),
         finalize(() => this.loadingSubject.next(false))

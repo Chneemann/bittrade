@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -18,6 +18,7 @@ import {
 } from '../../../models/wallet.model';
 import { Subject, takeUntil } from 'rxjs';
 import { SuccessModalComponent } from '../../../../shared/components/modals/success-modal/success-modal.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-deposit-withdraw',
@@ -33,7 +34,8 @@ import { SuccessModalComponent } from '../../../../shared/components/modals/succ
   styleUrl: './deposit-withdraw.component.scss',
 })
 export class DepositWithdrawComponent implements OnInit {
-  private readonly destroy$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
+
   amountControl: FormControl = new FormControl();
 
   WalletTransactionType = WalletTransactionType;
@@ -67,11 +69,6 @@ export class DepositWithdrawComponent implements OnInit {
     this.loadWalletBalance();
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   private getAmountValidators(): ValidatorFn[] {
     return [
       Validators.required,
@@ -83,7 +80,7 @@ export class DepositWithdrawComponent implements OnInit {
   private loadWalletBalance(): void {
     this.walletService
       .getWallet()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((wallet) => {
         this.walletBalance = wallet.balance;
       });
@@ -195,7 +192,7 @@ export class DepositWithdrawComponent implements OnInit {
   ): void {
     this.walletService
       .changeWalletBalance(amount, mode, WalletTransactionSource.FIAT)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (wallet: any) => {
           this.transactionResult = wallet.amount;

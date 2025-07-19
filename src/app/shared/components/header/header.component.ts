@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   combineLatest,
@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 import { CoinList, CoinListResponse } from '../../../home/models/coin.model';
 import { CoinListService } from '../../../home/services/coin-list.service';
 import { TooltipDirective } from '../../../core/directives/tooltip.directive';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 type RouteConfig = {
   dataKey: string | null;
@@ -31,11 +32,12 @@ type RouteConfig = {
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
+
   currentPath: string = '';
   showRefreshButton: boolean = false;
 
-  private destroy$ = new Subject<void>();
   canUpdate$!: Observable<boolean>;
   cooldownRemaining$!: Observable<number>;
   lastUpdateTimestamp$!: Observable<number | null>;
@@ -92,17 +94,12 @@ export class HeaderComponent {
     this.loadAndProcessCoinList();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   private subscribeToRouteChanges(): void {
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
         startWith(this.router.url),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
         this.currentPath = this.router.url.substring(1);
@@ -113,7 +110,7 @@ export class HeaderComponent {
   private loadAndProcessCoinList(): void {
     this.loadCoinList()
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         tap((response) => {
           this.addCoinsFromList(response);
           this.updateObservables();

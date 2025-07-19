@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { filter, Subject, takeUntil } from 'rxjs';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-navigation',
@@ -9,10 +10,10 @@ import { filter, Subject, takeUntil } from 'rxjs';
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
 })
-export class NavigationComponent implements OnInit, OnDestroy {
-  currentPath: string = '';
+export class NavigationComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
 
-  private destroy$ = new Subject<void>();
+  currentPath: string = '';
 
   constructor(private router: Router) {}
 
@@ -20,17 +21,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.getCurrentPath();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   getCurrentPath(): void {
     this.currentPath = this.router.url.substring(1);
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
         this.currentPath = this.router.url.substring(1);
