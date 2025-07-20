@@ -107,7 +107,7 @@ export class EditProfileComponent implements OnInit {
     this.userProfile$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((profile) => {
-        if (profile) {
+        if (profile && !this.originalProfile) {
           this.originalProfile = { ...profile };
           this.form.patchValue({
             [FormControlNames.Username]: profile.username,
@@ -140,7 +140,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.invalid || this.loadingSubject.value) return;
+    if (this.hasInvalidChangedFields() || this.loadingSubject.value) return;
     this.loadingSubject.next(true);
     this.feedbackMessages = [];
 
@@ -175,10 +175,9 @@ export class EditProfileComponent implements OnInit {
   }
 
   private handleSuccess(profile: UserProfileUpdate) {
-    this.originalProfile = { ...profile };
-    this.form.markAsPristine();
-
     const rawValue = this.form.getRawValue();
+
+    this.form.markAsPristine();
 
     if ((profile as any)?.email_verification_required) {
       this.showFeedbackMessage(
@@ -336,6 +335,40 @@ export class EditProfileComponent implements OnInit {
         current[FormControlNames.ConfirmPassword];
 
     return usernameChanged || emailChanged || passwordChanged;
+  }
+
+  hasInvalidChangedFields(): boolean {
+    if (!this.originalProfile) return true;
+
+    const current = this.form.getRawValue();
+
+    const usernameChanged =
+      current[FormControlNames.Username] !== this.originalProfile.username;
+    const emailChanged =
+      current[FormControlNames.Email] !== this.originalProfile.email;
+
+    const passwordChanged =
+      current[FormControlNames.NewPassword]?.length > 0 &&
+      current[FormControlNames.NewPassword] ===
+        current[FormControlNames.ConfirmPassword];
+
+    if (
+      usernameChanged &&
+      this.form.controls[FormControlNames.Username].invalid
+    )
+      return true;
+
+    if (emailChanged && this.form.controls[FormControlNames.Email].invalid)
+      return true;
+
+    if (
+      passwordChanged &&
+      (this.form.controls[FormControlNames.NewPassword].invalid ||
+        this.form.controls[FormControlNames.ConfirmPassword].invalid)
+    )
+      return true;
+
+    return false;
   }
 
   onFocus(controlName: FormControlName) {

@@ -316,7 +316,7 @@
     value="Save Changes"
     [loading]="updatingProfile$ | async"
     [loadingMessage]="'Updating profile...'"
-    [disabled]="!form.valid || !hasProfileChanged()"
+    [disabled]="!hasProfileChanged() || hasInvalidChangedFields()"
     (click)="onSubmit()"
   ></app-primary-button>
 </div>
