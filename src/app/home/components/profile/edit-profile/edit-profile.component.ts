@@ -144,22 +144,22 @@ export class EditProfileComponent implements OnInit {
     this.loadingSubject.next(true);
     this.feedbackMessages = [];
 
-    const rawValue = this.form.getRawValue();
+    const updated = this.buildUpdatePayload();
+    this.updateUserProfile(updated);
+  }
 
-    const updated: UserProfileUpdate = {
+  private buildUpdatePayload(): Partial<UserProfileUpdate> {
+    const rawValue = this.form.getRawValue();
+    const payload: UserProfileUpdate = {
       username: rawValue[FormControlNames.Username],
       email: rawValue[FormControlNames.Email],
     };
 
-    if (
-      rawValue[FormControlNames.NewPassword] &&
-      rawValue[FormControlNames.NewPassword] ===
-        rawValue[FormControlNames.ConfirmPassword]
-    ) {
-      updated.password = rawValue[FormControlNames.NewPassword];
+    if (this.isPasswordValidAndConfirmed()) {
+      payload.password = rawValue[FormControlNames.NewPassword];
     }
 
-    this.updateUserProfile(updated);
+    return payload;
   }
 
   private updateUserProfile(updated: Partial<UserProfileUpdate>) {
@@ -175,37 +175,35 @@ export class EditProfileComponent implements OnInit {
   }
 
   private handleSuccess(profile: UserProfileUpdate) {
-    const rawValue = this.form.getRawValue();
-    const previousVerified = (this.originalProfile as any)?.verified;
     const previousUsername = this.originalProfile?.username;
+    const previousVerified = (this.originalProfile as any)?.verified;
 
-    this.form.markAsPristine();
-    this.originalProfile = { ...profile };
+    const currentUsername = profile.username;
+    const currentVerified = (profile as any)?.verified;
 
-    if (profile.username && profile.username !== previousUsername) {
+    const previousEmail = this.originalProfile?.email;
+    const currentEmail = profile.email;
+
+    if (currentUsername && currentUsername !== previousUsername) {
       this.showFeedbackMessage('success', 'Username successfully updated.');
     }
 
-    if ((profile as any)?.email_verification_required) {
-      this.showFeedbackMessage(
-        'success',
-        'Please check your email to confirm the new address.'
-      );
-    }
-
-    if ((profile as any)?.verified === true && previousVerified !== true) {
+    if (currentVerified === true && previousVerified !== true) {
       this.showFeedbackMessage('success', 'Profile successfully verified.');
     }
 
-    if (
-      rawValue[FormControlNames.NewPassword] &&
-      rawValue[FormControlNames.NewPassword] ===
-        rawValue[FormControlNames.ConfirmPassword]
-    ) {
+    if (currentEmail && currentEmail !== previousEmail) {
+      this.showFeedbackMessage('success', 'Email address updated.');
+    }
+
+    if (this.isPasswordValidAndConfirmed()) {
       this.showFeedbackMessage('success', 'Password successfully updated.');
       this.form.controls[FormControlNames.NewPassword].reset();
       this.form.controls[FormControlNames.ConfirmPassword].reset();
     }
+
+    this.form.markAsPristine();
+    this.originalProfile = { ...profile };
   }
 
   private handleError(err: unknown): Observable<never> {
@@ -226,6 +224,13 @@ export class EditProfileComponent implements OnInit {
       .subscribe(() => {
         this.feedbackMessages = this.feedbackMessages.filter((m) => m !== msg);
       });
+  }
+
+  private isPasswordValidAndConfirmed(): boolean {
+    const rawValue = this.form.getRawValue();
+    const newPassword = rawValue[FormControlNames.NewPassword];
+    const confirmPassword = rawValue[FormControlNames.ConfirmPassword];
+    return !!newPassword && newPassword === confirmPassword;
   }
 
   getFormErrors(controlName: FormControlName): string[] {
