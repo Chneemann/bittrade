@@ -176,8 +176,15 @@ export class EditProfileComponent implements OnInit {
 
   private handleSuccess(profile: UserProfileUpdate) {
     const rawValue = this.form.getRawValue();
+    const previousVerified = (this.originalProfile as any)?.verified;
+    const previousUsername = this.originalProfile?.username;
 
     this.form.markAsPristine();
+    this.originalProfile = { ...profile };
+
+    if (profile.username && profile.username !== previousUsername) {
+      this.showFeedbackMessage('success', 'Username successfully updated.');
+    }
 
     if ((profile as any)?.email_verification_required) {
       this.showFeedbackMessage(
@@ -186,7 +193,7 @@ export class EditProfileComponent implements OnInit {
       );
     }
 
-    if ((profile as any)?.verified === true) {
+    if ((profile as any)?.verified === true && previousVerified !== true) {
       this.showFeedbackMessage('success', 'Profile successfully verified.');
     }
 
