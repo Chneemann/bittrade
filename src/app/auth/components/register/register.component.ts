@@ -13,6 +13,7 @@ import {
   strictEmailValidator,
 } from '../../../shared/validators/form-validators';
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
+import { LoginLoadingState } from '../../models/auth.model';
 
 @Component({
   selector: 'app-register',
@@ -31,6 +32,9 @@ export class RegisterComponent {
     email: FormControl<string>;
   }>;
 
+  loadingState: LoginLoadingState = LoginLoadingState.None;
+  public LoadingState = LoginLoadingState;
+
   usernameFieldFocused: boolean = false;
   emailFieldFocused: boolean = false;
 
@@ -42,6 +46,9 @@ export class RegisterComponent {
 
   async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
+
+    this.loadingState = LoginLoadingState.UserSignUp;
+    this.form.disable();
   }
 
   private createRegisterForm(): void {
@@ -82,8 +89,12 @@ export class RegisterComponent {
     });
   }
 
+  get isSignUpLoading(): boolean {
+    return this.loadingState === LoginLoadingState.UserSignUp;
+  }
+
   get isSignUpButtonDisabled(): boolean {
-    return this.form.invalid;
+    return this.form.invalid || this.isSignUpLoading;
   }
 
   get usernameInputClasses(): { [key: string]: boolean } {

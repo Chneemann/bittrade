@@ -127,10 +127,10 @@
       <app-primary-button
         type="submit"
         value="Sign Up"
+        [loading]="isSignUpLoading"
         [loadingMessage]="'Signing Up...'"
         [disabled]="isSignUpButtonDisabled"
       >
-        >
       </app-primary-button>
     </div>
   </form>
