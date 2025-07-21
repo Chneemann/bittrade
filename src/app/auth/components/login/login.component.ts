@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
@@ -20,6 +20,7 @@ import { LoginLoadingState, LoginCredentials } from '../../models/auth.model';
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     ReactiveFormsModule,
     PrimaryButtonComponent,
   ],
