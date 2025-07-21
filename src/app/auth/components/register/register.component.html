@@ -1,3 +1,65 @@
 <div class="register">
   <div class="headline">Register an Account</div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Email field -->
+    <div class="input-field">
+      <input
+        formControlName="email"
+        type="email"
+        id="email"
+        name="email"
+        autocomplete="email"
+        (focus)="emailFieldFocused = true"
+        (blur)="emailFieldFocused = false"
+        [ngClass]="emailInputClasses"
+        [attr.aria-describedby]="
+          getFormErrors('email').length ? 'email-errors' : null
+        "
+        required
+      />
+
+      <!-- Static email icon -->
+      <img
+        class="icon icon--base"
+        src="./assets/img/form/email.svg"
+        alt="email icon"
+        [ngClass]="emailInputClasses"
+      />
+
+      @if (form.controls['email'].valid) {
+      <!-- Success icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/success.svg"
+        alt="valid input"
+      />
+      } @else if (getFormErrors('email').length > 0) {
+      <!-- Error icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/error.svg"
+        alt="invalid input"
+      />
+      }
+
+      <label for="email" [ngClass]="emailInputClasses"> Email Address </label>
+    </div>
+
+    <div
+      id="email-errors"
+      class="error-wrapper"
+      role="alert"
+      aria-live="assertive"
+    >
+      <!-- Frontend email error message -->
+      @if (getFormErrors('email').length) {
+      <div class="error-message">
+        @for (error of getFormErrors('email'); track $index) {
+        <p>{{ error }}</p>
+        }
+      </div>
+      }
+    </div>
+  </form>
 </div>
