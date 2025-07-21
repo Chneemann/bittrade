@@ -12,10 +12,16 @@ import {
   noSpecialCharsValidator,
   strictEmailValidator,
 } from '../../../shared/validators/form-validators';
+import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
 
 @Component({
   selector: 'app-register',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    PrimaryButtonComponent,
+  ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
@@ -76,14 +82,18 @@ export class RegisterComponent {
     });
   }
 
-  get usernameInputClasses() {
+  get isSignUpButtonDisabled(): boolean {
+    return this.form.invalid;
+  }
+
+  get usernameInputClasses(): { [key: string]: boolean } {
     return this.getInputClasses(
       this.form.controls.username,
       this.usernameFieldFocused
     );
   }
 
-  get emailInputClasses() {
+  get emailInputClasses(): { [key: string]: boolean } {
     return this.getInputClasses(
       this.form.controls.email,
       this.emailFieldFocused

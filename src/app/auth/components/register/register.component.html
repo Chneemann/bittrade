@@ -121,5 +121,17 @@
       </div>
       }
     </div>
+
+    <!-- Register button -->
+    <div class="button-container">
+      <app-primary-button
+        type="submit"
+        value="Sign Up"
+        [loadingMessage]="'Signing Up...'"
+        [disabled]="isSignUpButtonDisabled"
+      >
+        >
+      </app-primary-button>
+    </div>
   </form>
 </div>
