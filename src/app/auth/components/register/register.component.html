@@ -2,6 +2,66 @@
   <div class="headline">Register an Account</div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Username field -->
+    <div class="input-field">
+      <input
+        formControlName="username"
+        type="text"
+        id="username"
+        name="username"
+        autocomplete="username"
+        (focus)="usernameFieldFocused = true"
+        (blur)="usernameFieldFocused = false"
+        [ngClass]="usernameInputClasses"
+        [attr.aria-describedby]="
+          getFormErrors('username').length ? 'username-errors' : null
+        "
+        required
+      />
+
+      <!-- Static username icon -->
+      <img
+        class="icon icon--base"
+        src="./assets/img/form/person.svg"
+        alt="username icon"
+        [ngClass]="usernameInputClasses"
+      />
+
+      @if (form.controls['username'].valid) {
+      <!-- Success icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/success.svg"
+        alt="valid input"
+      />
+      } @else if (getFormErrors('username').length > 0) {
+      <!-- Error icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/error.svg"
+        alt="invalid input"
+      />
+      }
+
+      <label for="email" [ngClass]="usernameInputClasses"> Username </label>
+    </div>
+
+    <div
+      id="email-errors"
+      class="error-wrapper"
+      role="alert"
+      aria-live="assertive"
+    >
+      <!-- Frontend username error message -->
+      @if (getFormErrors('username').length) {
+      <div class="error-message">
+        @for (error of getFormErrors('username'); track $index) {
+        <p>{{ error }}</p>
+        }
+      </div>
+      }
+    </div>
+
     <!-- Email field -->
     <div class="input-field">
       <input

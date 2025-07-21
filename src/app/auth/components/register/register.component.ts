@@ -6,8 +6,12 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { strictEmailValidator } from '../../../shared/validators/form-validators';
+import {
+  noSpecialCharsValidator,
+  strictEmailValidator,
+} from '../../../shared/validators/form-validators';
 
 @Component({
   selector: 'app-register',
@@ -17,9 +21,11 @@ import { strictEmailValidator } from '../../../shared/validators/form-validators
 })
 export class RegisterComponent {
   form!: FormGroup<{
+    username: FormControl<string>;
     email: FormControl<string>;
   }>;
 
+  usernameFieldFocused: boolean = false;
   emailFieldFocused: boolean = false;
 
   constructor(private formBuilder: FormBuilder) {}
@@ -34,6 +40,7 @@ export class RegisterComponent {
 
   private createRegisterForm(): void {
     this.form = this.formBuilder.nonNullable.group({
+      username: ['', [Validators.minLength(8), noSpecialCharsValidator]],
       email: ['', [strictEmailValidator]],
     });
   }
@@ -49,7 +56,7 @@ export class RegisterComponent {
     };
   }
 
-  getFormErrors(controlName: 'email'): string[] {
+  getFormErrors(controlName: 'email' | 'username'): string[] {
     const control = this.form.controls[controlName];
     if (!(control.touched && control.dirty) || !control.errors) return [];
 
@@ -59,12 +66,21 @@ export class RegisterComponent {
           return `Please enter your ${controlName}`;
         case 'email':
           return 'This is not a valid email format';
+        case 'noSpecialChars':
+          return 'Special characters are not allowed';
         case 'minlength':
           return `${controlName} is too short, min 8 characters`;
         default:
           return 'Invalid input';
       }
     });
+  }
+
+  get usernameInputClasses() {
+    return this.getInputClasses(
+      this.form.controls.username,
+      this.usernameFieldFocused
+    );
   }
 
   get emailInputClasses() {
