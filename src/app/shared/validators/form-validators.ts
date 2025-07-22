@@ -20,6 +20,29 @@ export function noSpecialCharsValidator(
   return regex.test(value) ? null : { noSpecialChars: true };
 }
 
+export function registerPasswordsMatchValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+  const password = control.get('password')?.value;
+  const confirmPassword = control.get('confirmPassword')?.value;
+
+  if (password !== confirmPassword) {
+    control.get('confirmPassword')?.setErrors({ passwordMismatch: true });
+    return { passwordMismatch: true };
+  } else {
+    const errors = control.get('confirmPassword')?.errors;
+    if (errors) {
+      delete errors['passwordMismatch'];
+      if (Object.keys(errors).length === 0) {
+        control.get('confirmPassword')?.setErrors(null);
+      } else {
+        control.get('confirmPassword')?.setErrors(errors);
+      }
+    }
+    return null;
+  }
+}
+
 export function passwordsMatchValidator(
   control: AbstractControl
 ): ValidationErrors | null {

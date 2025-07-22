@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import {
   noSpecialCharsValidator,
+  registerPasswordsMatchValidator,
   strictEmailValidator,
 } from '../../../shared/validators/form-validators';
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
@@ -30,6 +31,8 @@ export class RegisterComponent {
   form!: FormGroup<{
     username: FormControl<string>;
     email: FormControl<string>;
+    password: FormControl<string>;
+    confirmPassword: FormControl<string>;
   }>;
 
   loadingState: LoginLoadingState = LoginLoadingState.None;
@@ -37,6 +40,8 @@ export class RegisterComponent {
 
   usernameFieldFocused: boolean = false;
   emailFieldFocused: boolean = false;
+  passwordFieldFocused: boolean = false;
+  confirmPasswordFieldFocused: boolean = false;
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -52,10 +57,24 @@ export class RegisterComponent {
   }
 
   private createRegisterForm(): void {
-    this.form = this.formBuilder.nonNullable.group({
-      username: ['', [Validators.minLength(8), noSpecialCharsValidator]],
-      email: ['', [strictEmailValidator]],
-    });
+    this.form = this.formBuilder.nonNullable.group(
+      {
+        username: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            noSpecialCharsValidator,
+          ],
+        ],
+        email: ['', [Validators.required, strictEmailValidator]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: [''],
+      },
+      {
+        validators: [registerPasswordsMatchValidator],
+      }
+    );
   }
 
   private getInputClasses(
@@ -69,20 +88,25 @@ export class RegisterComponent {
     };
   }
 
-  getFormErrors(controlName: 'email' | 'username'): string[] {
+  getFormErrors(
+    controlName: 'email' | 'username' | 'password' | 'confirmPassword'
+  ): string[] {
     const control = this.form.controls[controlName];
     if (!(control.touched && control.dirty) || !control.errors) return [];
 
     return Object.entries(control.errors).map(([key]) => {
+      const name = controlName.charAt(0).toUpperCase() + controlName.slice(1);
       switch (key) {
         case 'required':
-          return `Please enter your ${controlName}`;
+          return `Please enter your ${name}`;
         case 'email':
           return 'This is not a valid email format';
         case 'noSpecialChars':
           return 'Special characters are not allowed';
         case 'minlength':
-          return `${controlName} is too short, min 8 characters`;
+          return `${name} is too short, min 8 characters`;
+        case 'passwordMismatch':
+          return 'Passwords do not match';
         default:
           return 'Invalid input';
       }
@@ -108,6 +132,20 @@ export class RegisterComponent {
     return this.getInputClasses(
       this.form.controls.email,
       this.emailFieldFocused
+    );
+  }
+
+  get passwordInputClasses(): { [key: string]: boolean } {
+    return this.getInputClasses(
+      this.form.controls.password,
+      this.passwordFieldFocused
+    );
+  }
+
+  get confirmPasswordInputClasses(): { [key: string]: boolean } {
+    return this.getInputClasses(
+      this.form.controls.confirmPassword,
+      this.confirmPasswordFieldFocused
     );
   }
 }

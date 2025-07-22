@@ -122,6 +122,130 @@
       }
     </div>
 
+    <!-- Password field -->
+    <div class="input-field">
+      <input
+        formControlName="password"
+        type="password"
+        id="password"
+        name="password"
+        autocomplete="password"
+        (focus)="passwordFieldFocused = true"
+        (blur)="passwordFieldFocused = false"
+        [ngClass]="passwordInputClasses"
+        [attr.aria-describedby]="
+          getFormErrors('password').length ? 'password-errors' : null
+        "
+        required
+      />
+
+      <!-- Static password icon -->
+      <img
+        class="icon icon--base"
+        src="./assets/img/form/password.svg"
+        alt="password icon"
+        [ngClass]="passwordInputClasses"
+      />
+
+      @if (form.controls['password'].valid) {
+      <!-- Success icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/success.svg"
+        alt="valid input"
+      />
+      } @else if (getFormErrors('password').length > 0) {
+      <!-- Error icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/error.svg"
+        alt="invalid input"
+      />
+      }
+
+      <label for="password" [ngClass]="passwordInputClasses"> Password </label>
+    </div>
+
+    <div
+      id="password-errors"
+      class="error-wrapper"
+      role="alert"
+      aria-live="assertive"
+    >
+      <!-- Frontend password error message -->
+      @if (getFormErrors('password').length) {
+      <div class="error-message">
+        @for (error of getFormErrors('password'); track $index) {
+        <p>{{ error }}</p>
+        }
+      </div>
+      }
+    </div>
+
+    <!-- Confirm password field -->
+    <div class="input-field">
+      <input
+        formControlName="confirmPassword"
+        type="password"
+        id="confirmPassword"
+        name="confirmPassword"
+        autocomplete="confirm-password"
+        (focus)="confirmPasswordFieldFocused = true"
+        (blur)="confirmPasswordFieldFocused = false"
+        [ngClass]="confirmPasswordInputClasses"
+        [attr.aria-describedby]="
+          getFormErrors('confirmPassword').length
+            ? 'confirm-password-errors'
+            : null
+        "
+        required
+      />
+
+      <!-- Static confirm password icon -->
+      <img
+        class="icon icon--base"
+        src="./assets/img/form/password.svg"
+        alt="password icon"
+        [ngClass]="confirmPasswordInputClasses"
+      />
+
+      @if (form.controls['confirmPassword'].valid) {
+      <!-- Success icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/success.svg"
+        alt="valid input"
+      />
+      } @else if (getFormErrors('confirmPassword').length > 0) {
+      <!-- Error icon -->
+      <img
+        class="icon icon--status"
+        src="./assets/img/form/error.svg"
+        alt="invalid input"
+      />
+      }
+
+      <label for="confirmPassword" [ngClass]="confirmPasswordInputClasses">
+        Confirm Password
+      </label>
+    </div>
+
+    <div
+      id="password-errors"
+      class="error-wrapper"
+      role="alert"
+      aria-live="assertive"
+    >
+      <!-- Frontend confirm password error message -->
+      @if (getFormErrors('confirmPassword').length) {
+      <div class="error-message">
+        @for (error of getFormErrors('confirmPassword'); track $index) {
+        <p>{{ error }}</p>
+        }
+      </div>
+      }
+    </div>
+
     <!-- Register button -->
     <div class="button-container">
       <app-primary-button
