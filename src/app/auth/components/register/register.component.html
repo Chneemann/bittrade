@@ -5,16 +5,18 @@
     <!-- Username field -->
     <div class="input-field">
       <input
-        formControlName="username"
+        [formControlName]="FIELD.username"
         type="text"
-        id="username"
-        name="username"
+        [id]="FIELD.username"
+        [name]="FIELD.username"
         autocomplete="username"
         (focus)="usernameFieldFocused = true"
         (blur)="usernameFieldFocused = false"
         [ngClass]="usernameInputClasses"
         [attr.aria-describedby]="
-          getFormErrors('username').length ? 'username-errors' : null
+          getFormErrors(FIELD.username).length
+            ? FIELD.username + '-errors'
+            : null
         "
         required
       />
@@ -27,14 +29,14 @@
         [ngClass]="usernameInputClasses"
       />
 
-      @if (form.controls['username'].valid) {
+      @if (form.controls[FIELD.username].valid) {
       <!-- Success icon -->
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      } @else if (getFormErrors('username').length > 0) {
+      } @else if (getFormErrors(FIELD.username).length > 0) {
       <!-- Error icon -->
       <img
         class="icon icon--status"
@@ -43,19 +45,21 @@
       />
       }
 
-      <label for="email" [ngClass]="usernameInputClasses"> Username </label>
+      <label [for]="FIELD.username" [ngClass]="usernameInputClasses">
+        Username
+      </label>
     </div>
 
     <div
-      id="email-errors"
+      [id]="FIELD.username + '-errors'"
       class="error-wrapper"
       role="alert"
       aria-live="assertive"
     >
       <!-- Frontend username error message -->
-      @if (getFormErrors('username').length) {
+      @if (getFormErrors(FIELD.username).length) {
       <div class="error-message">
-        @for (error of getFormErrors('username'); track $index) {
+        @for (error of getFormErrors(FIELD.username); track $index) {
         <p>{{ error }}</p>
         }
       </div>
@@ -65,16 +69,16 @@
     <!-- Email field -->
     <div class="input-field">
       <input
-        formControlName="email"
+        [formControlName]="FIELD.email"
         type="email"
-        id="email"
-        name="email"
+        [id]="FIELD.email"
+        [name]="FIELD.email"
         autocomplete="email"
         (focus)="emailFieldFocused = true"
         (blur)="emailFieldFocused = false"
         [ngClass]="emailInputClasses"
         [attr.aria-describedby]="
-          getFormErrors('email').length ? 'email-errors' : null
+          getFormErrors(FIELD.email).length ? FIELD.email + '-errors' : null
         "
         required
       />
@@ -87,14 +91,14 @@
         [ngClass]="emailInputClasses"
       />
 
-      @if (form.controls['email'].valid) {
+      @if (form.controls[FIELD.email].valid) {
       <!-- Success icon -->
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      } @else if (getFormErrors('email').length > 0) {
+      } @else if (getFormErrors(FIELD.email).length > 0) {
       <!-- Error icon -->
       <img
         class="icon icon--status"
@@ -103,19 +107,21 @@
       />
       }
 
-      <label for="email" [ngClass]="emailInputClasses"> Email Address </label>
+      <label [for]="FIELD.email" [ngClass]="emailInputClasses">
+        Email Address
+      </label>
     </div>
 
     <div
-      id="email-errors"
+      [id]="FIELD.email + '-errors'"
       class="error-wrapper"
       role="alert"
       aria-live="assertive"
     >
       <!-- Frontend email error message -->
-      @if (getFormErrors('email').length) {
+      @if (getFormErrors(FIELD.email).length) {
       <div class="error-message">
-        @for (error of getFormErrors('email'); track $index) {
+        @for (error of getFormErrors(FIELD.email); track $index) {
         <p>{{ error }}</p>
         }
       </div>
@@ -125,16 +131,18 @@
     <!-- Password field -->
     <div class="input-field">
       <input
-        formControlName="password"
+        [formControlName]="FIELD.password"
         type="password"
-        id="password"
-        name="password"
+        [id]="FIELD.password"
+        [name]="FIELD.password"
         autocomplete="password"
         (focus)="passwordFieldFocused = true"
         (blur)="passwordFieldFocused = false"
         [ngClass]="passwordInputClasses"
         [attr.aria-describedby]="
-          getFormErrors('password').length ? 'password-errors' : null
+          getFormErrors(FIELD.password).length
+            ? FIELD.password + '-errors'
+            : null
         "
         required
       />
@@ -147,14 +155,14 @@
         [ngClass]="passwordInputClasses"
       />
 
-      @if (form.controls['password'].valid) {
+      @if (form.controls[FIELD.password].valid) {
       <!-- Success icon -->
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      } @else if (getFormErrors('password').length > 0) {
+      } @else if (getFormErrors(FIELD.password).length > 0) {
       <!-- Error icon -->
       <img
         class="icon icon--status"
@@ -163,19 +171,21 @@
       />
       }
 
-      <label for="password" [ngClass]="passwordInputClasses"> Password </label>
+      <label [for]="FIELD.password" [ngClass]="passwordInputClasses">
+        Password
+      </label>
     </div>
 
     <div
-      id="password-errors"
+      [id]="FIELD.password + '-errors'"
       class="error-wrapper"
       role="alert"
       aria-live="assertive"
     >
       <!-- Frontend password error message -->
-      @if (getFormErrors('password').length) {
+      @if (getFormErrors(FIELD.password).length) {
       <div class="error-message">
-        @for (error of getFormErrors('password'); track $index) {
+        @for (error of getFormErrors(FIELD.password); track $index) {
         <p>{{ error }}</p>
         }
       </div>
@@ -185,17 +195,17 @@
     <!-- Confirm password field -->
     <div class="input-field">
       <input
-        formControlName="confirmPassword"
+        [formControlName]="FIELD.confirmPassword"
         type="password"
-        id="confirmPassword"
-        name="confirmPassword"
+        [id]="FIELD.confirmPassword"
+        [name]="FIELD.confirmPassword"
         autocomplete="confirm-password"
         (focus)="confirmPasswordFieldFocused = true"
         (blur)="confirmPasswordFieldFocused = false"
         [ngClass]="confirmPasswordInputClasses"
         [attr.aria-describedby]="
-          getFormErrors('confirmPassword').length
-            ? 'confirm-password-errors'
+          getFormErrors(FIELD.confirmPassword).length
+            ? FIELD.confirmPassword + '-errors'
             : null
         "
         required
@@ -209,14 +219,14 @@
         [ngClass]="confirmPasswordInputClasses"
       />
 
-      @if (form.controls['confirmPassword'].valid) {
+      @if (form.controls[FIELD.confirmPassword].valid) {
       <!-- Success icon -->
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      } @else if (getFormErrors('confirmPassword').length > 0) {
+      } @else if (getFormErrors(FIELD.confirmPassword).length > 0) {
       <!-- Error icon -->
       <img
         class="icon icon--status"
@@ -225,21 +235,24 @@
       />
       }
 
-      <label for="confirmPassword" [ngClass]="confirmPasswordInputClasses">
+      <label
+        [for]="FIELD.confirmPassword"
+        [ngClass]="confirmPasswordInputClasses"
+      >
         Confirm Password
       </label>
     </div>
 
     <div
-      id="password-errors"
+      [id]="FIELD.confirmPassword + '-errors'"
       class="error-wrapper"
       role="alert"
       aria-live="assertive"
     >
       <!-- Frontend confirm password error message -->
-      @if (getFormErrors('confirmPassword').length) {
+      @if (getFormErrors(FIELD.confirmPassword).length) {
       <div class="error-message">
-        @for (error of getFormErrors('confirmPassword'); track $index) {
+        @for (error of getFormErrors(FIELD.confirmPassword); track $index) {
         <p>{{ error }}</p>
         }
       </div>

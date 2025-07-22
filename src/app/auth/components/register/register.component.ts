@@ -14,7 +14,12 @@ import {
   strictEmailValidator,
 } from '../../../shared/validators/form-validators';
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
-import { LoginLoadingState } from '../../models/auth.model';
+import {
+  LoginLoadingState,
+  RegisterFormField,
+  REGISTER_FORM_FIELDS,
+  RegisterForm,
+} from '../../models/auth.model';
 
 @Component({
   selector: 'app-register',
@@ -29,11 +34,9 @@ import { LoginLoadingState } from '../../models/auth.model';
 })
 export class RegisterComponent {
   form!: FormGroup<{
-    username: FormControl<string>;
-    email: FormControl<string>;
-    password: FormControl<string>;
-    confirmPassword: FormControl<string>;
+    [K in keyof RegisterForm]: FormControl<RegisterForm[K]>;
   }>;
+  public FIELD = REGISTER_FORM_FIELDS;
 
   loadingState: LoginLoadingState = LoginLoadingState.None;
   public LoadingState = LoginLoadingState;
@@ -88,14 +91,13 @@ export class RegisterComponent {
     };
   }
 
-  getFormErrors(
-    controlName: 'email' | 'username' | 'password' | 'confirmPassword'
-  ): string[] {
+  getFormErrors(controlName: RegisterFormField): string[] {
     const control = this.form.controls[controlName];
     if (!(control.touched && control.dirty) || !control.errors) return [];
 
+    const name = controlName.charAt(0).toUpperCase() + controlName.slice(1);
+
     return Object.entries(control.errors).map(([key]) => {
-      const name = controlName.charAt(0).toUpperCase() + controlName.slice(1);
       switch (key) {
         case 'required':
           return `Please enter your ${name}`;
