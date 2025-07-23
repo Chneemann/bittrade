@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -32,18 +32,19 @@ import {
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent {
-  form!: FormGroup<{
-    [K in keyof LoginForm]: FormControl<LoginForm[K]>;
-  }>;
+export class LoginComponent implements OnInit {
   public FIELD = LOGIN_FORM_FIELDS;
+
+  public LoadingState = AuthLoadingState;
+  loadingState: AuthLoadingState = AuthLoadingState.None;
 
   fieldFocusStates: Record<LoginFormField, boolean> = Object.fromEntries(
     Object.keys(LOGIN_FORM_FIELDS).map((key) => [key, false])
   ) as Record<LoginFormField, boolean>;
 
-  loadingState: AuthLoadingState = AuthLoadingState.None;
-  public LoadingState = AuthLoadingState;
+  form!: FormGroup<{
+    [K in keyof LoginForm]: FormControl<LoginForm[K]>;
+  }>;
 
   httpErrorMessage: string = '';
 
@@ -57,6 +58,7 @@ export class LoginComponent {
     this.createLoginForm();
   }
 
+  // Public methods
   async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
 
@@ -72,27 +74,8 @@ export class LoginComponent {
     await this.performLogin(guestCredentials, AuthLoadingState.GuestSignIn);
   }
 
-  get isSignInLoading(): boolean {
-    return this.loadingState === AuthLoadingState.UserSignIn;
-  }
-
-  get isGuestLoading(): boolean {
-    return this.loadingState === AuthLoadingState.GuestSignIn;
-  }
-
-  get isSignInButtonDisabled(): boolean {
-    return this.form.invalid || this.isSignInLoading || this.isGuestLoading;
-  }
-
-  get isGuestLoginDisabled(): boolean {
-    if (!this.form) return false;
-    const { email, password } = this.form.value;
-    return !!email || !!password;
-  }
-
-  getInputClassesForField(field: LoginFormField): {
-    [key: string]: boolean;
-  } {
+  // Public helper methods
+  getInputClassesForField(field: LoginFormField): { [key: string]: boolean } {
     const control = this.form.controls[field];
     const focused = this.fieldFocusStates[field];
     return this.getInputClasses(control, focused);
@@ -124,6 +107,17 @@ export class LoginComponent {
     });
   }
 
+  // Private helper methods
+  private createLoginForm(): void {
+    this.form = this.formBuilder.nonNullable.group({
+      [LOGIN_FORM_FIELDS.email]: ['', [Validators.required, Validators.email]],
+      [LOGIN_FORM_FIELDS.password]: [
+        '',
+        [Validators.required, Validators.minLength(8)],
+      ],
+    });
+  }
+
   private async performLogin(
     credentials: LoginForm,
     loadingKey: Exclude<AuthLoadingState, AuthLoadingState.None>
@@ -149,16 +143,6 @@ export class LoginComponent {
     return 'Unknown error';
   }
 
-  private createLoginForm(): void {
-    this.form = this.formBuilder.nonNullable.group({
-      [LOGIN_FORM_FIELDS.email]: ['', [Validators.required, Validators.email]],
-      [LOGIN_FORM_FIELDS.password]: [
-        '',
-        [Validators.required, Validators.minLength(8)],
-      ],
-    });
-  }
-
   private getInputClasses(
     control: FormControl,
     focused: boolean
@@ -168,5 +152,24 @@ export class LoginComponent {
       valid: control.valid && control.touched,
       invalid: control.invalid && control.touched && control.dirty,
     };
+  }
+
+  // Getters
+  get isSignInLoading(): boolean {
+    return this.loadingState === AuthLoadingState.UserSignIn;
+  }
+
+  get isGuestLoading(): boolean {
+    return this.loadingState === AuthLoadingState.GuestSignIn;
+  }
+
+  get isSignInButtonDisabled(): boolean {
+    return this.form.invalid || this.isSignInLoading || this.isGuestLoading;
+  }
+
+  get isGuestLoginDisabled(): boolean {
+    if (!this.form) return false;
+    const { email, password } = this.form.value;
+    return !!email || !!password;
   }
 }

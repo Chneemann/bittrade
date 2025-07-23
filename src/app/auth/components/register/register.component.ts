@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -32,18 +32,19 @@ import {
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
-export class RegisterComponent {
-  form!: FormGroup<{
-    [K in keyof RegisterForm]: FormControl<RegisterForm[K]>;
-  }>;
+export class RegisterComponent implements OnInit {
   public FIELD = REGISTER_FORM_FIELDS;
+
+  public LoadingState = AuthLoadingState;
+  loadingState: AuthLoadingState = AuthLoadingState.None;
 
   fieldFocusStates: Record<RegisterFormField, boolean> = Object.fromEntries(
     Object.keys(REGISTER_FORM_FIELDS).map((key) => [key, false])
   ) as Record<RegisterFormField, boolean>;
 
-  loadingState: AuthLoadingState = AuthLoadingState.None;
-  public LoadingState = AuthLoadingState;
+  form!: FormGroup<{
+    [K in keyof RegisterForm]: FormControl<RegisterForm[K]>;
+  }>;
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -51,6 +52,7 @@ export class RegisterComponent {
     this.createRegisterForm();
   }
 
+  // Public methods
   async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
 
@@ -58,6 +60,44 @@ export class RegisterComponent {
     this.form.disable();
   }
 
+  // Public helper methods
+  getFormErrors(controlName: RegisterFormField): string[] {
+    const control = this.form.controls[controlName];
+    if (!(control.touched && control.dirty) || !control.errors) return [];
+
+    const name = controlName.charAt(0).toUpperCase() + controlName.slice(1);
+
+    return Object.entries(control.errors).map(([key]) => {
+      switch (key) {
+        case 'required':
+          return `Please enter your ${name}`;
+        case 'email':
+          return 'This is not a valid email format';
+        case 'noSpecialChars':
+          return 'Special characters are not allowed';
+        case 'minlength':
+          return `${name} is too short, min 8 characters`;
+        case 'passwordMismatch':
+          return 'Passwords do not match';
+        default:
+          return 'Invalid input';
+      }
+    });
+  }
+
+  getInputClassesForField(field: RegisterFormField): {
+    [key: string]: boolean;
+  } {
+    const control = this.form.controls[field];
+    const focused = this.fieldFocusStates[field];
+    return this.getInputClasses(control, focused);
+  }
+
+  getAriaDescribedBy(field: RegisterFormField): string | null {
+    return this.getFormErrors(field).length ? `${field}-errors` : null;
+  }
+
+  // Private helper methods
   private createRegisterForm(): void {
     this.form = this.formBuilder.nonNullable.group(
       {
@@ -96,47 +136,12 @@ export class RegisterComponent {
     };
   }
 
-  getFormErrors(controlName: RegisterFormField): string[] {
-    const control = this.form.controls[controlName];
-    if (!(control.touched && control.dirty) || !control.errors) return [];
-
-    const name = controlName.charAt(0).toUpperCase() + controlName.slice(1);
-
-    return Object.entries(control.errors).map(([key]) => {
-      switch (key) {
-        case 'required':
-          return `Please enter your ${name}`;
-        case 'email':
-          return 'This is not a valid email format';
-        case 'noSpecialChars':
-          return 'Special characters are not allowed';
-        case 'minlength':
-          return `${name} is too short, min 8 characters`;
-        case 'passwordMismatch':
-          return 'Passwords do not match';
-        default:
-          return 'Invalid input';
-      }
-    });
-  }
-
+  // Getters
   get isSignUpLoading(): boolean {
     return this.loadingState === AuthLoadingState.UserSignUp;
   }
 
   get isSignUpButtonDisabled(): boolean {
     return this.form.invalid || this.isSignUpLoading;
-  }
-
-  getInputClassesForField(field: RegisterFormField): {
-    [key: string]: boolean;
-  } {
-    const control = this.form.controls[field];
-    const focused = this.fieldFocusStates[field];
-    return this.getInputClasses(control, focused);
-  }
-
-  getAriaDescribedBy(field: RegisterFormField): string | null {
-    return this.getFormErrors(field).length ? `${field}-errors` : null;
   }
 }
