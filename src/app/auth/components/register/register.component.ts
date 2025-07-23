@@ -41,10 +41,12 @@ export class RegisterComponent {
   loadingState: LoginLoadingState = LoginLoadingState.None;
   public LoadingState = LoginLoadingState;
 
-  usernameFieldFocused: boolean = false;
-  emailFieldFocused: boolean = false;
-  passwordFieldFocused: boolean = false;
-  confirmPasswordFieldFocused: boolean = false;
+  fieldFocusStates: Record<RegisterFormField, boolean> = {
+    username: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+  };
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -123,31 +125,11 @@ export class RegisterComponent {
     return this.form.invalid || this.isSignUpLoading;
   }
 
-  get usernameInputClasses(): { [key: string]: boolean } {
-    return this.getInputClasses(
-      this.form.controls.username,
-      this.usernameFieldFocused
-    );
-  }
-
-  get emailInputClasses(): { [key: string]: boolean } {
-    return this.getInputClasses(
-      this.form.controls.email,
-      this.emailFieldFocused
-    );
-  }
-
-  get passwordInputClasses(): { [key: string]: boolean } {
-    return this.getInputClasses(
-      this.form.controls.password,
-      this.passwordFieldFocused
-    );
-  }
-
-  get confirmPasswordInputClasses(): { [key: string]: boolean } {
-    return this.getInputClasses(
-      this.form.controls.confirmPassword,
-      this.confirmPasswordFieldFocused
-    );
+  getInputClassesForField(field: RegisterFormField): {
+    [key: string]: boolean;
+  } {
+    const control = this.form.controls[field];
+    const focused = this.fieldFocusStates[field];
+    return this.getInputClasses(control, focused);
   }
 }

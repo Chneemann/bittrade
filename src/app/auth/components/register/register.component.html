@@ -9,10 +9,10 @@
         type="text"
         [id]="FIELD.username"
         [name]="FIELD.username"
-        autocomplete="username"
-        (focus)="usernameFieldFocused = true"
-        (blur)="usernameFieldFocused = false"
-        [ngClass]="usernameInputClasses"
+        autocomplete="name"
+        (focus)="fieldFocusStates[FIELD.username] = true"
+        (blur)="fieldFocusStates[FIELD.username] = false"
+        [ngClass]="getInputClassesForField(FIELD.username)"
         [attr.aria-describedby]="
           getFormErrors(FIELD.username).length
             ? FIELD.username + '-errors'
@@ -26,7 +26,7 @@
         class="icon icon--base"
         src="./assets/img/form/person.svg"
         alt="username icon"
-        [ngClass]="usernameInputClasses"
+        [ngClass]="getInputClassesForField(FIELD.username)"
       />
 
       @if (form.controls[FIELD.username].valid) {
@@ -45,7 +45,10 @@
       />
       }
 
-      <label [for]="FIELD.username" [ngClass]="usernameInputClasses">
+      <label
+        [for]="FIELD.username"
+        [ngClass]="getInputClassesForField(FIELD.username)"
+      >
         Username
       </label>
     </div>
@@ -74,9 +77,9 @@
         [id]="FIELD.email"
         [name]="FIELD.email"
         autocomplete="email"
-        (focus)="emailFieldFocused = true"
-        (blur)="emailFieldFocused = false"
-        [ngClass]="emailInputClasses"
+        (focus)="fieldFocusStates[FIELD.email] = true"
+        (blur)="fieldFocusStates[FIELD.email] = false"
+        [ngClass]="getInputClassesForField(FIELD.email)"
         [attr.aria-describedby]="
           getFormErrors(FIELD.email).length ? FIELD.email + '-errors' : null
         "
@@ -88,7 +91,7 @@
         class="icon icon--base"
         src="./assets/img/form/email.svg"
         alt="email icon"
-        [ngClass]="emailInputClasses"
+        [ngClass]="getInputClassesForField(FIELD.email)"
       />
 
       @if (form.controls[FIELD.email].valid) {
@@ -107,7 +110,10 @@
       />
       }
 
-      <label [for]="FIELD.email" [ngClass]="emailInputClasses">
+      <label
+        [for]="FIELD.email"
+        [ngClass]="getInputClassesForField(FIELD.email)"
+      >
         Email Address
       </label>
     </div>
@@ -135,10 +141,10 @@
         type="password"
         [id]="FIELD.password"
         [name]="FIELD.password"
-        autocomplete="password"
-        (focus)="passwordFieldFocused = true"
-        (blur)="passwordFieldFocused = false"
-        [ngClass]="passwordInputClasses"
+        autocomplete="new-password"
+        (focus)="fieldFocusStates[FIELD.password] = true"
+        (blur)="fieldFocusStates[FIELD.password] = false"
+        [ngClass]="getInputClassesForField(FIELD.password)"
         [attr.aria-describedby]="
           getFormErrors(FIELD.password).length
             ? FIELD.password + '-errors'
@@ -152,7 +158,7 @@
         class="icon icon--base"
         src="./assets/img/form/password.svg"
         alt="password icon"
-        [ngClass]="passwordInputClasses"
+        [ngClass]="getInputClassesForField(FIELD.password)"
       />
 
       @if (form.controls[FIELD.password].valid) {
@@ -171,7 +177,10 @@
       />
       }
 
-      <label [for]="FIELD.password" [ngClass]="passwordInputClasses">
+      <label
+        [for]="FIELD.password"
+        [ngClass]="getInputClassesForField(FIELD.password)"
+      >
         Password
       </label>
     </div>
@@ -199,10 +208,10 @@
         type="password"
         [id]="FIELD.confirmPassword"
         [name]="FIELD.confirmPassword"
-        autocomplete="confirm-password"
-        (focus)="confirmPasswordFieldFocused = true"
-        (blur)="confirmPasswordFieldFocused = false"
-        [ngClass]="confirmPasswordInputClasses"
+        autocomplete="new-password"
+        (focus)="fieldFocusStates[FIELD.confirmPassword] = true"
+        (blur)="fieldFocusStates[FIELD.confirmPassword] = false"
+        [ngClass]="getInputClassesForField(FIELD.confirmPassword)"
         [attr.aria-describedby]="
           getFormErrors(FIELD.confirmPassword).length
             ? FIELD.confirmPassword + '-errors'
@@ -216,7 +225,7 @@
         class="icon icon--base"
         src="./assets/img/form/password.svg"
         alt="password icon"
-        [ngClass]="confirmPasswordInputClasses"
+        [ngClass]="getInputClassesForField(FIELD.confirmPassword)"
       />
 
       @if (form.controls[FIELD.confirmPassword].valid) {
@@ -237,7 +246,7 @@
 
       <label
         [for]="FIELD.confirmPassword"
-        [ngClass]="confirmPasswordInputClasses"
+        [ngClass]="getInputClassesForField(FIELD.confirmPassword)"
       >
         Confirm Password
       </label>
