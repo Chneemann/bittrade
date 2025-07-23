@@ -38,15 +38,12 @@ export class RegisterComponent {
   }>;
   public FIELD = REGISTER_FORM_FIELDS;
 
+  fieldFocusStates: Record<RegisterFormField, boolean> = Object.fromEntries(
+    Object.keys(REGISTER_FORM_FIELDS).map((key) => [key, false])
+  ) as Record<RegisterFormField, boolean>;
+
   loadingState: AuthLoadingState = AuthLoadingState.None;
   public LoadingState = AuthLoadingState;
-
-  fieldFocusStates: Record<RegisterFormField, boolean> = {
-    username: false,
-    email: false,
-    password: false,
-    confirmPassword: false,
-  };
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -64,7 +61,7 @@ export class RegisterComponent {
   private createRegisterForm(): void {
     this.form = this.formBuilder.nonNullable.group(
       {
-        username: [
+        [REGISTER_FORM_FIELDS.username]: [
           '',
           [
             Validators.required,
@@ -72,9 +69,15 @@ export class RegisterComponent {
             noSpecialCharsValidator,
           ],
         ],
-        email: ['', [Validators.required, strictEmailValidator]],
-        password: ['', [Validators.required, Validators.minLength(8)]],
-        confirmPassword: [''],
+        [REGISTER_FORM_FIELDS.email]: [
+          '',
+          [Validators.required, strictEmailValidator],
+        ],
+        [REGISTER_FORM_FIELDS.password]: [
+          '',
+          [Validators.required, Validators.minLength(8)],
+        ],
+        [REGISTER_FORM_FIELDS.confirmPassword]: [''],
       },
       {
         validators: [registerPasswordsMatchValidator],

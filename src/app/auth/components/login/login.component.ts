@@ -38,13 +38,12 @@ export class LoginComponent {
   }>;
   public FIELD = LOGIN_FORM_FIELDS;
 
+  fieldFocusStates: Record<LoginFormField, boolean> = Object.fromEntries(
+    Object.keys(LOGIN_FORM_FIELDS).map((key) => [key, false])
+  ) as Record<LoginFormField, boolean>;
+
   loadingState: AuthLoadingState = AuthLoadingState.None;
   public LoadingState = AuthLoadingState;
-
-  fieldFocusStates: Record<LoginFormField, boolean> = {
-    email: false,
-    password: false,
-  };
 
   httpErrorMessage: string = '';
 
@@ -67,8 +66,8 @@ export class LoginComponent {
 
   async onGuestLogin(): Promise<void> {
     const guestCredentials: LoginForm = {
-      email: environment.guestEmail,
-      password: environment.guestPassword,
+      [LOGIN_FORM_FIELDS.email]: environment.guestEmail,
+      [LOGIN_FORM_FIELDS.password]: environment.guestPassword,
     };
     await this.performLogin(guestCredentials, AuthLoadingState.GuestSignIn);
   }
@@ -86,9 +85,9 @@ export class LoginComponent {
   }
 
   get isGuestLoginDisabled(): boolean {
-    const email = this.form?.value.email ?? '';
-    const password = this.form?.value.password ?? '';
-    return email.length > 0 || password.length > 0;
+    if (!this.form) return false;
+    const { email, password } = this.form.value;
+    return !!email || !!password;
   }
 
   getInputClassesForField(field: LoginFormField): {
@@ -152,8 +151,11 @@ export class LoginComponent {
 
   private createLoginForm(): void {
     this.form = this.formBuilder.nonNullable.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      [LOGIN_FORM_FIELDS.email]: ['', [Validators.required, Validators.email]],
+      [LOGIN_FORM_FIELDS.password]: [
+        '',
+        [Validators.required, Validators.minLength(8)],
+      ],
     });
   }
 
