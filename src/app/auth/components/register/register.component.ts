@@ -15,7 +15,7 @@ import {
 } from '../../../shared/validators/form-validators';
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
 import {
-  LoginLoadingState,
+  AuthLoadingState,
   RegisterFormField,
   REGISTER_FORM_FIELDS,
   RegisterForm,
@@ -38,8 +38,8 @@ export class RegisterComponent {
   }>;
   public FIELD = REGISTER_FORM_FIELDS;
 
-  loadingState: LoginLoadingState = LoginLoadingState.None;
-  public LoadingState = LoginLoadingState;
+  loadingState: AuthLoadingState = AuthLoadingState.None;
+  public LoadingState = AuthLoadingState;
 
   fieldFocusStates: Record<RegisterFormField, boolean> = {
     username: false,
@@ -57,7 +57,7 @@ export class RegisterComponent {
   async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
 
-    this.loadingState = LoginLoadingState.UserSignUp;
+    this.loadingState = AuthLoadingState.UserSignUp;
     this.form.disable();
   }
 
@@ -118,7 +118,7 @@ export class RegisterComponent {
   }
 
   get isSignUpLoading(): boolean {
-    return this.loadingState === LoginLoadingState.UserSignUp;
+    return this.loadingState === AuthLoadingState.UserSignUp;
   }
 
   get isSignUpButtonDisabled(): boolean {

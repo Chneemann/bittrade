@@ -1,4 +1,4 @@
-export enum LoginLoadingState {
+export enum AuthLoadingState {
   None = 'none',
   UserSignIn = 'userSignIn',
   GuestSignIn = 'guestSignIn',

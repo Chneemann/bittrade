@@ -13,7 +13,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { LoginLoadingState, LoginCredentials } from '../../models/auth.model';
+import { AuthLoadingState, LoginCredentials } from '../../models/auth.model';
 
 @Component({
   selector: 'app-login',
@@ -33,8 +33,8 @@ export class LoginComponent {
     password: FormControl<string>;
   }>;
 
-  loadingState: LoginLoadingState = LoginLoadingState.None;
-  public LoadingState = LoginLoadingState;
+  loadingState: AuthLoadingState = AuthLoadingState.None;
+  public LoadingState = AuthLoadingState;
 
   emailFieldFocused: boolean = false;
   passwordFieldFocused: boolean = false;
@@ -54,7 +54,7 @@ export class LoginComponent {
     if (this.form.invalid) return;
 
     const credentials = this.form.value as LoginCredentials;
-    await this.performLogin(credentials, LoginLoadingState.UserSignIn);
+    await this.performLogin(credentials, AuthLoadingState.UserSignIn);
   }
 
   async onGuestLogin(): Promise<void> {
@@ -62,15 +62,15 @@ export class LoginComponent {
       email: environment.guestEmail,
       password: environment.guestPassword,
     };
-    await this.performLogin(guestCredentials, LoginLoadingState.GuestSignIn);
+    await this.performLogin(guestCredentials, AuthLoadingState.GuestSignIn);
   }
 
   get isSignInLoading(): boolean {
-    return this.loadingState === LoginLoadingState.UserSignIn;
+    return this.loadingState === AuthLoadingState.UserSignIn;
   }
 
   get isGuestLoading(): boolean {
-    return this.loadingState === LoginLoadingState.GuestSignIn;
+    return this.loadingState === AuthLoadingState.GuestSignIn;
   }
 
   get isSignInButtonDisabled(): boolean {
@@ -116,7 +116,7 @@ export class LoginComponent {
 
   private async performLogin(
     credentials: LoginCredentials,
-    loadingKey: Exclude<LoginLoadingState, LoginLoadingState.None>
+    loadingKey: Exclude<AuthLoadingState, AuthLoadingState.None>
   ): Promise<void> {
     this.loadingState = loadingKey;
     this.form.disable();
@@ -127,7 +127,7 @@ export class LoginComponent {
     } catch (error: unknown) {
       this.httpErrorMessage = this.extractErrorMessage(error);
     } finally {
-      this.loadingState = LoginLoadingState.None;
+      this.loadingState = AuthLoadingState.None;
       this.form.enable();
     }
   }
