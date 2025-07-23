@@ -13,11 +13,7 @@
         (focus)="fieldFocusStates[FIELD.username] = true"
         (blur)="fieldFocusStates[FIELD.username] = false"
         [ngClass]="getInputClassesForField(FIELD.username)"
-        [attr.aria-describedby]="
-          getFormErrors(FIELD.username).length
-            ? FIELD.username + '-errors'
-            : null
-        "
+        [attr.aria-describedby]="getAriaDescribedBy(FIELD.username)"
         required
       />
 
@@ -80,9 +76,7 @@
         (focus)="fieldFocusStates[FIELD.email] = true"
         (blur)="fieldFocusStates[FIELD.email] = false"
         [ngClass]="getInputClassesForField(FIELD.email)"
-        [attr.aria-describedby]="
-          getFormErrors(FIELD.email).length ? FIELD.email + '-errors' : null
-        "
+        [attr.aria-describedby]="getAriaDescribedBy(FIELD.email)"
         required
       />
 
@@ -145,11 +139,7 @@
         (focus)="fieldFocusStates[FIELD.password] = true"
         (blur)="fieldFocusStates[FIELD.password] = false"
         [ngClass]="getInputClassesForField(FIELD.password)"
-        [attr.aria-describedby]="
-          getFormErrors(FIELD.password).length
-            ? FIELD.password + '-errors'
-            : null
-        "
+        [attr.aria-describedby]="getAriaDescribedBy(FIELD.password)"
         required
       />
 
@@ -212,11 +202,7 @@
         (focus)="fieldFocusStates[FIELD.confirmPassword] = true"
         (blur)="fieldFocusStates[FIELD.confirmPassword] = false"
         [ngClass]="getInputClassesForField(FIELD.confirmPassword)"
-        [attr.aria-describedby]="
-          getFormErrors(FIELD.confirmPassword).length
-            ? FIELD.confirmPassword + '-errors'
-            : null
-        "
+        [attr.aria-describedby]="getAriaDescribedBy(FIELD.confirmPassword)"
         required
       />
 

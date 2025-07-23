@@ -132,4 +132,8 @@ export class RegisterComponent {
     const focused = this.fieldFocusStates[field];
     return this.getInputClasses(control, focused);
   }
+
+  getAriaDescribedBy(field: RegisterFormField): string | null {
+    return this.getFormErrors(field).length ? `${field}-errors` : null;
+  }
 }
