@@ -5,10 +5,21 @@ export enum AuthLoadingState {
   UserSignUp = 'userSignUp',
 }
 
-export interface LoginCredentials {
+// Login
+
+export interface LoginForm {
   email: string;
   password: string;
 }
+
+export const LOGIN_FORM_FIELDS = {
+  email: 'email',
+  password: 'password',
+} as const;
+
+export type LoginFormField = keyof typeof LOGIN_FORM_FIELDS;
+
+// Register
 
 export interface RegisterForm {
   username: string;

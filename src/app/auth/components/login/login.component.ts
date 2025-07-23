@@ -13,7 +13,11 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { AuthLoadingState, LoginCredentials } from '../../models/auth.model';
+import {
+  AuthLoadingState,
+  LOGIN_FORM_FIELDS,
+  LoginForm,
+} from '../../models/auth.model';
 
 @Component({
   selector: 'app-login',
@@ -29,9 +33,9 @@ import { AuthLoadingState, LoginCredentials } from '../../models/auth.model';
 })
 export class LoginComponent {
   form!: FormGroup<{
-    email: FormControl<string>;
-    password: FormControl<string>;
+    [K in keyof LoginForm]: FormControl<LoginForm[K]>;
   }>;
+  public FIELD = LOGIN_FORM_FIELDS;
 
   loadingState: AuthLoadingState = AuthLoadingState.None;
   public LoadingState = AuthLoadingState;
@@ -53,12 +57,12 @@ export class LoginComponent {
   async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
 
-    const credentials = this.form.value as LoginCredentials;
+    const credentials = this.form.value as LoginForm;
     await this.performLogin(credentials, AuthLoadingState.UserSignIn);
   }
 
   async onGuestLogin(): Promise<void> {
-    const guestCredentials: LoginCredentials = {
+    const guestCredentials: LoginForm = {
       email: environment.guestEmail,
       password: environment.guestPassword,
     };
@@ -115,7 +119,7 @@ export class LoginComponent {
   }
 
   private async performLogin(
-    credentials: LoginCredentials,
+    credentials: LoginForm,
     loadingKey: Exclude<AuthLoadingState, AuthLoadingState.None>
   ): Promise<void> {
     this.loadingState = loadingKey;

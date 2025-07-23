@@ -5,16 +5,16 @@
     <!-- Email field -->
     <div class="input-field">
       <input
-        formControlName="email"
+        [formControlName]="FIELD.email"
         type="email"
-        id="email"
-        name="email"
+        [id]="FIELD.email"
+        [name]="FIELD.email"
         autocomplete="email"
         (focus)="emailFieldFocused = true"
         (blur)="emailFieldFocused = false"
         [ngClass]="emailInputClasses"
         [attr.aria-describedby]="
-          getFormErrors('email').length ? 'email-errors' : null
+          getFormErrors(FIELD.email).length ? 'email-errors' : null
         "
         required
       />
@@ -27,14 +27,14 @@
         [ngClass]="emailInputClasses"
       />
 
-      @if (form.controls['email'].valid) {
+      @if (form.controls[FIELD.email].valid) {
       <!-- Success icon -->
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      } @else if (getFormErrors('email').length > 0) {
+      } @else if (getFormErrors(FIELD.email).length > 0) {
       <!-- Error icon -->
       <img
         class="icon icon--status"
@@ -53,9 +53,9 @@
       aria-live="assertive"
     >
       <!-- Frontend email error message -->
-      @if (getFormErrors('email').length) {
+      @if (getFormErrors(FIELD.email).length) {
       <div class="error-message">
-        @for (error of getFormErrors('email'); track $index) {
+        @for (error of getFormErrors(FIELD.email); track $index) {
         <p>{{ error }}</p>
         }
       </div>
@@ -65,16 +65,16 @@
     <!-- Password field -->
     <div class="input-field">
       <input
-        formControlName="password"
+        [formControlName]="FIELD.password"
         type="password"
-        id="password"
-        name="password"
-        autocomplete="current-password"
+        [id]="FIELD.password"
+        [name]="FIELD.password"
+        autocomplete="new-password"
         (focus)="passwordFieldFocused = true"
         (blur)="passwordFieldFocused = false"
         [ngClass]="passwordInputClasses"
         [attr.aria-describedby]="
-          getFormErrors('password').length ? 'password-errors' : null
+          getFormErrors(FIELD.password).length ? 'password-errors' : null
         "
         required
       />
@@ -87,14 +87,14 @@
         [ngClass]="passwordInputClasses"
       />
 
-      @if (form.controls['password'].valid) {
+      @if (form.controls[FIELD.password].valid) {
       <!-- Success icon -->
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      } @else if (getFormErrors('password').length > 0) {
+      } @else if (getFormErrors(FIELD.password).length > 0) {
       <!-- Error icon -->
       <img
         class="icon icon--status"
@@ -113,9 +113,9 @@
       aria-live="assertive"
     >
       <!-- Frontend password error message -->
-      @if (getFormErrors('password').length) {
+      @if (getFormErrors(FIELD.password).length) {
       <div class="error-message">
-        @for (error of getFormErrors('password'); track $index) {
+        @for (error of getFormErrors(FIELD.password); track $index) {
         <p>{{ error }}</p>
         }
       </div>
