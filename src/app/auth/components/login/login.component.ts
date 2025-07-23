@@ -17,6 +17,7 @@ import {
   AuthLoadingState,
   LOGIN_FORM_FIELDS,
   LoginForm,
+  LoginFormField,
 } from '../../models/auth.model';
 
 @Component({
@@ -40,8 +41,11 @@ export class LoginComponent {
   loadingState: AuthLoadingState = AuthLoadingState.None;
   public LoadingState = AuthLoadingState;
 
-  emailFieldFocused: boolean = false;
-  passwordFieldFocused: boolean = false;
+  fieldFocusStates: Record<LoginFormField, boolean> = {
+    email: false,
+    password: false,
+  };
+
   httpErrorMessage: string = '';
 
   constructor(
@@ -87,17 +91,12 @@ export class LoginComponent {
     return email.length > 0 || password.length > 0;
   }
 
-  get emailInputClasses() {
-    return this.getInputClasses(
-      this.form.controls.email,
-      this.emailFieldFocused
-    );
-  }
-  get passwordInputClasses() {
-    return this.getInputClasses(
-      this.form.controls.password,
-      this.passwordFieldFocused
-    );
+  getInputClassesForField(field: LoginFormField): {
+    [key: string]: boolean;
+  } {
+    const control = this.form.controls[field];
+    const focused = this.fieldFocusStates[field];
+    return this.getInputClasses(control, focused);
   }
 
   getFormErrors(controlName: 'email' | 'password'): string[] {

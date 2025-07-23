@@ -10,9 +10,9 @@
         [id]="FIELD.email"
         [name]="FIELD.email"
         autocomplete="email"
-        (focus)="emailFieldFocused = true"
-        (blur)="emailFieldFocused = false"
-        [ngClass]="emailInputClasses"
+        (focus)="fieldFocusStates[FIELD.email] = true"
+        (blur)="fieldFocusStates[FIELD.email] = false"
+        [ngClass]="getInputClassesForField(FIELD.email)"
         [attr.aria-describedby]="
           getFormErrors(FIELD.email).length ? 'email-errors' : null
         "
@@ -24,7 +24,7 @@
         class="icon icon--base"
         src="./assets/img/form/email.svg"
         alt="email icon"
-        [ngClass]="emailInputClasses"
+        [ngClass]="getInputClassesForField(FIELD.email)"
       />
 
       @if (form.controls[FIELD.email].valid) {
@@ -43,11 +43,16 @@
       />
       }
 
-      <label for="email" [ngClass]="emailInputClasses"> Email Address </label>
+      <label
+        [for]="FIELD.email"
+        [ngClass]="getInputClassesForField(FIELD.email)"
+      >
+        Email Address
+      </label>
     </div>
 
     <div
-      id="email-errors"
+      [id]="FIELD.email + '-errors'"
       class="error-wrapper"
       role="alert"
       aria-live="assertive"
@@ -70,9 +75,9 @@
         [id]="FIELD.password"
         [name]="FIELD.password"
         autocomplete="new-password"
-        (focus)="passwordFieldFocused = true"
-        (blur)="passwordFieldFocused = false"
-        [ngClass]="passwordInputClasses"
+        (focus)="fieldFocusStates[FIELD.password] = true"
+        (blur)="fieldFocusStates[FIELD.password] = false"
+        [ngClass]="getInputClassesForField(FIELD.password)"
         [attr.aria-describedby]="
           getFormErrors(FIELD.password).length ? 'password-errors' : null
         "
@@ -84,7 +89,7 @@
         class="icon icon--base"
         src="./assets/img/form/password.svg"
         alt="password icon"
-        [ngClass]="passwordInputClasses"
+        [ngClass]="getInputClassesForField(FIELD.password)"
       />
 
       @if (form.controls[FIELD.password].valid) {
@@ -103,11 +108,16 @@
       />
       }
 
-      <label for="password" [ngClass]="passwordInputClasses"> Password </label>
+      <label
+        [for]="FIELD.password"
+        [ngClass]="getInputClassesForField(FIELD.password)"
+      >
+        Password
+      </label>
     </div>
 
     <div
-      id="password-errors"
+      [id]="FIELD.password + '-errors'"
       class="error-wrapper"
       role="alert"
       aria-live="assertive"
