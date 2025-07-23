@@ -99,6 +99,10 @@ export class LoginComponent {
     return this.getInputClasses(control, focused);
   }
 
+  getAriaDescribedBy(field: LoginFormField): string | null {
+    return this.getFormErrors(field).length ? `${field}-errors` : null;
+  }
+
   getFormErrors(controlName: 'email' | 'password'): string[] {
     const control = this.form.controls[controlName];
     if (!(control.touched && control.dirty) || !control.errors) return [];

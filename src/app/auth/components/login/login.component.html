@@ -13,9 +13,7 @@
         (focus)="fieldFocusStates[FIELD.email] = true"
         (blur)="fieldFocusStates[FIELD.email] = false"
         [ngClass]="getInputClassesForField(FIELD.email)"
-        [attr.aria-describedby]="
-          getFormErrors(FIELD.email).length ? 'email-errors' : null
-        "
+        [attr.aria-describedby]="getAriaDescribedBy(FIELD.email)"
         required
       />
 
@@ -78,9 +76,7 @@
         (focus)="fieldFocusStates[FIELD.password] = true"
         (blur)="fieldFocusStates[FIELD.password] = false"
         [ngClass]="getInputClassesForField(FIELD.password)"
-        [attr.aria-describedby]="
-          getFormErrors(FIELD.password).length ? 'password-errors' : null
-        "
+        [attr.aria-describedby]="getAriaDescribedBy(FIELD.password)"
         required
       />
 
