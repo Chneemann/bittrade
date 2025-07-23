@@ -20,6 +20,7 @@ import {
   REGISTER_FORM_FIELDS,
   RegisterForm,
 } from '../../models/auth.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -46,7 +47,9 @@ export class RegisterComponent implements OnInit {
     [K in keyof RegisterForm]: FormControl<RegisterForm[K]>;
   }>;
 
-  constructor(private formBuilder: FormBuilder) {}
+  httpErrorMessage: string = '';
+
+  constructor(private router: Router, private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.createRegisterForm();
@@ -56,8 +59,8 @@ export class RegisterComponent implements OnInit {
   async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
 
-    this.loadingState = AuthLoadingState.UserSignUp;
-    this.form.disable();
+    const credentials = this.form.value as RegisterForm;
+    await this.performRegister(credentials, AuthLoadingState.UserSignUp);
   }
 
   // Public helper methods
@@ -123,6 +126,31 @@ export class RegisterComponent implements OnInit {
         validators: [registerPasswordsMatchValidator],
       }
     );
+  }
+
+  private async performRegister(
+    credentials: RegisterForm,
+    loadingKey: Exclude<AuthLoadingState, AuthLoadingState.None>
+  ): Promise<void> {
+    this.loadingState = loadingKey;
+    this.form.disable();
+
+    try {
+      // TODO: Implement registration
+      console.log('Registering user:', credentials);
+    } catch (error: unknown) {
+      this.httpErrorMessage = this.extractErrorMessage(error);
+    } finally {
+      this.loadingState = AuthLoadingState.None;
+      this.form.enable();
+    }
+  }
+
+  private extractErrorMessage(error: unknown): string {
+    if (error instanceof Error) {
+      return error.message;
+    }
+    return 'Unknown error';
   }
 
   private getInputClasses(

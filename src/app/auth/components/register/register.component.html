@@ -252,6 +252,13 @@
         }
       </div>
       }
+
+      <!-- Backend error message -->
+      @if (httpErrorMessage) {
+      <div class="error-message">
+        <p>{{ httpErrorMessage }}</p>
+      </div>
+      }
     </div>
 
     <!-- Register button -->
