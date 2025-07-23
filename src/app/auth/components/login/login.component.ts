@@ -103,18 +103,22 @@ export class LoginComponent {
     return this.getFormErrors(field).length ? `${field}-errors` : null;
   }
 
-  getFormErrors(controlName: 'email' | 'password'): string[] {
+  getFormErrors(controlName: LoginFormField): string[] {
     const control = this.form.controls[controlName];
     if (!(control.touched && control.dirty) || !control.errors) return [];
+
+    const name = controlName.charAt(0).toUpperCase() + controlName.slice(1);
 
     return Object.entries(control.errors).map(([key]) => {
       switch (key) {
         case 'required':
-          return `Please enter your ${controlName}`;
+          return `Please enter your ${name}`;
         case 'email':
           return 'This is not a valid email format';
+        case 'noSpecialChars':
+          return 'Special characters are not allowed';
         case 'minlength':
-          return `${controlName} is too short, min 8 characters`;
+          return `${name} is too short, min 8 characters`;
         default:
           return 'Invalid input';
       }
