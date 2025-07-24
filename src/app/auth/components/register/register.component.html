@@ -72,20 +72,19 @@
       }
     </div>
 
+    <!-- Frontend username error message -->
     <div
-      [id]="FIELD.username + '-errors'"
       class="error-wrapper"
+      [ngClass]="{ visible: getFormErrors(FIELD.username).length > 0 }"
+      [id]="FIELD.username + '-errors'"
       role="alert"
       aria-live="assertive"
     >
-      <!-- Frontend username error message -->
-      @if (getFormErrors(FIELD.username).length) {
       <div class="error-message">
         @for (error of getFormErrors(FIELD.username); track $index) {
         <p>{{ error }}</p>
         }
       </div>
-      }
     </div>
 
     <!-- Email field -->
@@ -134,20 +133,19 @@
       }
     </div>
 
+    <!-- Frontend email error message -->
     <div
-      [id]="FIELD.email + '-errors'"
       class="error-wrapper"
+      [ngClass]="{ visible: getFormErrors(FIELD.email).length > 0 }"
+      [id]="FIELD.email + '-errors'"
       role="alert"
       aria-live="assertive"
     >
-      <!-- Frontend email error message -->
-      @if (getFormErrors(FIELD.email).length) {
       <div class="error-message">
         @for (error of getFormErrors(FIELD.email); track $index) {
         <p>{{ error }}</p>
         }
       </div>
-      }
     </div>
 
     <!-- Password field -->
@@ -196,20 +194,19 @@
       }
     </div>
 
+    <!-- Frontend password error message -->
     <div
-      [id]="FIELD.password + '-errors'"
       class="error-wrapper"
+      [ngClass]="{ visible: getFormErrors(FIELD.password).length > 0 }"
+      [id]="FIELD.password + '-errors'"
       role="alert"
       aria-live="assertive"
     >
-      <!-- Frontend password error message -->
-      @if (getFormErrors(FIELD.password).length) {
       <div class="error-message">
         @for (error of getFormErrors(FIELD.password); track $index) {
         <p>{{ error }}</p>
         }
       </div>
-      }
     </div>
 
     <!-- Confirm password field -->
@@ -258,20 +255,19 @@
       }
     </div>
 
+    <!-- Frontend confirm password error message -->
     <div
-      [id]="FIELD.confirmPassword + '-errors'"
       class="error-wrapper"
+      [ngClass]="{ visible: getFormErrors(FIELD.confirmPassword).length > 0 }"
+      [id]="FIELD.confirmPassword + '-errors'"
       role="alert"
       aria-live="assertive"
     >
-      <!-- Frontend confirm password error message -->
-      @if (getFormErrors(FIELD.confirmPassword).length) {
       <div class="error-message">
         @for (error of getFormErrors(FIELD.confirmPassword); track $index) {
         <p>{{ error }}</p>
         }
       </div>
-      }
     </div>
 
     <!-- Backend error message -->

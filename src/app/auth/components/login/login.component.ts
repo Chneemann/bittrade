@@ -19,6 +19,7 @@ import {
   LoginForm,
   LoginFormField,
 } from '../../models/auth.model';
+import { strictEmailValidator } from '../../../shared/validators/form-validators';
 
 @Component({
   selector: 'app-login',
@@ -87,30 +88,36 @@ export class LoginComponent implements OnInit {
 
   getFormErrors(controlName: LoginFormField): string[] {
     const control = this.form.controls[controlName];
+
     if (!(control.touched && control.dirty) || !control.errors) return [];
 
     const name = controlName.charAt(0).toUpperCase() + controlName.slice(1);
 
-    return Object.entries(control.errors).map(([key]) => {
-      switch (key) {
-        case 'required':
-          return `Please enter your ${name}`;
-        case 'email':
-          return 'This is not a valid email format';
-        case 'noSpecialChars':
-          return 'Special characters are not allowed';
-        case 'minlength':
-          return `${name} is too short, min 8 characters`;
-        default:
-          return 'Invalid input';
-      }
-    });
+    return Object.entries(control.errors)
+      .filter(([key]) => key !== 'required')
+      .map(([key]) => {
+        switch (key) {
+          case 'email':
+            return 'This is not a valid email format';
+          case 'noSpecialChars':
+            return 'Special characters are not allowed';
+          case 'minlength':
+            return `${name} is too short, min 8 characters`;
+          case 'passwordMismatch':
+            return 'Passwords do not match';
+          default:
+            return 'Invalid input';
+        }
+      });
   }
 
   // Private helper methods
   private createLoginForm(): void {
     this.form = this.formBuilder.nonNullable.group({
-      [LOGIN_FORM_FIELDS.email]: ['', [Validators.required, Validators.email]],
+      [LOGIN_FORM_FIELDS.email]: [
+        '',
+        [Validators.required, strictEmailValidator],
+      ],
       [LOGIN_FORM_FIELDS.password]: [
         '',
         [Validators.required, Validators.minLength(8)],
@@ -147,10 +154,14 @@ export class LoginComponent implements OnInit {
     control: FormControl,
     focused: boolean
   ): { [key: string]: boolean } {
+    const hasErrors = Object.keys(control.errors ?? {}).some(
+      (e) => e !== 'required'
+    );
+
     return {
       focused: focused || !!control.value,
       valid: control.valid && control.touched,
-      invalid: control.invalid && control.touched && control.dirty,
+      invalid: hasErrors && control.touched && control.dirty,
     };
   }
 

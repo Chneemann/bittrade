@@ -48,20 +48,19 @@
       }
     </div>
 
+    <!-- Frontend email error message -->
     <div
-      [id]="FIELD.email + '-errors'"
       class="error-wrapper"
+      [ngClass]="{ visible: getFormErrors(FIELD.email).length > 0 }"
+      [id]="FIELD.email + '-errors'"
       role="alert"
       aria-live="assertive"
     >
-      <!-- Frontend email error message -->
-      @if (getFormErrors(FIELD.email).length) {
       <div class="error-message">
         @for (error of getFormErrors(FIELD.email); track $index) {
         <p>{{ error }}</p>
         }
       </div>
-      }
     </div>
 
     <!-- Password field -->
@@ -110,20 +109,19 @@
       }
     </div>
 
+    <!-- Frontend password error message -->
     <div
-      [id]="FIELD.password + '-errors'"
       class="error-wrapper"
+      [ngClass]="{ visible: getFormErrors(FIELD.password).length > 0 }"
+      [id]="FIELD.password + '-errors'"
       role="alert"
       aria-live="assertive"
     >
-      <!-- Frontend password error message -->
-      @if (getFormErrors(FIELD.password).length) {
       <div class="error-message">
         @for (error of getFormErrors(FIELD.password); track $index) {
         <p>{{ error }}</p>
         }
       </div>
-      }
     </div>
 
     <!-- Backend error message -->
