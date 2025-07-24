@@ -35,4 +35,11 @@ export const REGISTER_FORM_FIELDS = {
   confirmPassword: 'confirmPassword',
 } as const;
 
+export const REGISTER_FIELD_LABELS = {
+  username: 'Username',
+  email: 'Email Address',
+  password: 'Password',
+  confirmPassword: 'Confirm Password',
+} as const;
+
 export type RegisterFormField = keyof typeof REGISTER_FORM_FIELDS;

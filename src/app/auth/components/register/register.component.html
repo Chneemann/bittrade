@@ -1,5 +1,6 @@
 @if (registrationSuccess) {
 
+<!-- Success modal -->
 <div class="success-card">
   <img
     class="success-icon"
@@ -12,6 +13,7 @@
     <br />
     You can now log in to access your account.
   </p>
+
   <app-primary-button
     type="button"
     value="Go to Login"
@@ -32,8 +34,9 @@
         [for]="FIELD.username"
         [ngClass]="getInputClassesForField(FIELD.username)"
       >
-        Username
+        {{ LABEL.username }}
       </label>
+
       <input
         [formControlName]="FIELD.username"
         type="text"
@@ -92,8 +95,9 @@
         [for]="FIELD.email"
         [ngClass]="getInputClassesForField(FIELD.email)"
       >
-        Email Address
+        {{ LABEL.email }}
       </label>
+
       <input
         [formControlName]="FIELD.email"
         type="email"
@@ -152,8 +156,9 @@
         [for]="FIELD.password"
         [ngClass]="getInputClassesForField(FIELD.password)"
       >
-        Password
+        {{ LABEL.password }}
       </label>
+
       <input
         [formControlName]="FIELD.password"
         type="password"
@@ -212,8 +217,9 @@
         [for]="FIELD.confirmPassword"
         [ngClass]="getInputClassesForField(FIELD.confirmPassword)"
       >
-        Confirm Password
+        {{ LABEL.confirmPassword }}
       </label>
+
       <input
         [formControlName]="FIELD.confirmPassword"
         type="password"

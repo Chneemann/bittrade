@@ -19,6 +19,7 @@ import {
   RegisterFormField,
   REGISTER_FORM_FIELDS,
   RegisterForm,
+  REGISTER_FIELD_LABELS,
 } from '../../models/auth.model';
 import { Router, RouterLink } from '@angular/router';
 
@@ -36,6 +37,7 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class RegisterComponent implements OnInit {
   public FIELD = REGISTER_FORM_FIELDS;
+  public LABEL = REGISTER_FIELD_LABELS;
 
   public LoadingState = AuthLoadingState;
   loadingState: AuthLoadingState = AuthLoadingState.None;
@@ -71,7 +73,7 @@ export class RegisterComponent implements OnInit {
 
     if (!(control.touched && control.dirty) || !control.errors) return [];
 
-    const name = controlName.charAt(0).toUpperCase() + controlName.slice(1);
+    const label = REGISTER_FIELD_LABELS[controlName] ?? controlName;
 
     return Object.entries(control.errors)
       .filter(([key]) => key !== 'required')
@@ -82,7 +84,7 @@ export class RegisterComponent implements OnInit {
           case 'noSpecialChars':
             return 'Special characters are not allowed';
           case 'minlength':
-            return `${name} is too short, min 8 characters`;
+            return `${label} is too short, min 8 characters`;
           case 'passwordMismatch':
             return 'Passwords do not match';
           default:
