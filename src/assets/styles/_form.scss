@@ -24,9 +24,13 @@ form {
     font-size: 18px;
     font-weight: 400;
 
-    resize: none;
-    transition: background-color 250ms ease-in-out, color 250ms ease-in-out,
-      border-color 250ms ease-in-out;
+    transition: all 0.2s ease;
+
+    outline: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 
     &.focused {
       border-color: var(--color-primary);
@@ -35,21 +39,18 @@ form {
 
     &.valid,
     &.valid.focused {
-      outline: none;
       border-color: var(--color-black);
       color: var(--color-black);
     }
 
     &.invalid,
     &.invalid.focused {
-      outline: none;
       border-color: var(--color-red);
       color: var(--color-red);
     }
 
     &:read-only {
       border-style: dashed;
-      opacity: 0.5;
     }
   }
 
@@ -92,29 +93,32 @@ form {
     height: 24px;
 
     &--base {
+      opacity: 0.5;
+
       left: 20px;
     }
     &--status {
+      opacity: 1;
+
       left: auto;
       right: 15px;
     }
 
     &.focused {
+      opacity: 1;
       filter: var(--filter-color-primary);
     }
 
     &.valid,
     &.valid.focused {
+      opacity: 1;
       filter: var(--filter-color-black);
     }
 
     &.invalid,
     &.invalid.focused {
+      opacity: 1;
       filter: var(--filter-color-red);
-    }
-
-    &:read-only {
-      opacity: 0.5;
     }
   }
 }
