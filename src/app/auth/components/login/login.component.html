@@ -4,6 +4,12 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <!-- Email field -->
     <div class="input-field">
+      <label
+        [for]="FIELD.email"
+        [ngClass]="getInputClassesForField(FIELD.email)"
+      >
+        Email Address
+      </label>
       <input
         [formControlName]="FIELD.email"
         type="email"
@@ -40,13 +46,6 @@
         alt="invalid input"
       />
       }
-
-      <label
-        [for]="FIELD.email"
-        [ngClass]="getInputClassesForField(FIELD.email)"
-      >
-        Email Address
-      </label>
     </div>
 
     <div
@@ -67,6 +66,12 @@
 
     <!-- Password field -->
     <div class="input-field">
+      <label
+        [for]="FIELD.password"
+        [ngClass]="getInputClassesForField(FIELD.password)"
+      >
+        Password
+      </label>
       <input
         [formControlName]="FIELD.password"
         type="password"
@@ -103,13 +108,6 @@
         alt="invalid input"
       />
       }
-
-      <label
-        [for]="FIELD.password"
-        [ngClass]="getInputClassesForField(FIELD.password)"
-      >
-        Password
-      </label>
     </div>
 
     <div

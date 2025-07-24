@@ -1,4 +1,5 @@
 @if (registrationSuccess) {
+
 <div class="success-card">
   <img
     class="success-icon"
@@ -18,6 +19,7 @@
   >
   </app-primary-button>
 </div>
+
 } @else {
 
 <div class="register">
@@ -26,6 +28,12 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <!-- Username field -->
     <div class="input-field">
+      <label
+        [for]="FIELD.username"
+        [ngClass]="getInputClassesForField(FIELD.username)"
+      >
+        Username
+      </label>
       <input
         [formControlName]="FIELD.username"
         type="text"
@@ -62,13 +70,6 @@
         alt="invalid input"
       />
       }
-
-      <label
-        [for]="FIELD.username"
-        [ngClass]="getInputClassesForField(FIELD.username)"
-      >
-        Username
-      </label>
     </div>
 
     <div
@@ -89,6 +90,12 @@
 
     <!-- Email field -->
     <div class="input-field">
+      <label
+        [for]="FIELD.email"
+        [ngClass]="getInputClassesForField(FIELD.email)"
+      >
+        Email Address
+      </label>
       <input
         [formControlName]="FIELD.email"
         type="email"
@@ -125,13 +132,6 @@
         alt="invalid input"
       />
       }
-
-      <label
-        [for]="FIELD.email"
-        [ngClass]="getInputClassesForField(FIELD.email)"
-      >
-        Email Address
-      </label>
     </div>
 
     <div
@@ -152,6 +152,12 @@
 
     <!-- Password field -->
     <div class="input-field">
+      <label
+        [for]="FIELD.password"
+        [ngClass]="getInputClassesForField(FIELD.password)"
+      >
+        Password
+      </label>
       <input
         [formControlName]="FIELD.password"
         type="password"
@@ -188,13 +194,6 @@
         alt="invalid input"
       />
       }
-
-      <label
-        [for]="FIELD.password"
-        [ngClass]="getInputClassesForField(FIELD.password)"
-      >
-        Password
-      </label>
     </div>
 
     <div
@@ -215,6 +214,12 @@
 
     <!-- Confirm password field -->
     <div class="input-field">
+      <label
+        [for]="FIELD.confirmPassword"
+        [ngClass]="getInputClassesForField(FIELD.confirmPassword)"
+      >
+        Confirm Password
+      </label>
       <input
         [formControlName]="FIELD.confirmPassword"
         type="password"
@@ -251,13 +256,6 @@
         alt="invalid input"
       />
       }
-
-      <label
-        [for]="FIELD.confirmPassword"
-        [ngClass]="getInputClassesForField(FIELD.confirmPassword)"
-      >
-        Confirm Password
-      </label>
     </div>
 
     <div
