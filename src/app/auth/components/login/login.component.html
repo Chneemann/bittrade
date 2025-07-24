@@ -31,15 +31,14 @@
         [ngClass]="getInputClassesForField(FIELD.email)"
       />
 
-      @if (form.controls[FIELD.email].valid) {
-      <!-- Success icon -->
+      <!-- Validation status icon -->
+      @if (getStatusIcon(FIELD.email) === 'success') {
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      } @else if (getFormErrors(FIELD.email).length > 0) {
-      <!-- Error icon -->
+      } @else if (getStatusIcon(FIELD.email) === 'error') {
       <img
         class="icon icon--status"
         src="./assets/img/form/error.svg"
@@ -92,15 +91,14 @@
         [ngClass]="getInputClassesForField(FIELD.password)"
       />
 
-      @if (form.controls[FIELD.password].valid) {
-      <!-- Success icon -->
+      <!-- Validation status icon -->
+      @if (getStatusIcon(FIELD.password) === 'success') {
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      } @else if (getFormErrors(FIELD.password).length > 0) {
-      <!-- Error icon -->
+      } @else if (getStatusIcon(FIELD.password) === 'error') {
       <img
         class="icon icon--status"
         src="./assets/img/form/error.svg"

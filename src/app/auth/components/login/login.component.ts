@@ -76,16 +76,6 @@ export class LoginComponent implements OnInit {
   }
 
   // Public helper methods
-  getInputClassesForField(field: LoginFormField): { [key: string]: boolean } {
-    const control = this.form.controls[field];
-    const focused = this.fieldFocusStates[field];
-    return this.getInputClasses(control, focused);
-  }
-
-  getAriaDescribedBy(field: LoginFormField): string | null {
-    return this.getFormErrors(field).length ? `${field}-errors` : null;
-  }
-
   getFormErrors(controlName: LoginFormField): string[] {
     const control = this.form.controls[controlName];
 
@@ -109,6 +99,23 @@ export class LoginComponent implements OnInit {
             return 'Invalid input';
         }
       });
+  }
+
+  getInputClassesForField(field: LoginFormField): { [key: string]: boolean } {
+    const control = this.form.controls[field];
+    const focused = this.fieldFocusStates[field];
+    return this.getInputClasses(control, focused);
+  }
+
+  getAriaDescribedBy(field: LoginFormField): string | null {
+    return this.getFormErrors(field).length ? `${field}-errors` : null;
+  }
+
+  getStatusIcon(field: LoginFormField): 'success' | 'error' | null {
+    const control = this.form.controls[field];
+    if (control.valid && (control.touched || control.dirty)) return 'success';
+    if (this.getFormErrors(field).length > 0) return 'error';
+    return null;
   }
 
   // Private helper methods

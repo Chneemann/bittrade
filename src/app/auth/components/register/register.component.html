@@ -55,15 +55,14 @@
         [ngClass]="getInputClassesForField(FIELD.username)"
       />
 
-      @if (form.controls[FIELD.username].valid) {
-      <!-- Success icon -->
+      <!-- Validation status icon -->
+      @if (getStatusIcon(FIELD.username) === 'success') {
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      } @else if (getFormErrors(FIELD.username).length > 0) {
-      <!-- Error icon -->
+      } @else if (getStatusIcon(FIELD.username) === 'error') {
       <img
         class="icon icon--status"
         src="./assets/img/form/error.svg"
@@ -116,15 +115,14 @@
         [ngClass]="getInputClassesForField(FIELD.email)"
       />
 
-      @if (form.controls[FIELD.email].valid) {
-      <!-- Success icon -->
+      <!-- Validation status icon -->
+      @if (getStatusIcon(FIELD.email) === 'success') {
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      } @else if (getFormErrors(FIELD.email).length > 0) {
-      <!-- Error icon -->
+      } @else if (getStatusIcon(FIELD.email) === 'error') {
       <img
         class="icon icon--status"
         src="./assets/img/form/error.svg"
@@ -177,15 +175,14 @@
         [ngClass]="getInputClassesForField(FIELD.password)"
       />
 
-      @if (form.controls[FIELD.password].valid) {
-      <!-- Success icon -->
+      <!-- Validation status icon -->
+      @if (getStatusIcon(FIELD.password) === 'success') {
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      } @else if (getFormErrors(FIELD.password).length > 0) {
-      <!-- Error icon -->
+      } @else if (getStatusIcon(FIELD.password) === 'error') {
       <img
         class="icon icon--status"
         src="./assets/img/form/error.svg"
@@ -238,15 +235,14 @@
         [ngClass]="getInputClassesForField(FIELD.confirmPassword)"
       />
 
-      @if (form.controls[FIELD.confirmPassword].valid) {
-      <!-- Success icon -->
+      <!-- Validation status icon -->
+      @if (getStatusIcon(FIELD.confirmPassword) === 'success') {
       <img
         class="icon icon--status"
         src="./assets/img/form/success.svg"
         alt="valid input"
       />
-      } @else if (getFormErrors(FIELD.confirmPassword).length > 0) {
-      <!-- Error icon -->
+      } @else if (getStatusIcon(FIELD.confirmPassword) === 'error') {
       <img
         class="icon icon--status"
         src="./assets/img/form/error.svg"

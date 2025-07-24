@@ -103,6 +103,13 @@ export class RegisterComponent implements OnInit {
     return this.getFormErrors(field).length ? `${field}-errors` : null;
   }
 
+  getStatusIcon(field: RegisterFormField): 'success' | 'error' | null {
+    const control = this.form.controls[field];
+    if (control.valid && (control.touched || control.dirty)) return 'success';
+    if (this.getFormErrors(field).length > 0) return 'error';
+    return null;
+  }
+
   // Private helper methods
   private createRegisterForm(): void {
     this.form = this.formBuilder.nonNullable.group(
