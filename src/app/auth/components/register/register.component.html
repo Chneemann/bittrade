@@ -1,3 +1,25 @@
+@if (registrationSuccess) {
+<div class="success-card">
+  <img
+    class="success-icon"
+    src="./assets/img/form/success.svg"
+    alt="success icon"
+  />
+  <p class="success-title">Registration Complete</p>
+  <p class="success-text">
+    Your account was successfully created.
+    <br />
+    You can now log in to access your account.
+  </p>
+  <app-primary-button
+    type="button"
+    value="Go to Login"
+    routerLink="/auth/login"
+  >
+  </app-primary-button>
+</div>
+} @else {
+
 <div class="register">
   <div class="headline">Register an Account</div>
 
@@ -274,3 +296,4 @@
     </div>
   </form>
 </div>
+}

@@ -20,12 +20,13 @@ import {
   REGISTER_FORM_FIELDS,
   RegisterForm,
 } from '../../models/auth.model';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   imports: [
     CommonModule,
+    RouterLink,
     FormsModule,
     ReactiveFormsModule,
     PrimaryButtonComponent,
@@ -48,6 +49,7 @@ export class RegisterComponent implements OnInit {
   }>;
 
   httpErrorMessage: string = '';
+  registrationSuccess = false;
 
   constructor(private router: Router, private formBuilder: FormBuilder) {}
 
@@ -138,11 +140,13 @@ export class RegisterComponent implements OnInit {
     try {
       // TODO: Implement registration
       console.log('Registering user:', credentials);
+      this.registrationSuccess = true;
     } catch (error: unknown) {
       this.httpErrorMessage = this.extractErrorMessage(error);
     } finally {
       this.loadingState = AuthLoadingState.None;
       this.form.enable();
+      this.form.reset();
     }
   }
 
