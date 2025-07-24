@@ -124,13 +124,16 @@
         }
       </div>
       }
-      <!-- Backend error message -->
-      @if (httpErrorMessage) {
-      <div class="error-message">
-        <p>{{ httpErrorMessage }}</p>
-      </div>
-      }
     </div>
+
+    <!-- Backend error message -->
+    @if (httpErrorMessage) {
+    <div class="error-wrapper" role="alert" aria-live="assertive">
+      <div class="error-message">
+        <p class="backend-error">{{ httpErrorMessage }}</p>
+      </div>
+    </div>
+    }
 
     <div class="forgot-password-container">
       Forgot your password?
