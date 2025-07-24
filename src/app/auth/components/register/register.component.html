@@ -81,7 +81,7 @@
       aria-live="assertive"
     >
       <div class="error-message">
-        @for (error of getFormErrors(FIELD.username); track $index) {
+        @if (getFormErrors(FIELD.username)[0]; as error) {
         <p>{{ error }}</p>
         }
       </div>
@@ -142,7 +142,7 @@
       aria-live="assertive"
     >
       <div class="error-message">
-        @for (error of getFormErrors(FIELD.email); track $index) {
+        @if (getFormErrors(FIELD.email)[0]; as error) {
         <p>{{ error }}</p>
         }
       </div>
@@ -203,7 +203,7 @@
       aria-live="assertive"
     >
       <div class="error-message">
-        @for (error of getFormErrors(FIELD.password); track $index) {
+        @if (getFormErrors(FIELD.password)[0]; as error) {
         <p>{{ error }}</p>
         }
       </div>
@@ -264,7 +264,7 @@
       aria-live="assertive"
     >
       <div class="error-message">
-        @for (error of getFormErrors(FIELD.confirmPassword); track $index) {
+        @if (getFormErrors(FIELD.confirmPassword)[0]; as error) {
         <p>{{ error }}</p>
         }
       </div>
