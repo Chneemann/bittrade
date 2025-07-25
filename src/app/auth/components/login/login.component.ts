@@ -15,6 +15,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
   AuthLoadingState,
+  LOGIN_FIELD_LABELS,
   LOGIN_FORM_FIELDS,
   LoginForm,
   LoginFormField,
@@ -35,6 +36,7 @@ import { strictEmailValidator } from '../../../shared/validators/form-validators
 })
 export class LoginComponent implements OnInit {
   public FIELD = LOGIN_FORM_FIELDS;
+  public LABEL = LOGIN_FIELD_LABELS;
 
   public LoadingState = AuthLoadingState;
   loadingState: AuthLoadingState = AuthLoadingState.None;
@@ -81,7 +83,7 @@ export class LoginComponent implements OnInit {
 
     if (!(control.touched && control.dirty) || !control.errors) return [];
 
-    const name = controlName.charAt(0).toUpperCase() + controlName.slice(1);
+    const label = LOGIN_FIELD_LABELS[controlName] ?? controlName;
 
     return Object.entries(control.errors)
       .filter(([key]) => key !== 'required')
@@ -92,7 +94,7 @@ export class LoginComponent implements OnInit {
           case 'noSpecialChars':
             return 'Special characters are not allowed';
           case 'minlength':
-            return `${name} is too short, min 8 characters`;
+            return `${label} is too short, min 8 characters`;
           case 'passwordMismatch':
             return 'Passwords do not match';
           default:

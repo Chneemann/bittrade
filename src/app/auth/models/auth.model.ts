@@ -17,6 +17,11 @@ export const LOGIN_FORM_FIELDS = {
   password: 'password',
 } as const;
 
+export const LOGIN_FIELD_LABELS = {
+  email: 'Email Address',
+  password: 'Password',
+} as const;
+
 export type LoginFormField = keyof typeof LOGIN_FORM_FIELDS;
 
 // Register

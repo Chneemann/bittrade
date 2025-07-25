@@ -8,7 +8,7 @@
         [for]="FIELD.email"
         [ngClass]="getInputClassesForField(FIELD.email)"
       >
-        Email Address
+        {{ LABEL.email }}
       </label>
       <input
         [formControlName]="FIELD.email"
@@ -68,7 +68,7 @@
         [for]="FIELD.password"
         [ngClass]="getInputClassesForField(FIELD.password)"
       >
-        Password
+        {{ LABEL.password }}
       </label>
       <input
         [formControlName]="FIELD.password"
