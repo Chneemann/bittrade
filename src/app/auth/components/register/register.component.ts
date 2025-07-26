@@ -22,6 +22,8 @@ import {
   REGISTER_FIELD_LABELS,
 } from '../../models/auth.model';
 import { Router, RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -53,7 +55,10 @@ export class RegisterComponent implements OnInit {
   httpErrorMessage: string = '';
   registrationSuccess = false;
 
-  constructor(private router: Router, private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.createRegisterForm();
@@ -147,8 +152,10 @@ export class RegisterComponent implements OnInit {
     this.loadingState = loadingKey;
     this.form.disable();
 
+    credentials.email = credentials.email.toLowerCase();
+
     try {
-      // TODO: Implement registration
+      await firstValueFrom(this.authService.register(credentials));
       console.log('Registering user:', credentials);
       this.registrationSuccess = true;
     } catch (error: unknown) {

@@ -26,6 +26,12 @@ export type LoginFormField = keyof typeof LOGIN_FORM_FIELDS;
 
 // Register
 
+export interface RegisterCredentials {
+  username: string;
+  email: string;
+  password: string;
+}
+
 export interface RegisterForm {
   username: string;
   email: string;

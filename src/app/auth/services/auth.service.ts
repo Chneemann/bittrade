@@ -6,6 +6,7 @@ import { CoinGeckoCacheService } from '../../core/services/external/coin-gecko-c
 import { UserService } from '../../home/services/user.service';
 import { UserProfile } from '../../home/models/user.model';
 import { HttpParams } from '@angular/common/http';
+import { RegisterCredentials } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -54,17 +55,24 @@ export class AuthService {
       );
   }
 
+  logout(): Observable<void> {
+    return this.backendApiService
+      .post<void, {}>('/auth/logout/', {})
+      .pipe(tap(() => this.clearSession()));
+  }
+
+  register(credentials: RegisterCredentials): Observable<{ message: string }> {
+    return this.backendApiService.post<
+      { message: string },
+      RegisterCredentials
+    >('/auth/register/', credentials);
+  }
+
   verifyEmail(uid: string, token: string): Observable<{ detail: string }> {
     return this.backendApiService.get<{ detail: string }>(
       '/auth/verify-email/',
       new HttpParams({ fromObject: { uid, token } })
     );
-  }
-
-  logout(): Observable<void> {
-    return this.backendApiService
-      .post<void, {}>('/auth/logout/', {})
-      .pipe(tap(() => this.clearSession()));
   }
 
   private clearSession(): void {
