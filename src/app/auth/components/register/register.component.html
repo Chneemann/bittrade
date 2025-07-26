@@ -276,7 +276,7 @@
     @if (httpErrorMessage) {
     <div class="error-wrapper visible" role="alert" aria-live="assertive">
       <div class="error-message">
-        <p class="backend-error">{{ httpErrorMessage }}</p>
+        <p class="backend-error" [innerHTML]="httpErrorMessage"></p>
       </div>
     </div>
     }

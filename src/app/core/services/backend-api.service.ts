@@ -87,14 +87,15 @@ export class BackendApiService {
    */
   private handleError(error: any): Observable<never> {
     console.error('API error:', error);
-    let errorMsg = 'Unknown error';
 
     if (error.error) {
-      if (typeof error.error.error === 'string') {
-        errorMsg = error.error.message;
+      if (typeof error.error === 'string') {
+        return throwError(() => new Error(error.error));
+      } else if (typeof error.error === 'object' && error.error !== null) {
+        return throwError(() => error);
       }
     }
 
-    return throwError(() => new Error(errorMsg));
+    return throwError(() => error);
   }
 }

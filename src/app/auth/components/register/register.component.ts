@@ -21,7 +21,7 @@ import {
   RegisterForm,
   REGISTER_FIELD_LABELS,
 } from '../../models/auth.model';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
@@ -158,19 +158,21 @@ export class RegisterComponent implements OnInit {
       await firstValueFrom(this.authService.register(credentials));
       console.log('Registering user:', credentials);
       this.registrationSuccess = true;
+      this.form.reset();
     } catch (error: unknown) {
       this.httpErrorMessage = this.extractErrorMessage(error);
     } finally {
       this.loadingState = AuthLoadingState.None;
       this.form.enable();
-      this.form.reset();
     }
   }
 
   private extractErrorMessage(error: unknown): string {
-    if (error instanceof Error) {
-      return error.message;
+    const err = (error as any)?.error;
+    if (err && typeof err === 'object') {
+      return Object.values(err).flat().join('<br>');
     }
+    if (typeof err === 'string') return err;
     return 'Unknown error';
   }
 
