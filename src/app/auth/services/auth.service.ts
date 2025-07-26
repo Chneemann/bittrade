@@ -6,7 +6,7 @@ import { CoinGeckoCacheService } from '../../core/services/external/coin-gecko-c
 import { UserService } from '../../home/services/user.service';
 import { UserProfile } from '../../home/models/user.model';
 import { HttpParams } from '@angular/common/http';
-import { RegisterCredentials } from '../models/auth.model';
+import { LoginCredentials, RegisterCredentials } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -41,12 +41,9 @@ export class AuthService {
     return this.authCheck$;
   }
 
-  login(credentials: { email: string; password: string }): Observable<void> {
+  login(credentials: LoginCredentials): Observable<void> {
     return this.backendApiService
-      .post<void, { email: string; password: string }>(
-        '/auth/login/',
-        credentials
-      )
+      .post<void, LoginCredentials>('/auth/login/', credentials)
       .pipe(
         tap(() => {
           this.loggedInSubject.next(true);

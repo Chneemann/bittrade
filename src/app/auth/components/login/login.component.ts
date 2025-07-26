@@ -17,6 +17,7 @@ import {
   AuthLoadingState,
   LOGIN_FIELD_LABELS,
   LOGIN_FORM_FIELDS,
+  LoginCredentials,
   LoginForm,
   LoginFormField,
 } from '../../models/auth.model';
@@ -70,7 +71,7 @@ export class LoginComponent implements OnInit {
   }
 
   async onGuestLogin(): Promise<void> {
-    const guestCredentials: LoginForm = {
+    const guestCredentials: LoginCredentials = {
       [LOGIN_FORM_FIELDS.email]: environment.guestEmail,
       [LOGIN_FORM_FIELDS.password]: environment.guestPassword,
     };
@@ -135,7 +136,7 @@ export class LoginComponent implements OnInit {
   }
 
   private async performLogin(
-    credentials: LoginForm,
+    credentials: LoginCredentials,
     loadingKey: Exclude<AuthLoadingState, AuthLoadingState.None>
   ): Promise<void> {
     this.loadingState = loadingKey;
