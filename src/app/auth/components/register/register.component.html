@@ -275,7 +275,7 @@
         }
 
         <!-- Backend Global Error Message -->
-        @if (httpErrorMessage) {
+        @else if (httpErrorMessage) {
         <p class="backend-error" [innerHTML]="httpErrorMessage"></p>
         }
       </div>
