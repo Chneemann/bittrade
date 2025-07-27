@@ -41,9 +41,9 @@ export class AuthService {
     return this.authCheck$;
   }
 
-  login(credentials: LoginCredentials): Observable<void> {
+  login(credentials: LoginCredentials): Observable<{ message: string }> {
     return this.backendApiService
-      .post<void, LoginCredentials>('/auth/login/', credentials)
+      .post<{ message: string }, LoginCredentials>('/auth/login/', credentials)
       .pipe(
         tap(() => {
           this.loggedInSubject.next(true);

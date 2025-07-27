@@ -154,6 +154,8 @@ export class LoginComponent implements OnInit {
     this.loadingState = loadingKey;
     this.form.disable();
 
+    credentials.email = credentials.email.toLowerCase();
+
     try {
       await firstValueFrom(this.authService.login(credentials));
       this.rememberMe(credentials);
@@ -167,9 +169,11 @@ export class LoginComponent implements OnInit {
   }
 
   private extractErrorMessage(error: unknown): string {
-    if (error instanceof Error) {
-      return error.message;
+    const err = (error as any)?.error;
+    if (err && typeof err === 'object') {
+      return Object.values(err).flat().join('<br>');
     }
+    if (typeof err === 'string') return err;
     return 'Unknown error';
   }
 
