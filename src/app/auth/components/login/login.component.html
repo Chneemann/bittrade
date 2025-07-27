@@ -131,6 +131,14 @@
     </div>
     }
 
+    <!-- Remember me checkbox -->
+    <div class="remember-me">
+      <label>
+        <input type="checkbox" [formControlName]="FIELD.remember" />
+        {{ LABEL.remember }}
+      </label>
+    </div>
+
     <div class="forgot-password-container">
       Forgot your password?
       <a class="link link--inline" routerLink="/forgot-password">Click here</a>

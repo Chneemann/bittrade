@@ -40,6 +40,35 @@
   margin-top: 12px;
 }
 
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0 5px;
+  margin-bottom: 12px;
+
+  font-size: 16px;
+  color: var(--color-font-secondary);
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+  }
+}
+
 // MEDIA QUERIES
 
 @media (min-width: 480px) {

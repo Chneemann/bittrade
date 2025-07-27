@@ -60,6 +60,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.createLoginForm();
+    this.getRememberedEmail();
   }
 
   // Public methods
@@ -104,6 +105,16 @@ export class LoginComponent implements OnInit {
       });
   }
 
+  getRememberedEmail(): void | null {
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    if (rememberedEmail) {
+      this.form.patchValue({
+        [LOGIN_FORM_FIELDS.email]: rememberedEmail,
+        [LOGIN_FORM_FIELDS.remember]: true,
+      });
+    }
+  }
+
   getInputClassesForField(field: LoginFormField): { [key: string]: boolean } {
     const control = this.form.controls[field];
     const focused = this.fieldFocusStates[field];
@@ -132,11 +143,12 @@ export class LoginComponent implements OnInit {
         '',
         [Validators.required, Validators.minLength(8)],
       ],
+      [LOGIN_FORM_FIELDS.remember]: [false],
     });
   }
 
   private async performLogin(
-    credentials: LoginCredentials,
+    credentials: LoginCredentials & Partial<Pick<LoginForm, 'remember'>>,
     loadingKey: Exclude<AuthLoadingState, AuthLoadingState.None>
   ): Promise<void> {
     this.loadingState = loadingKey;
@@ -144,6 +156,7 @@ export class LoginComponent implements OnInit {
 
     try {
       await firstValueFrom(this.authService.login(credentials));
+      this.rememberMe(credentials);
       await this.router.navigate(['/home/portfolio/']);
     } catch (error: unknown) {
       this.httpErrorMessage = this.extractErrorMessage(error);
@@ -158,6 +171,14 @@ export class LoginComponent implements OnInit {
       return error.message;
     }
     return 'Unknown error';
+  }
+
+  private rememberMe(credentials: LoginCredentials): void {
+    if ('remember' in credentials && credentials.remember) {
+      localStorage.setItem('rememberedEmail', credentials.email);
+    } else {
+      localStorage.removeItem('rememberedEmail');
+    }
   }
 
   private getInputClasses(
