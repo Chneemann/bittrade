@@ -107,29 +107,28 @@
       }
     </div>
 
-    <!-- Frontend password error message -->
+    <!-- Combined Error Message for Frontend + Backend -->
     <div
       class="error-wrapper"
-      [ngClass]="{ visible: getFormErrors(FIELD.password).length > 0 }"
+      [ngClass]="{
+        visible: getFormErrors(FIELD.password).length > 0 || httpErrorMessage
+      }"
       [id]="FIELD.password + '-errors'"
       role="alert"
       aria-live="assertive"
     >
       <div class="error-message">
+        <!-- Frontend Password Error Message -->
         @if (getFormErrors(FIELD.password)[0]; as error) {
         <p>{{ error }}</p>
         }
-      </div>
-    </div>
 
-    <!-- Backend error message -->
-    @if (httpErrorMessage) {
-    <div class="error-wrapper visible" role="alert" aria-live="assertive">
-      <div class="error-message">
+        <!-- Backend Global Error Message -->
+        @if (httpErrorMessage) {
         <p class="backend-error" [innerHTML]="httpErrorMessage"></p>
+        }
       </div>
     </div>
-    }
 
     <!-- Remember me checkbox -->
     <div class="remember-me">

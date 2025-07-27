@@ -257,29 +257,29 @@
       }
     </div>
 
-    <!-- Frontend confirm password error message -->
+    <!-- Combined Error Message for Frontend + Backend -->
     <div
       class="error-wrapper"
-      [ngClass]="{ visible: getFormErrors(FIELD.confirmPassword).length > 0 }"
+      [ngClass]="{
+        visible:
+          getFormErrors(FIELD.confirmPassword).length > 0 || httpErrorMessage
+      }"
       [id]="FIELD.confirmPassword + '-errors'"
       role="alert"
       aria-live="assertive"
     >
       <div class="error-message">
+        <!-- Frontend Confirm Password Error Message -->
         @if (getFormErrors(FIELD.confirmPassword)[0]; as error) {
         <p>{{ error }}</p>
         }
-      </div>
-    </div>
 
-    <!-- Backend error message -->
-    @if (httpErrorMessage) {
-    <div class="error-wrapper visible" role="alert" aria-live="assertive">
-      <div class="error-message">
+        <!-- Backend Global Error Message -->
+        @if (httpErrorMessage) {
         <p class="backend-error" [innerHTML]="httpErrorMessage"></p>
+        }
       </div>
     </div>
-    }
 
     <!-- Register button -->
     <div class="button-container">

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -11,7 +11,7 @@ import {
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timer } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
   AuthLoadingState,
@@ -22,6 +22,7 @@ import {
   LoginFormField,
 } from '../../models/auth.model';
 import { strictEmailValidator } from '../../../shared/validators/form-validators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-login',
@@ -36,6 +37,8 @@ import { strictEmailValidator } from '../../../shared/validators/form-validators
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
+
   public FIELD = LOGIN_FORM_FIELDS;
   public LABEL = LOGIN_FIELD_LABELS;
 
@@ -162,6 +165,11 @@ export class LoginComponent implements OnInit {
       await this.router.navigate(['/home/portfolio/']);
     } catch (error: unknown) {
       this.httpErrorMessage = this.extractErrorMessage(error);
+      timer(5000)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => {
+          this.httpErrorMessage = '';
+        });
     } finally {
       this.loadingState = AuthLoadingState.None;
       this.form.enable();
@@ -171,7 +179,10 @@ export class LoginComponent implements OnInit {
   private extractErrorMessage(error: unknown): string {
     const err = (error as any)?.error;
     if (err && typeof err === 'object') {
-      return Object.values(err).flat().join('<br>');
+      const firstError = Object.values(err).flat()[0];
+      if (typeof firstError === 'string') {
+        return firstError;
+      }
     }
     if (typeof err === 'string') return err;
     return 'Unknown error';
