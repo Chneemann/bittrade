@@ -3,6 +3,7 @@ export enum AuthLoadingState {
   UserSignIn = 'userSignIn',
   GuestSignIn = 'guestSignIn',
   UserSignUp = 'userSignUp',
+  ForgotPassword = 'forgotPassword',
 }
 
 // Login
@@ -62,3 +63,23 @@ export const REGISTER_FIELD_LABELS = {
 } as const;
 
 export type RegisterFormField = keyof typeof REGISTER_FORM_FIELDS;
+
+// Forgot Password
+
+export interface ForgotPasswordCredentials {
+  email: string;
+}
+
+export interface ForgotPasswordForm {
+  email: string;
+}
+
+export const FORGOT_PASSWORD_FORM_FIELDS = {
+  email: 'email',
+} as const;
+
+export const FORGOT_PASSWORD_FIELD_LABELS = {
+  email: 'Email Address',
+} as const;
+
+export type ForgotPasswordFormField = keyof typeof FORGOT_PASSWORD_FORM_FIELDS;
