@@ -16,6 +16,7 @@ import { BuySellComponent } from './home/components/coin-detail/buy-sell/buy-sel
 import { EditProfileComponent } from './home/components/profile/edit-profile/edit-profile.component';
 import { EmailVerificationComponent } from './auth/components/email-verification/email-verification.component';
 import { RegisterComponent } from './auth/components/register/register.component';
+import { ForgotPasswordComponent } from './auth/components/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -27,6 +28,7 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'logout', component: LogoutComponent },
       { path: 'register', component: RegisterComponent },
+      { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'login/privacy-policy', component: PrivacyPolicyComponent },
       { path: 'login/legal-notice', component: LegalNoticeComponent },
       { path: 'verify-email', component: EmailVerificationComponent },
