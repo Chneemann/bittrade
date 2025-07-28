@@ -10,13 +10,12 @@ import {
 import { strictEmailValidator } from '../../../shared/validators/form-validators';
 import {
   AuthLoadingState,
-  LOGIN_FIELD_LABELS,
   LOGIN_FORM_FIELDS,
-  FORGOT_PASSWORD_FIELD_LABELS,
   FORGOT_PASSWORD_FORM_FIELDS,
   ForgotPasswordFormField,
   ForgotPasswordForm,
   ForgotPasswordCredentials,
+  AUTH_FIELD_LABELS,
 } from '../../models/auth.model';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -36,7 +35,7 @@ import { Router } from '@angular/router';
 })
 export class ForgotPasswordComponent {
   public FIELD = FORGOT_PASSWORD_FORM_FIELDS;
-  public LABEL = FORGOT_PASSWORD_FIELD_LABELS;
+  public LABEL = AUTH_FIELD_LABELS;
 
   public LoadingState = AuthLoadingState;
   loadingState: AuthLoadingState = AuthLoadingState.None;
@@ -76,7 +75,7 @@ export class ForgotPasswordComponent {
 
     if (!(control.touched && control.dirty) || !control.errors) return [];
 
-    const label = LOGIN_FIELD_LABELS[controlName] ?? controlName;
+    const label = AUTH_FIELD_LABELS[controlName] ?? controlName;
 
     return Object.entries(control.errors)
       .filter(([key]) => key !== 'required')
@@ -130,7 +129,10 @@ export class ForgotPasswordComponent {
     this.loadingState = loadingKey;
     this.form.disable();
 
-    credentials.email = credentials.email.toLowerCase();
+    const forgotPasswordData = {
+      ...credentials,
+      email: credentials.email.toLowerCase(),
+    };
 
     try {
       // TODO backend call

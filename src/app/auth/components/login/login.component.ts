@@ -14,8 +14,8 @@ import { AuthService } from '../../services/auth.service';
 import { firstValueFrom, timer } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
+  AUTH_FIELD_LABELS,
   AuthLoadingState,
-  LOGIN_FIELD_LABELS,
   LOGIN_FORM_FIELDS,
   LoginCredentials,
   LoginForm,
@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   public FIELD = LOGIN_FORM_FIELDS;
-  public LABEL = LOGIN_FIELD_LABELS;
+  public LABEL = AUTH_FIELD_LABELS;
 
   public LoadingState = AuthLoadingState;
   loadingState: AuthLoadingState = AuthLoadingState.None;
@@ -88,7 +88,7 @@ export class LoginComponent implements OnInit {
 
     if (!(control.touched && control.dirty) || !control.errors) return [];
 
-    const label = LOGIN_FIELD_LABELS[controlName] ?? controlName;
+    const label = AUTH_FIELD_LABELS[controlName] ?? controlName;
 
     return Object.entries(control.errors)
       .filter(([key]) => key !== 'required')
@@ -157,10 +157,13 @@ export class LoginComponent implements OnInit {
     this.loadingState = loadingKey;
     this.form.disable();
 
-    credentials.email = credentials.email.toLowerCase();
+    const loginData = {
+      ...credentials,
+      email: credentials.email.toLowerCase(),
+    };
 
     try {
-      await firstValueFrom(this.authService.login(credentials));
+      await firstValueFrom(this.authService.login(loginData));
       this.rememberMe(credentials);
       await this.router.navigate(['/home/portfolio/']);
     } catch (error: unknown) {

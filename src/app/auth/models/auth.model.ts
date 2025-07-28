@@ -6,80 +6,74 @@ export enum AuthLoadingState {
   ForgotPassword = 'forgotPassword',
 }
 
-// Login
-
-export interface LoginCredentials {
-  email: string;
-  password: string;
+export enum FieldNames {
+  Email = 'email',
+  Password = 'password',
+  ConfirmPassword = 'confirmPassword',
+  Username = 'username',
+  Remember = 'remember',
 }
+
+export const AUTH_FIELD_LABELS: Record<FieldNames, string> = {
+  [FieldNames.Username]: 'Username',
+  [FieldNames.Email]: 'Email Address',
+  [FieldNames.Password]: 'Password',
+  [FieldNames.ConfirmPassword]: 'Confirm Password',
+  [FieldNames.Remember]: 'Remember Me',
+};
+
+type FormFields<T> = keyof T;
+
+// --- Login ---
 
 export interface LoginForm {
-  email: string;
-  password: string;
-  remember: boolean;
+  readonly email: string;
+  readonly password: string;
+  readonly remember: boolean;
 }
+
+export type LoginCredentials = Omit<LoginForm, 'remember'>;
 
 export const LOGIN_FORM_FIELDS = {
-  email: 'email',
-  password: 'password',
-  remember: 'remember',
+  email: FieldNames.Email,
+  password: FieldNames.Password,
+  remember: FieldNames.Remember,
 } as const;
 
-export const LOGIN_FIELD_LABELS = {
-  email: 'Email Address',
-  password: 'Password',
-  remember: 'Remember me',
-} as const;
+export type LoginFormField = FormFields<typeof LOGIN_FORM_FIELDS>;
 
-export type LoginFormField = keyof typeof LOGIN_FORM_FIELDS;
-
-// Register
-
-export interface RegisterCredentials {
-  username: string;
-  email: string;
-  password: string;
-}
+// --- Register ---
 
 export interface RegisterForm {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
+  readonly username: string;
+  readonly email: string;
+  readonly password: string;
+  readonly confirmPassword: string;
 }
+
+export type RegisterCredentials = Omit<RegisterForm, 'confirmPassword'>;
 
 export const REGISTER_FORM_FIELDS = {
-  username: 'username',
-  email: 'email',
-  password: 'password',
-  confirmPassword: 'confirmPassword',
+  username: FieldNames.Username,
+  email: FieldNames.Email,
+  password: FieldNames.Password,
+  confirmPassword: FieldNames.ConfirmPassword,
 } as const;
 
-export const REGISTER_FIELD_LABELS = {
-  username: 'Username',
-  email: 'Email Address',
-  password: 'Password',
-  confirmPassword: 'Confirm Password',
-} as const;
+export type RegisterFormField = FormFields<typeof REGISTER_FORM_FIELDS>;
 
-export type RegisterFormField = keyof typeof REGISTER_FORM_FIELDS;
-
-// Forgot Password
-
-export interface ForgotPasswordCredentials {
-  email: string;
-}
+// --- Forgot Password ---
 
 export interface ForgotPasswordForm {
-  email: string;
+  readonly email: string;
 }
 
+export type ForgotPasswordCredentials = ForgotPasswordForm;
+
 export const FORGOT_PASSWORD_FORM_FIELDS = {
-  email: 'email',
+  email: FieldNames.Email,
 } as const;
 
-export const FORGOT_PASSWORD_FIELD_LABELS = {
-  email: 'Email Address',
-} as const;
-
-export type ForgotPasswordFormField = keyof typeof FORGOT_PASSWORD_FORM_FIELDS;
+export type ForgotPasswordFormField = FormFields<
+  typeof FORGOT_PASSWORD_FORM_FIELDS
+>;

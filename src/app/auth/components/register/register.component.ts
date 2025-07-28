@@ -19,7 +19,7 @@ import {
   RegisterFormField,
   REGISTER_FORM_FIELDS,
   RegisterForm,
-  REGISTER_FIELD_LABELS,
+  AUTH_FIELD_LABELS,
 } from '../../models/auth.model';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom, timer } from 'rxjs';
@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   public FIELD = REGISTER_FORM_FIELDS;
-  public LABEL = REGISTER_FIELD_LABELS;
+  public LABEL = AUTH_FIELD_LABELS;
 
   public LoadingState = AuthLoadingState;
   loadingState: AuthLoadingState = AuthLoadingState.None;
@@ -81,7 +81,7 @@ export class RegisterComponent implements OnInit {
 
     if (!(control.touched && control.dirty) || !control.errors) return [];
 
-    const label = REGISTER_FIELD_LABELS[controlName] ?? controlName;
+    const label = AUTH_FIELD_LABELS[controlName] ?? controlName;
 
     return Object.entries(control.errors)
       .filter(([key]) => key !== 'required')
@@ -155,10 +155,13 @@ export class RegisterComponent implements OnInit {
     this.loadingState = loadingKey;
     this.form.disable();
 
-    credentials.email = credentials.email.toLowerCase();
+    const registerData = {
+      ...credentials,
+      email: credentials.email.toLowerCase(),
+    };
 
     try {
-      await firstValueFrom(this.authService.register(credentials));
+      await firstValueFrom(this.authService.register(registerData));
       this.registrationSuccess = true;
       this.form.reset();
     } catch (error: unknown) {
