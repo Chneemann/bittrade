@@ -65,6 +65,15 @@ export class AuthService {
     >('/auth/register/', credentials);
   }
 
+  passwordReset(credentials: {
+    email: string;
+  }): Observable<{ message: string }> {
+    return this.backendApiService.post<{ message: string }, { email: string }>(
+      '/auth/password-reset/',
+      credentials
+    );
+  }
+
   verifyEmail(uid: string, token: string): Observable<{ detail: string }> {
     return this.backendApiService.get<{ detail: string }>(
       '/auth/verify-email/',

@@ -21,6 +21,7 @@ import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-forgot-password',
@@ -50,6 +51,7 @@ export class ForgotPasswordComponent {
   }>;
 
   httpErrorMessage: string = '';
+  passwordResetSuccess = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -135,7 +137,8 @@ export class ForgotPasswordComponent {
     };
 
     try {
-      // TODO backend call
+      await firstValueFrom(this.authService.passwordReset(forgotPasswordData));
+      this.passwordResetSuccess = true;
       this.form.reset();
     } catch (error: unknown) {
       this.httpErrorMessage = this.extractErrorMessage(error);
