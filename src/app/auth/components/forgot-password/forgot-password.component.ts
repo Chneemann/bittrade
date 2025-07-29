@@ -23,6 +23,10 @@ import { PrimaryButtonComponent } from '../../../shared/components/buttons/prima
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { extractErrorMessage } from '../../utils/error-utils';
+import {
+  extractFormErrors,
+  determineInputClasses,
+} from '../../utils/form-utils';
 
 @Component({
   selector: 'app-forgot-password',
@@ -74,35 +78,16 @@ export class ForgotPasswordComponent {
   }
 
   // Public helper methods
-  getFormErrors(controlName: ForgotPasswordFormField): string[] {
-    const control = this.form.controls[controlName];
-
-    if (!(control.touched && control.dirty) || !control.errors) return [];
-
-    const label = AUTH_FIELD_LABELS[controlName] ?? controlName;
-
-    return Object.entries(control.errors)
-      .filter(([key]) => key !== 'required')
-      .map(([key]) => {
-        switch (key) {
-          case 'email':
-            return 'This is not a valid email format';
-          case 'minlength':
-            return `${label} is too short, min 8 characters`;
-          case 'passwordMismatch':
-            return 'Passwords do not match';
-          default:
-            return 'Invalid input';
-        }
-      });
+  getFormErrors(controlName: string): string[] {
+    return extractFormErrors(controlName, this.form, this.LABEL);
   }
 
-  getInputClassesForField(field: ForgotPasswordFormField): {
-    [key: string]: boolean;
-  } {
+  getFieldInputClasses(
+    field: ForgotPasswordFormField
+  ): Record<string, boolean> {
     const control = this.form.controls[field];
     const focused = this.fieldFocusStates[field];
-    return this.getInputClasses(control, focused);
+    return determineInputClasses(control, focused);
   }
 
   getAriaDescribedBy(field: ForgotPasswordFormField): string | null {
@@ -148,21 +133,6 @@ export class ForgotPasswordComponent {
       this.loadingState = AuthLoadingState.None;
       this.form.enable();
     }
-  }
-
-  private getInputClasses(
-    control: FormControl,
-    focused: boolean
-  ): { [key: string]: boolean } {
-    const hasErrors = Object.keys(control.errors ?? {}).some(
-      (e) => e !== 'required'
-    );
-
-    return {
-      focused: focused || !!control.value,
-      valid: control.valid && control.touched,
-      invalid: hasErrors && control.touched && control.dirty,
-    };
   }
 
   // Getters

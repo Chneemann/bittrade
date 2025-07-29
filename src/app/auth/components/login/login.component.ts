@@ -24,6 +24,10 @@ import {
 import { strictEmailValidator } from '../../../shared/validators/form-validators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { extractErrorMessage } from '../../utils/error-utils';
+import {
+  extractFormErrors,
+  determineInputClasses,
+} from '../../utils/form-utils';
 
 @Component({
   selector: 'app-login',
@@ -84,29 +88,8 @@ export class LoginComponent implements OnInit {
   }
 
   // Public helper methods
-  getFormErrors(controlName: LoginFormField): string[] {
-    const control = this.form.controls[controlName];
-
-    if (!(control.touched && control.dirty) || !control.errors) return [];
-
-    const label = AUTH_FIELD_LABELS[controlName] ?? controlName;
-
-    return Object.entries(control.errors)
-      .filter(([key]) => key !== 'required')
-      .map(([key]) => {
-        switch (key) {
-          case 'email':
-            return 'This is not a valid email format';
-          case 'noSpecialChars':
-            return 'Special characters are not allowed';
-          case 'minlength':
-            return `${label} is too short, min 8 characters`;
-          case 'passwordMismatch':
-            return 'Passwords do not match';
-          default:
-            return 'Invalid input';
-        }
-      });
+  getFormErrors(controlName: string): string[] {
+    return extractFormErrors(controlName, this.form, this.LABEL);
   }
 
   getRememberedEmail(): void | null {
@@ -119,10 +102,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  getInputClassesForField(field: LoginFormField): { [key: string]: boolean } {
+  getFieldInputClasses(field: LoginFormField): Record<string, boolean> {
     const control = this.form.controls[field];
     const focused = this.fieldFocusStates[field];
-    return this.getInputClasses(control, focused);
+    return determineInputClasses(control, focused);
   }
 
   getAriaDescribedBy(field: LoginFormField): string | null {
@@ -186,21 +169,6 @@ export class LoginComponent implements OnInit {
     } else {
       localStorage.removeItem('rememberedEmail');
     }
-  }
-
-  private getInputClasses(
-    control: FormControl,
-    focused: boolean
-  ): { [key: string]: boolean } {
-    const hasErrors = Object.keys(control.errors ?? {}).some(
-      (e) => e !== 'required'
-    );
-
-    return {
-      focused: focused || !!control.value,
-      valid: control.valid && control.touched,
-      invalid: hasErrors && control.touched && control.dirty,
-    };
   }
 
   // Getters

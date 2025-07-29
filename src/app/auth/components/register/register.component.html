@@ -32,7 +32,7 @@
     <div class="input-field">
       <label
         [for]="FIELD.username"
-        [ngClass]="getInputClassesForField(FIELD.username)"
+        [ngClass]="getFieldInputClasses(FIELD.username)"
       >
         {{ LABEL.username }}
       </label>
@@ -45,7 +45,7 @@
         autocomplete="name"
         (focus)="fieldFocusStates[FIELD.username] = true"
         (blur)="fieldFocusStates[FIELD.username] = false"
-        [ngClass]="getInputClassesForField(FIELD.username)"
+        [ngClass]="getFieldInputClasses(FIELD.username)"
         [attr.aria-describedby]="getAriaDescribedBy(FIELD.username)"
         required
       />
@@ -55,7 +55,7 @@
         class="icon icon--base"
         src="./assets/img/form/person.svg"
         alt="username icon"
-        [ngClass]="getInputClassesForField(FIELD.username)"
+        [ngClass]="getFieldInputClasses(FIELD.username)"
       />
 
       <!-- Validation status icon -->
@@ -91,10 +91,7 @@
 
     <!-- Email field -->
     <div class="input-field">
-      <label
-        [for]="FIELD.email"
-        [ngClass]="getInputClassesForField(FIELD.email)"
-      >
+      <label [for]="FIELD.email" [ngClass]="getFieldInputClasses(FIELD.email)">
         {{ LABEL.email }}
       </label>
 
@@ -106,7 +103,7 @@
         autocomplete="email"
         (focus)="fieldFocusStates[FIELD.email] = true"
         (blur)="fieldFocusStates[FIELD.email] = false"
-        [ngClass]="getInputClassesForField(FIELD.email)"
+        [ngClass]="getFieldInputClasses(FIELD.email)"
         [attr.aria-describedby]="getAriaDescribedBy(FIELD.email)"
         required
       />
@@ -116,7 +113,7 @@
         class="icon icon--base"
         src="./assets/img/form/email.svg"
         alt="email icon"
-        [ngClass]="getInputClassesForField(FIELD.email)"
+        [ngClass]="getFieldInputClasses(FIELD.email)"
       />
 
       <!-- Validation status icon -->
@@ -154,7 +151,7 @@
     <div class="input-field">
       <label
         [for]="FIELD.password"
-        [ngClass]="getInputClassesForField(FIELD.password)"
+        [ngClass]="getFieldInputClasses(FIELD.password)"
       >
         {{ LABEL.password }}
       </label>
@@ -167,7 +164,7 @@
         autocomplete="new-password"
         (focus)="fieldFocusStates[FIELD.password] = true"
         (blur)="fieldFocusStates[FIELD.password] = false"
-        [ngClass]="getInputClassesForField(FIELD.password)"
+        [ngClass]="getFieldInputClasses(FIELD.password)"
         [attr.aria-describedby]="getAriaDescribedBy(FIELD.password)"
         required
       />
@@ -177,7 +174,7 @@
         class="icon icon--base"
         src="./assets/img/form/password.svg"
         alt="password icon"
-        [ngClass]="getInputClassesForField(FIELD.password)"
+        [ngClass]="getFieldInputClasses(FIELD.password)"
       />
 
       <!-- Validation status icon -->
@@ -215,7 +212,7 @@
     <div class="input-field">
       <label
         [for]="FIELD.confirmPassword"
-        [ngClass]="getInputClassesForField(FIELD.confirmPassword)"
+        [ngClass]="getFieldInputClasses(FIELD.confirmPassword)"
       >
         {{ LABEL.confirmPassword }}
       </label>
@@ -228,7 +225,7 @@
         autocomplete="new-password"
         (focus)="fieldFocusStates[FIELD.confirmPassword] = true"
         (blur)="fieldFocusStates[FIELD.confirmPassword] = false"
-        [ngClass]="getInputClassesForField(FIELD.confirmPassword)"
+        [ngClass]="getFieldInputClasses(FIELD.confirmPassword)"
         [attr.aria-describedby]="getAriaDescribedBy(FIELD.confirmPassword)"
         required
       />
@@ -238,7 +235,7 @@
         class="icon icon--base"
         src="./assets/img/form/password.svg"
         alt="password icon"
-        [ngClass]="getInputClassesForField(FIELD.confirmPassword)"
+        [ngClass]="getFieldInputClasses(FIELD.confirmPassword)"
       />
 
       <!-- Validation status icon -->
