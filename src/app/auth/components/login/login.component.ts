@@ -23,6 +23,7 @@ import {
 } from '../../models/auth.model';
 import { strictEmailValidator } from '../../../shared/validators/form-validators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { extractErrorMessage } from '../../utils/error-utils';
 
 @Component({
   selector: 'app-login',
@@ -167,7 +168,7 @@ export class LoginComponent implements OnInit {
       this.rememberMe(credentials);
       await this.router.navigate(['/home/portfolio/']);
     } catch (error: unknown) {
-      this.httpErrorMessage = this.extractErrorMessage(error);
+      this.httpErrorMessage = extractErrorMessage(error);
       timer(5000)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
@@ -177,18 +178,6 @@ export class LoginComponent implements OnInit {
       this.loadingState = AuthLoadingState.None;
       this.form.enable();
     }
-  }
-
-  private extractErrorMessage(error: unknown): string {
-    const err = (error as any)?.error;
-    if (err && typeof err === 'object') {
-      const firstError = Object.values(err).flat()[0];
-      if (typeof firstError === 'string') {
-        return firstError;
-      }
-    }
-    if (typeof err === 'string') return err;
-    return 'Unknown error';
   }
 
   private rememberMe(credentials: LoginCredentials): void {

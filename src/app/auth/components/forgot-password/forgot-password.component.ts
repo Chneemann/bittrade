@@ -20,13 +20,15 @@ import {
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { extractErrorMessage } from '../../utils/error-utils';
 
 @Component({
   selector: 'app-forgot-password',
   imports: [
     CommonModule,
+    RouterLink,
     FormsModule,
     ReactiveFormsModule,
     PrimaryButtonComponent,
@@ -141,23 +143,11 @@ export class ForgotPasswordComponent {
       this.passwordResetSuccess = true;
       this.form.reset();
     } catch (error: unknown) {
-      this.httpErrorMessage = this.extractErrorMessage(error);
+      this.httpErrorMessage = extractErrorMessage(error);
     } finally {
       this.loadingState = AuthLoadingState.None;
       this.form.enable();
     }
-  }
-
-  private extractErrorMessage(error: unknown): string {
-    const err = (error as any)?.error;
-    if (err && typeof err === 'object') {
-      const firstError = Object.values(err).flat()[0];
-      if (typeof firstError === 'string') {
-        return firstError;
-      }
-    }
-    if (typeof err === 'string') return err;
-    return 'Unknown error';
   }
 
   private getInputClasses(
