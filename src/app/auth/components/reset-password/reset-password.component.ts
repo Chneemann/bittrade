@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { timer } from 'rxjs';
+import { firstValueFrom, timer } from 'rxjs';
 import { passwordsMatchValidator } from '../../../shared/validators/form-validators';
 import {
   AUTH_FIELD_LABELS,
@@ -25,7 +25,7 @@ import {
   extractFormErrors,
   determineInputClasses,
 } from '../../utils/form-utils';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
@@ -62,7 +62,8 @@ export class ResetPasswordComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -115,6 +116,12 @@ export class ResetPasswordComponent implements OnInit {
     );
   }
 
+  private getUidAndTokenFromUrl(): { uid: string; token: string } {
+    const uid = this.route.snapshot.queryParamMap.get('uid') || '';
+    const token = this.route.snapshot.queryParamMap.get('token') || '';
+    return { uid, token };
+  }
+
   private async performResetPassword(
     credentials: ResetPasswordForm,
     loadingKey: Exclude<AuthLoadingState, AuthLoadingState.None>
@@ -122,8 +129,17 @@ export class ResetPasswordComponent implements OnInit {
     this.loadingState = loadingKey;
     this.form.disable();
 
+    const { uid, token } = this.getUidAndTokenFromUrl();
+    const passwordResetData = {
+      uid,
+      token,
+      new_password: credentials.password,
+    };
+
     try {
-      // TODO: implement password reset
+      await firstValueFrom(
+        this.authService.passwordResetConfirm(passwordResetData)
+      );
       this.passwordResetSuccess = true;
       this.form.reset();
     } catch (error: unknown) {

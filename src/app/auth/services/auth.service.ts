@@ -74,6 +74,21 @@ export class AuthService {
     );
   }
 
+  passwordResetConfirm(credentials: {
+    uid: string;
+    token: string;
+    new_password: string;
+  }): Observable<{ message: string }> {
+    return this.backendApiService.post<
+      { message: string },
+      {
+        uid: string;
+        token: string;
+        new_password: string;
+      }
+    >('/auth/password-reset/confirm/', credentials);
+  }
+
   verifyEmail(uid: string, token: string): Observable<{ detail: string }> {
     return this.backendApiService.get<{ detail: string }>(
       '/auth/verify-email/',
