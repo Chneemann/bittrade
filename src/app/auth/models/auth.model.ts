@@ -77,3 +77,21 @@ export const FORGOT_PASSWORD_FORM_FIELDS = {
 export type ForgotPasswordFormField = FormFields<
   typeof FORGOT_PASSWORD_FORM_FIELDS
 >;
+
+// --- Reset Password ---
+
+export interface ResetPasswordForm {
+  readonly password: string;
+  readonly confirmPassword: string;
+}
+
+export type ResetPasswordCredentials = ResetPasswordForm;
+
+export const RESET_PASSWORD_FORM_FIELDS = {
+  password: FieldNames.Password,
+  confirmPassword: FieldNames.ConfirmPassword,
+} as const;
+
+export type ResetPasswordFormField = FormFields<
+  typeof RESET_PASSWORD_FORM_FIELDS
+>;
