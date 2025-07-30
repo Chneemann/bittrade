@@ -25,7 +25,7 @@ import {
 import { UserService } from '../../../services/user.service';
 import {
   noSpecialCharsValidator,
-  passwordsMatchValidator,
+  newPasswordsMatchValidator,
   strictEmailValidator,
 } from '../../../../shared/validators/form-validators';
 import { environment } from '../../../../../environments/environment';
@@ -134,7 +134,7 @@ export class EditProfileComponent implements OnInit {
         [FormControlNames.ConfirmWithoutPassword]: [false],
       },
       {
-        validators: [passwordsMatchValidator],
+        validators: [newPasswordsMatchValidator],
       }
     );
   }

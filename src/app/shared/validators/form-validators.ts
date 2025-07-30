@@ -20,7 +20,7 @@ export function noSpecialCharsValidator(
   return regex.test(value) ? null : { noSpecialChars: true };
 }
 
-export function registerPasswordsMatchValidator(
+export function passwordsMatchValidator(
   control: AbstractControl
 ): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -43,7 +43,7 @@ export function registerPasswordsMatchValidator(
   }
 }
 
-export function passwordsMatchValidator(
+export function newPasswordsMatchValidator(
   control: AbstractControl
 ): ValidationErrors | null {
   const newPassword = control.get('newPassword')?.value;

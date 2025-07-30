@@ -11,7 +11,7 @@ import {
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { timer } from 'rxjs';
-import { registerPasswordsMatchValidator } from '../../../shared/validators/form-validators';
+import { passwordsMatchValidator } from '../../../shared/validators/form-validators';
 import {
   AUTH_FIELD_LABELS,
   AuthLoadingState,
@@ -107,7 +107,7 @@ export class ResetPasswordComponent implements OnInit {
         [this.FIELD.confirmPassword]: [''],
       },
       {
-        validators: [registerPasswordsMatchValidator],
+        validators: [passwordsMatchValidator],
       }
     );
   }

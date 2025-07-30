@@ -10,7 +10,6 @@ import {
 import { strictEmailValidator } from '../../../shared/validators/form-validators';
 import {
   AuthLoadingState,
-  LOGIN_FORM_FIELDS,
   FORGOT_PASSWORD_FORM_FIELDS,
   ForgotPasswordFormField,
   ForgotPasswordForm,
@@ -49,7 +48,7 @@ export class ForgotPasswordComponent {
 
   fieldFocusStates: Record<ForgotPasswordFormField, boolean> =
     Object.fromEntries(
-      Object.keys(FORGOT_PASSWORD_FORM_FIELDS).map((key) => [key, false])
+      Object.keys(this.FIELD).map((key) => [key, false])
     ) as Record<ForgotPasswordFormField, boolean>;
 
   form!: FormGroup<{
@@ -66,7 +65,7 @@ export class ForgotPasswordComponent {
   ) {}
 
   ngOnInit(): void {
-    this.createLoginForm();
+    this.createForgotPasswordForm();
   }
 
   // Public methods
@@ -74,7 +73,10 @@ export class ForgotPasswordComponent {
     if (this.form.invalid) return;
 
     const credentials = this.form.value as ForgotPasswordForm;
-    await this.performReset(credentials, AuthLoadingState.ForgotPassword);
+    await this.performResetPassword(
+      credentials,
+      AuthLoadingState.ForgotPassword
+    );
   }
 
   // Public helper methods
@@ -102,16 +104,13 @@ export class ForgotPasswordComponent {
   }
 
   // Private helper methods
-  private createLoginForm(): void {
+  private createForgotPasswordForm(): void {
     this.form = this.formBuilder.nonNullable.group({
-      [LOGIN_FORM_FIELDS.email]: [
-        '',
-        [Validators.required, strictEmailValidator],
-      ],
+      [this.FIELD.email]: ['', [Validators.required, strictEmailValidator]],
     });
   }
 
-  private async performReset(
+  private async performResetPassword(
     credentials: ForgotPasswordCredentials,
     loadingKey: Exclude<AuthLoadingState, AuthLoadingState.None>
   ): Promise<void> {

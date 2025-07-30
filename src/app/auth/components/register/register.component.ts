@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import {
   noSpecialCharsValidator,
-  registerPasswordsMatchValidator,
+  passwordsMatchValidator,
   strictEmailValidator,
 } from '../../../shared/validators/form-validators';
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
@@ -53,7 +53,7 @@ export class RegisterComponent implements OnInit {
   loadingState: AuthLoadingState = AuthLoadingState.None;
 
   fieldFocusStates: Record<RegisterFormField, boolean> = Object.fromEntries(
-    Object.keys(REGISTER_FORM_FIELDS).map((key) => [key, false])
+    Object.keys(this.FIELD).map((key) => [key, false])
   ) as Record<RegisterFormField, boolean>;
 
   form!: FormGroup<{
@@ -106,7 +106,7 @@ export class RegisterComponent implements OnInit {
   private createRegisterForm(): void {
     this.form = this.formBuilder.nonNullable.group(
       {
-        [REGISTER_FORM_FIELDS.username]: [
+        [this.FIELD.username]: [
           '',
           [
             Validators.required,
@@ -114,18 +114,15 @@ export class RegisterComponent implements OnInit {
             noSpecialCharsValidator,
           ],
         ],
-        [REGISTER_FORM_FIELDS.email]: [
-          '',
-          [Validators.required, strictEmailValidator],
-        ],
-        [REGISTER_FORM_FIELDS.password]: [
+        [this.FIELD.email]: ['', [Validators.required, strictEmailValidator]],
+        [this.FIELD.password]: [
           '',
           [Validators.required, Validators.minLength(8)],
         ],
-        [REGISTER_FORM_FIELDS.confirmPassword]: [''],
+        [this.FIELD.confirmPassword]: [''],
       },
       {
-        validators: [registerPasswordsMatchValidator],
+        validators: [passwordsMatchValidator],
       }
     );
   }

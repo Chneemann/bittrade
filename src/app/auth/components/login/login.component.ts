@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
   loadingState: AuthLoadingState = AuthLoadingState.None;
 
   fieldFocusStates: Record<LoginFormField, boolean> = Object.fromEntries(
-    Object.keys(LOGIN_FORM_FIELDS).map((key) => [key, false])
+    Object.keys(this.FIELD).map((key) => [key, false])
   ) as Record<LoginFormField, boolean>;
 
   form!: FormGroup<{
@@ -81,8 +81,8 @@ export class LoginComponent implements OnInit {
 
   async onGuestLogin(): Promise<void> {
     const guestCredentials: LoginCredentials = {
-      [LOGIN_FORM_FIELDS.email]: environment.guestEmail,
-      [LOGIN_FORM_FIELDS.password]: environment.guestPassword,
+      [this.FIELD.email]: environment.guestEmail,
+      [this.FIELD.password]: environment.guestPassword,
     };
     await this.performLogin(guestCredentials, AuthLoadingState.GuestSignIn);
   }
@@ -96,8 +96,8 @@ export class LoginComponent implements OnInit {
     const rememberedEmail = localStorage.getItem('rememberedEmail');
     if (rememberedEmail) {
       this.form.patchValue({
-        [LOGIN_FORM_FIELDS.email]: rememberedEmail,
-        [LOGIN_FORM_FIELDS.remember]: true,
+        [this.FIELD.email]: rememberedEmail,
+        [this.FIELD.remember]: true,
       });
     }
   }
@@ -122,15 +122,12 @@ export class LoginComponent implements OnInit {
   // Private helper methods
   private createLoginForm(): void {
     this.form = this.formBuilder.nonNullable.group({
-      [LOGIN_FORM_FIELDS.email]: [
-        '',
-        [Validators.required, strictEmailValidator],
-      ],
-      [LOGIN_FORM_FIELDS.password]: [
+      [this.FIELD.email]: ['', [Validators.required, strictEmailValidator]],
+      [this.FIELD.password]: [
         '',
         [Validators.required, Validators.minLength(8)],
       ],
-      [LOGIN_FORM_FIELDS.remember]: [false],
+      [this.FIELD.remember]: [false],
     });
   }
 
