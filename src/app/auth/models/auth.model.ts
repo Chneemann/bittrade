@@ -62,36 +62,36 @@ export const REGISTER_FORM_FIELDS = {
 
 export type RegisterFormField = FormFields<typeof REGISTER_FORM_FIELDS>;
 
-// --- Forgot Password ---
+// --- Password Reset: Request (forgot password) ---
 
-export interface ForgotPasswordForm {
+export interface PasswordResetRequestForm {
   readonly email: string;
 }
 
-export type ForgotPasswordCredentials = ForgotPasswordForm;
+export type PasswordResetRequestCredentials = PasswordResetRequestForm;
 
-export const FORGOT_PASSWORD_FORM_FIELDS = {
+export const PASSWORD_RESET_REQUEST_FORM_FIELDS = {
   email: FieldNames.Email,
 } as const;
 
-export type ForgotPasswordFormField = FormFields<
-  typeof FORGOT_PASSWORD_FORM_FIELDS
+export type PasswordResetRequestFormField = FormFields<
+  typeof PASSWORD_RESET_REQUEST_FORM_FIELDS
 >;
 
-// --- Reset Password ---
+// --- Password Reset: Confirm (set new password) ---
 
-export interface ResetPasswordForm {
+export interface PasswordResetConfirmForm {
   readonly password: string;
   readonly confirmPassword: string;
 }
 
-export type ResetPasswordCredentials = ResetPasswordForm;
+export type PasswordResetConfirmCredentials = PasswordResetConfirmForm;
 
-export const RESET_PASSWORD_FORM_FIELDS = {
+export const PASSWORD_RESET_CONFIRM_FORM_FIELDS = {
   password: FieldNames.Password,
   confirmPassword: FieldNames.ConfirmPassword,
 } as const;
 
-export type ResetPasswordFormField = FormFields<
-  typeof RESET_PASSWORD_FORM_FIELDS
+export type PasswordResetConfirmFormField = FormFields<
+  typeof PASSWORD_RESET_CONFIRM_FORM_FIELDS
 >;

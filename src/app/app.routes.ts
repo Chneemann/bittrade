@@ -16,8 +16,8 @@ import { BuySellComponent } from './home/components/coin-detail/buy-sell/buy-sel
 import { EditProfileComponent } from './home/components/profile/edit-profile/edit-profile.component';
 import { EmailVerificationComponent } from './auth/components/email-verification/email-verification.component';
 import { RegisterComponent } from './auth/components/register/register.component';
-import { ForgotPasswordComponent } from './auth/components/forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './auth/components/reset-password/reset-password.component';
+import { PasswordResetRequestComponent } from './auth/components/password-reset/password-reset-request/password-reset-request.component';
+import { PasswordResetConfirmComponent } from './auth/components/password-reset/password-reset-confirm/password-reset-confirm.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -29,8 +29,8 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'logout', component: LogoutComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'forgot-password', component: ForgotPasswordComponent },
-      { path: 'reset-password', component: ResetPasswordComponent },
+      { path: 'forgot-password', component: PasswordResetRequestComponent },
+      { path: 'reset-password', component: PasswordResetConfirmComponent },
       { path: 'login/privacy-policy', component: PrivacyPolicyComponent },
       { path: 'login/legal-notice', component: LegalNoticeComponent },
       { path: 'verify-email', component: EmailVerificationComponent },
