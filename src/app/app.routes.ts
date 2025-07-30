@@ -17,6 +17,7 @@ import { EditProfileComponent } from './home/components/profile/edit-profile/edi
 import { EmailVerificationComponent } from './auth/components/email-verification/email-verification.component';
 import { RegisterComponent } from './auth/components/register/register.component';
 import { ForgotPasswordComponent } from './auth/components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './auth/components/reset-password/reset-password.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -29,6 +30,7 @@ export const routes: Routes = [
       { path: 'logout', component: LogoutComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
+      { path: 'reset-password', component: ResetPasswordComponent },
       { path: 'login/privacy-policy', component: PrivacyPolicyComponent },
       { path: 'login/legal-notice', component: LegalNoticeComponent },
       { path: 'verify-email', component: EmailVerificationComponent },
