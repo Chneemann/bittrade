@@ -25,12 +25,14 @@ import {
   extractFormErrors,
   determineInputClasses,
 } from '../../utils/form-utils';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     ReactiveFormsModule,
     PrimaryButtonComponent,
   ],
@@ -56,6 +58,7 @@ export class ResetPasswordComponent implements OnInit {
   }>;
 
   httpErrorMessage: string = '';
+  passwordResetSuccess = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -121,6 +124,7 @@ export class ResetPasswordComponent implements OnInit {
 
     try {
       // TODO: implement password reset
+      this.passwordResetSuccess = true;
       this.form.reset();
     } catch (error: unknown) {
       this.httpErrorMessage = extractErrorMessage(error);
