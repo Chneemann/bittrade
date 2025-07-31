@@ -1,8 +1,14 @@
 <div class="app-wrapper">
   <app-header></app-header>
-  <main class="content-wrapper">
-    <router-outlet></router-outlet>
+
+  <main
+    [@routeFadeAnimation]="getAnimationState(outlet)"
+    class="content-wrapper"
+  >
+    <router-outlet #outlet="outlet"></router-outlet>
   </main>
+
   <app-navigation></app-navigation>
+
   <app-footer></app-footer>
 </div>

@@ -1,8 +1,8 @@
 <div class="auth-layout">
   <app-auth-header></app-auth-header>
 
-  <main>
-    <router-outlet></router-outlet>
+  <main [@routeFadeAnimation]="getAnimationState(outlet)">
+    <router-outlet #outlet="outlet"></router-outlet>
   </main>
 
   <app-auth-footer></app-auth-footer>
