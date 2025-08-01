@@ -21,7 +21,6 @@ import {
   RegisterForm,
   AUTH_FIELD_LABELS,
 } from '../../models/auth.model';
-import { RouterLink } from '@angular/router';
 import { firstValueFrom, timer } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -30,15 +29,16 @@ import {
   extractFormErrors,
   determineInputClasses,
 } from '../../utils/form-utils';
+import { SuccessModalComponent } from '../../shared/components/success-modal/success-modal.component';
 
 @Component({
   selector: 'app-register',
   imports: [
     CommonModule,
-    RouterLink,
     FormsModule,
     ReactiveFormsModule,
     PrimaryButtonComponent,
+    SuccessModalComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',

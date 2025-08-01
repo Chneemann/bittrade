@@ -19,22 +19,23 @@ import {
 import { AuthService } from '../../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { extractErrorMessage } from '../../../utils/error-utils';
 import {
   extractFormErrors,
   determineInputClasses,
 } from '../../../utils/form-utils';
+import { SuccessModalComponent } from '../../../shared/components/success-modal/success-modal.component';
 
 @Component({
   selector: 'app-password-reset-request',
   imports: [
     CommonModule,
-    RouterLink,
     FormsModule,
     ReactiveFormsModule,
     PrimaryButtonComponent,
+    SuccessModalComponent,
   ],
   templateUrl: './password-reset-request.component.html',
   styleUrl: './password-reset-request.component.scss',

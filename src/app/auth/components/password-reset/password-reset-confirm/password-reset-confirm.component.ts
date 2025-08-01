@@ -26,16 +26,17 @@ import {
   extractFormErrors,
   determineInputClasses,
 } from '../../../utils/form-utils';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { SuccessModalComponent } from '../../../shared/components/success-modal/success-modal.component';
 
 @Component({
   selector: 'app-password-reset-confirm',
   imports: [
     CommonModule,
     FormsModule,
-    RouterLink,
     ReactiveFormsModule,
     PrimaryButtonComponent,
+    SuccessModalComponent,
   ],
   templateUrl: './password-reset-confirm.component.html',
   styleUrl: './password-reset-confirm.component.scss',
