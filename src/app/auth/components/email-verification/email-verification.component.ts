@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../auth/services/auth.service';
 import { finalize } from 'rxjs';
@@ -18,7 +18,8 @@ export class EmailVerificationComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -32,7 +33,12 @@ export class EmailVerificationComponent implements OnInit {
 
     this.authService
       .verifyEmail(uid, token)
-      .pipe(finalize(() => (this.loading = false)))
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdRef.detectChanges();
+        })
+      )
       .subscribe({
         next: (res) => this.handleSuccess(res.detail),
         error: (err) =>
@@ -42,13 +48,11 @@ export class EmailVerificationComponent implements OnInit {
 
   private handleSuccess(msg?: string): void {
     this.message = msg || 'Email successfully verified.';
-    this.loading = false;
     this.scheduleRedirect();
   }
 
   private handleError(msg: string): void {
     this.message = msg;
-    this.loading = false;
     this.scheduleRedirect();
   }
 
