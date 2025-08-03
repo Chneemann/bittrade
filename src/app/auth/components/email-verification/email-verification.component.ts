@@ -1,28 +1,31 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService } from '../../../auth/services/auth.service';
 import { finalize } from 'rxjs';
+import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
 
 @Component({
   selector: 'app-email-verification',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink, PrimaryButtonComponent],
   templateUrl: './email-verification.component.html',
   styleUrl: './email-verification.component.scss',
 })
 export class EmailVerificationComponent implements OnInit {
   message = '';
   loading = true;
-  redirectDelay = 5000;
 
   constructor(
     private route: ActivatedRoute,
     private authService: AuthService,
-    private router: Router,
     private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.verifyEmailFromParams();
+  }
+
+  private verifyEmailFromParams(): void {
     const uid = this.route.snapshot.queryParamMap.get('uid');
     const token = this.route.snapshot.queryParamMap.get('token');
 
@@ -46,21 +49,11 @@ export class EmailVerificationComponent implements OnInit {
       });
   }
 
-  private handleSuccess(msg?: string): void {
-    this.message = msg || 'Email successfully verified.';
-    this.scheduleRedirect();
+  private handleSuccess(msg: string): void {
+    this.message = msg;
   }
 
   private handleError(msg: string): void {
     this.message = msg;
-    this.scheduleRedirect();
-  }
-
-  private scheduleRedirect(): void {
-    setTimeout(() => this.redirectToLogin(), this.redirectDelay);
-  }
-
-  redirectToLogin(): void {
-    this.router.navigate(['/auth/login']);
   }
 }

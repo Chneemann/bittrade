@@ -1,28 +1,14 @@
-<div class="verification-wrapper">
+<div class="verification">
+  <div class="headline">Email Verification</div>
+
   @if (loading) {
-  <section
-    class="card loading-card"
-    role="status"
-    aria-live="polite"
-    aria-busy="true"
-  >
-    <div class="loading-container">Verify your e-mail, please wait...</div>
-  </section>
+  <p class="loading">Verify your e-mail, please wait...</p>
   } @else {
-  <section class="card" role="alert">
-    <p class="message">{{ message }}</p>
-    <p class="redirect-info">
-      You will be redirected shortly.
-      <br />
-      If not, click
-      <a
-        class="link link--inline"
-        (click)="redirectToLogin()"
-        aria-label="Go to login"
-      >
-        here</a
-      >.
-    </p>
-  </section>
+  <p class="message">{{ message }}</p>
+  <app-primary-button
+    type="button"
+    value="Go to Login"
+    routerLink="/auth/login"
+  ></app-primary-button>
   }
 </div>
