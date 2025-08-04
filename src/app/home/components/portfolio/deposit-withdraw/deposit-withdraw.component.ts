@@ -8,7 +8,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
 import { OptionButtonComponent } from '../../../../shared/components/buttons/option-button/option-button.component';
 import { WalletService } from '../../../services/wallet.service';
@@ -16,15 +16,18 @@ import {
   WalletTransactionSource,
   WalletTransactionType,
 } from '../../../models/wallet.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SuccessModalComponent } from '../../../../shared/components/modals/success-modal/success-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UserProfile } from '../../../models/user.model';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-deposit-withdraw',
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     ReactiveFormsModule,
     PrimaryButtonComponent,
     OptionButtonComponent,
@@ -57,16 +60,20 @@ export class DepositWithdrawComponent implements OnInit {
   ];
   selectedPercent = '0';
 
+  userProfile$!: Observable<UserProfile | null>;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private walletService: WalletService
+    private walletService: WalletService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
     this.amountControl = this.fb.control('', this.getAmountValidators());
     this.updateMode();
     this.loadWalletBalance();
+    this.userProfile$ = this.userService.userProfile$;
   }
 
   private getAmountValidators(): ValidatorFn[] {

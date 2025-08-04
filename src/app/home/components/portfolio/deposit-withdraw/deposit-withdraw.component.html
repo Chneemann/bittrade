@@ -1,4 +1,16 @@
 <div class="deposit-withdraw">
+  <!-- Verification Check -->
+  @if (userProfile$ | async; as profile) { @if (!profile?.verified) {
+  <p class="not-verified">
+    To deposit or withdraw funds,<br />please
+    <a class="link link--inline" routerLink="/home/profile/edit"
+      >verify your account</a
+    >
+    first.
+  </p>
+
+  } @else {
+  <!-- Deposit / Withdraw Form -->
   <div class="amount-display">
     <p class="label">Enter Amount in USD</p>
 
@@ -50,4 +62,5 @@
       (click)="submit()"
     ></app-primary-button>
   </div>
+  } }
 </div>

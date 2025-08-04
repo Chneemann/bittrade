@@ -23,6 +23,16 @@
     font-weight: 600;
     color: var(--color-font-secondary);
   }
+
+  .not-verified {
+    text-align: center;
+    margin-top: 24px;
+
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--color-font-primary);
+  }
 }
 
 .amount-display {
