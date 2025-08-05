@@ -2,7 +2,8 @@
   width: 100%;
 }
 
-.no-transactions-container {
+.no-transactions-container,
+.loading-container {
   display: flex;
   justify-content: center;
   align-items: center;

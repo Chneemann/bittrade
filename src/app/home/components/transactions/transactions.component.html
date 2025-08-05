@@ -6,16 +6,18 @@
     (optionSelected)="onFilterTransactions($event)"
   ></app-selection-tabs>
 
-  @if (transactions.length !== 0) {
-
-  <!-- Transaction list -->
-  @for (transaction of transactions; track $index) {
+  @if (!dataLoaded) {
+  <p class="loading-container">Loading transactions...</p>
+  } @else {
+  <!-- Transaction cards -->
+  @if (transactions.length !== 0) { @for (transaction of transactions; track
+  $index) {
   <app-transaction-card [transaction]="transaction"></app-transaction-card>
   } } @else {
   <div class="no-transactions-container">
     <p>No transactions found</p>
   </div>
-  }
+  } }
 </div>
 } @else {
 <p>All Transactions</p>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TransactionCardComponent } from './transaction-card/transaction-card.component';
 import { CoinTransactionService } from '../../services/coin-transactions.service';
@@ -16,12 +16,14 @@ export class TransactionsComponent implements OnInit {
   allTransactions: any[] = [];
   transactions: any[] = [];
 
+  dataLoaded = false;
   options: string[] = ['all', 'buy', 'sell'];
   activeOption: string = 'all';
 
   constructor(
     private route: ActivatedRoute,
-    private coinTransactionService: CoinTransactionService
+    private coinTransactionService: CoinTransactionService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +42,8 @@ export class TransactionsComponent implements OnInit {
       .subscribe((txs) => {
         this.allTransactions = txs;
         this.applyFilter();
+        this.dataLoaded = true;
+        this.cdr.detectChanges();
       });
   }
 
