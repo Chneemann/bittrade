@@ -40,6 +40,8 @@ import {
 import { SuccessModalComponent } from '../../../../shared/components/modals/success-modal/success-modal.component';
 import { ConfirmationModalComponent } from '../../../../shared/components/modals/confirmation-modal/confirmation-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UserProfile } from '../../../models/user.model';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-buy-sell',
@@ -88,15 +90,17 @@ export class BuySellComponent implements OnInit {
   selectedPercent = '0';
 
   currentCoin$!: Observable<Coin>;
+  userProfile$!: Observable<UserProfile | null>;
 
   constructor(
-    private walletService: WalletService,
-    private coinTransactionService: CoinTransactionService,
-    private coinHoldingsService: CoinHoldingsService,
-    private coinGeckoService: CoinGeckoService,
     private router: Router,
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private walletService: WalletService,
+    private userService: UserService,
+    private coinTransactionService: CoinTransactionService,
+    private coinHoldingsService: CoinHoldingsService,
+    private coinGeckoService: CoinGeckoService
   ) {}
 
   ngOnInit(): void {
@@ -104,6 +108,7 @@ export class BuySellComponent implements OnInit {
     this.updateMode();
     this.loadCurrentCoin();
     this.loadWalletBalance();
+    this.userProfile$ = this.userService.userProfile$;
   }
 
   private getAmountValidators(): ValidatorFn[] {

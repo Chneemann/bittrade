@@ -1,4 +1,16 @@
 <div class="buy-sell">
+  <!-- Verification Check -->
+  @if (userProfile$ | async; as profile) { @if (!profile?.verified) {
+  <p class="not-verified">
+    To deposit or withdraw funds,<br />please
+    <a class="link link--inline" routerLink="/home/profile/edit"
+      >verify your account</a
+    >
+    first.
+  </p>
+
+  } @else {
+  <!-- Buy / Sell Form -->
   <div class="amount-display">
     <p class="label">
       @if (mode === CoinTransactionType.BUY) { Enter Amount in USD } @else if
@@ -99,4 +111,5 @@
       (click)="submit()"
     ></app-primary-button>
   </div>
+  } }
 </div>
