@@ -183,6 +183,7 @@ export class EditProfileComponent implements OnInit {
 
     const previousEmail = this.originalProfile?.email;
     const currentEmail = profile.email;
+    const unconfirmedEmail = profile.unconfirmed_email;
 
     if (currentUsername && currentUsername !== previousUsername) {
       this.showFeedbackMessage('success', 'Username successfully updated.');
@@ -192,8 +193,11 @@ export class EditProfileComponent implements OnInit {
       this.showFeedbackMessage('success', 'Profile successfully verified.');
     }
 
-    if (currentEmail && currentEmail !== previousEmail) {
-      this.showFeedbackMessage('success', 'Email address updated.');
+    if (currentEmail && unconfirmedEmail !== previousEmail) {
+      this.showFeedbackMessage(
+        'success',
+        'Email address updated, check your inbox.'
+      );
     }
 
     if (this.isPasswordValidAndConfirmed()) {
