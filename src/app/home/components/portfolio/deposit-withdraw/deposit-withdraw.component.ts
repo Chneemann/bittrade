@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -35,6 +42,7 @@ import { UserService } from '../../../services/user.service';
   ],
   templateUrl: './deposit-withdraw.component.html',
   styleUrl: './deposit-withdraw.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DepositWithdrawComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
@@ -66,7 +74,8 @@ export class DepositWithdrawComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private walletService: WalletService,
-    private userService: UserService
+    private userService: UserService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -90,6 +99,7 @@ export class DepositWithdrawComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((wallet) => {
         this.walletBalance = wallet.balance;
+        this.cdRef.markForCheck();
       });
   }
 
@@ -189,6 +199,7 @@ export class DepositWithdrawComponent implements OnInit {
     this.updateWalletBalance(amount, this.mode, () => {
       this.showSuccessModal = true;
       this.isUpdating = false;
+      this.cdRef.markForCheck();
     });
   }
 
