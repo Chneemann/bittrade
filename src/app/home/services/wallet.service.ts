@@ -5,6 +5,7 @@ import {
   Wallet,
   WalletTransactionType,
   WalletTransactionSource,
+  WalletUpdateResponse,
 } from '../models/wallet.model';
 
 @Injectable({ providedIn: 'root' })
@@ -23,10 +24,10 @@ export class WalletService {
     transactionSource:
       | WalletTransactionSource.FIAT
       | WalletTransactionSource.COIN
-  ): Observable<Wallet> {
+  ): Observable<WalletUpdateResponse> {
     const endpoint = `/api/me/wallet/${transactionType}/`;
     return this.backendApi.post<
-      Wallet,
+      WalletUpdateResponse,
       { amount: number; transaction_source: string }
     >(endpoint, {
       amount: amount,

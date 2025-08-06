@@ -22,6 +22,7 @@ import { WalletService } from '../../../services/wallet.service';
 import {
   WalletTransactionSource,
   WalletTransactionType,
+  WalletUpdateResponse,
 } from '../../../models/wallet.model';
 import { Observable } from 'rxjs';
 import { SuccessModalComponent } from '../../../../shared/components/modals/success-modal/success-modal.component';
@@ -212,7 +213,7 @@ export class DepositWithdrawComponent implements OnInit {
       .changeWalletBalance(amount, mode, WalletTransactionSource.FIAT)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (wallet: any) => {
+        next: (wallet: WalletUpdateResponse) => {
           this.transactionResult = wallet.amount;
           this.walletBalance = wallet.balance;
           this.amountControl.setValue('10');

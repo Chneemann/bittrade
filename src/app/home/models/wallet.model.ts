@@ -3,6 +3,12 @@ export interface Wallet {
   balance: number;
 }
 
+export interface WalletUpdateResponse {
+  balance: number;
+  amount: number;
+  type: string;
+}
+
 export enum WalletTransactionType {
   WITHDRAW = 'withdraw',
   DEPOSIT = 'deposit',
