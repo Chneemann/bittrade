@@ -130,7 +130,12 @@
     <!-- Remember me checkbox -->
     <div class="remember-me">
       <label>
-        <input type="checkbox" [formControlName]="FIELD.remember" />
+        <input
+          [id]="FIELD.remember"
+          [name]="FIELD.remember"
+          type="checkbox"
+          [formControlName]="FIELD.remember"
+        />
         {{ LABEL.remember }}
       </label>
     </div>
