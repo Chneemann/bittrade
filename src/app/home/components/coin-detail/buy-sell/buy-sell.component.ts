@@ -58,29 +58,13 @@ import { UserService } from '../../../services/user.service';
   styleUrl: './buy-sell.component.scss',
 })
 export class BuySellComponent implements OnInit {
-  private destroyRef = inject(DestroyRef);
+  private readonly destroyRef = inject(DestroyRef);
 
-  amountControl: FormControl = new FormControl();
+  readonly CoinTransactionType = CoinTransactionType;
+  readonly MIN_BUY_VALUE = 10;
+  readonly MAX_BUY_VALUE = 10000;
 
-  currentCoin: Coin | null = null;
-  holding: CoinHolding | null = null;
-
-  previewTransaction: CoinTransactionCreateDto | null = null;
-  transactionResult: CoinTransactionCreateDto | null = null;
-  CoinTransactionType = CoinTransactionType;
-  mode: CoinTransactionType = CoinTransactionType.BUY;
-
-  walletBalance = 0;
-  cryptoBalance = 0;
-
-  minValue = 10;
-  maxValue = 10000;
-
-  isUpdating = false;
-  showSuccessModal = false;
-  showConfirmationModal = false;
-
-  percentages = [
+  readonly percentages = [
     { value: '10', label: '10%', mobileLabel: '10%' },
     { value: '25', label: '25%', mobileLabel: '25%' },
     { value: '50', label: '50%', mobileLabel: '50%' },
@@ -88,6 +72,22 @@ export class BuySellComponent implements OnInit {
     { value: '100', label: '100%', mobileLabel: '100%' },
   ];
   selectedPercent = '0';
+
+  amountControl: FormControl = new FormControl();
+  currentCoin: Coin | null = null;
+  holding: CoinHolding | null = null;
+  previewTransaction: CoinTransactionCreateDto | null = null;
+  transactionResult: CoinTransactionCreateDto | null = null;
+
+  mode: CoinTransactionType = CoinTransactionType.BUY;
+  walletBalance = 0;
+  cryptoBalance = 0;
+  minValue = this.MIN_BUY_VALUE;
+  maxValue = this.MAX_BUY_VALUE;
+
+  isUpdating = false;
+  showSuccessModal = false;
+  showConfirmationModal = false;
 
   currentCoin$!: Observable<Coin>;
   userProfile$!: Observable<UserProfile | null>;
@@ -111,12 +111,23 @@ export class BuySellComponent implements OnInit {
     this.userProfile$ = this.userService.userProfile$;
   }
 
-  private getAmountValidators(): ValidatorFn[] {
-    return [
-      Validators.required,
-      Validators.min(this.minValue),
-      Validators.max(this.maxValue),
-    ];
+  // Public methods
+  onSubmit(): void {
+    if (this.isInvalid || this.isUpdating) return;
+
+    const priceUSD = this.currentCoin?.market_data?.current_price?.['usd'] ?? 0;
+
+    const transaction: CoinTransactionCreateDto = {
+      transaction_type: this.mode,
+      amount:
+        this.mode === CoinTransactionType.BUY
+          ? parseFloat((this.amount / priceUSD).toFixed(8))
+          : parseFloat(this.amount.toFixed(8)),
+      price_per_coin: priceUSD,
+    };
+
+    this.previewTransaction = transaction;
+    this.showConfirmationModal = true;
   }
 
   updateMode(): void {
@@ -131,110 +142,6 @@ export class BuySellComponent implements OnInit {
     this.amountControl.setValue(resetValue);
   }
 
-  loadCurrentCoin() {
-    return (this.currentCoin$ = this.route.paramMap.pipe(
-      map((params) => params.get('id')?.toLowerCase() ?? ''),
-      switchMap((coinId) => {
-        if (!coinId) {
-          return throwError(() => new Error('Coin ID missing'));
-        }
-        return forkJoin({
-          coin: this.coinGeckoService.getCoinData(coinId),
-          holding: this.coinHoldingsService.getHoldingByCoin(coinId),
-        });
-      }),
-      tap(({ holding, coin }) => {
-        this.holding = holding;
-        this.cryptoBalance = holding.amount;
-        this.currentCoin = coin.data;
-        this.updateMinMaxValue(coin.data);
-      }),
-      map(({ coin }) => coin.data),
-      catchError((err) => {
-        console.error('Error loading coin or holding', err);
-        this.holding = null;
-        this.cryptoBalance = 0;
-        return EMPTY;
-      })
-    ));
-  }
-
-  private loadWalletBalance(): void {
-    this.walletService
-      .getWallet()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((wallet) => {
-        this.walletBalance = wallet.balance;
-      });
-  }
-
-  loadHolding(coinId: string): void {
-    this.coinHoldingsService.getHoldingByCoin(coinId).subscribe({
-      next: (data) => {
-        this.holding = data;
-        this.cryptoBalance = data?.amount || 0;
-      },
-      error: (err) => {
-        console.error('Error loading the holding:', err);
-        this.holding = null;
-        this.cryptoBalance = 0;
-      },
-    });
-  }
-
-  private calculateMinMaxValues(price: number): { min: number; max: number } {
-    if (this.mode === CoinTransactionType.BUY) {
-      return { min: 10, max: 10000 };
-    }
-
-    if (price < 100) return { min: 0.1, max: 10000 };
-    if (price < 1000) return { min: 0.01, max: 1000 };
-    if (price < 10000) return { min: 0.001, max: 100 };
-    return { min: 0.0001, max: 10 };
-  }
-
-  private updateMinMaxValue(coin: Coin): void {
-    const price = coin.market_data?.current_price?.['usd'] ?? 0;
-    const { min, max } = this.calculateMinMaxValues(price);
-    this.minValue = min;
-    this.maxValue = max;
-
-    this.amountControl.setValidators(this.getAmountValidators());
-    this.amountControl.updateValueAndValidity();
-
-    if (this.amount < this.minValue) {
-      this.amountControl.setValue(this.minValue.toString());
-    }
-  }
-
-  get rawAmount(): string {
-    return this.amountControl.value ?? '0';
-  }
-
-  get amount(): number {
-    return parseFloat(this.rawAmount.replace(/,/g, '.').replace(/ /g, '')) || 0;
-  }
-
-  get displayValue(): string {
-    if (this.amount === 0) return '0';
-    return this.mode === CoinTransactionType.BUY
-      ? this.amount.toLocaleString('en-US', { maximumFractionDigits: 0 })
-      : this.amount.toFixed(8).replace(/\.?0+$/, '');
-  }
-
-  get isInvalid(): boolean {
-    return (
-      !this.amount ||
-      isNaN(this.amount) ||
-      this.amount < this.minValue ||
-      this.amount > this.maxValue ||
-      (this.mode === CoinTransactionType.SELL &&
-        this.amount > this.cryptoBalance) ||
-      (this.mode === CoinTransactionType.BUY &&
-        this.amount > this.walletBalance)
-    );
-  }
-
   onInputChange(event: Event): void {
     let input = (event.target as HTMLInputElement).value;
 
@@ -242,7 +149,6 @@ export class BuySellComponent implements OnInit {
       input = input.replace(/[^0-9]/g, '');
     } else {
       input = input.replace(/[^0-9.,]/g, '').replace(/[,]/g, '.');
-
       const parts = input.split('.');
       if (parts.length > 2) {
         input = parts[0] + '.' + parts.slice(1).join('');
@@ -293,6 +199,64 @@ export class BuySellComponent implements OnInit {
     this.applyPercentage(+value);
   }
 
+  onUserConfirmed(): void {
+    if (!this.currentCoin) return;
+
+    this.showConfirmationModal = false;
+    this.isUpdating = true;
+
+    const priceUSD = this.currentCoin.market_data.current_price['usd'];
+    const transactionHandler =
+      this.mode === CoinTransactionType.BUY
+        ? this.handleBuyTransaction.bind(this)
+        : this.handleSellTransaction.bind(this);
+
+    transactionHandler(this.amount, priceUSD);
+  }
+
+  // Public helper methods
+  loadCurrentCoin() {
+    return (this.currentCoin$ = this.route.paramMap.pipe(
+      map((params) => params.get('id')?.toLowerCase() ?? ''),
+      switchMap((coinId) => {
+        if (!coinId) {
+          return throwError(() => new Error('Coin ID missing'));
+        }
+        return forkJoin({
+          coin: this.coinGeckoService.getCoinData(coinId),
+          holding: this.coinHoldingsService.getHoldingByCoin(coinId),
+        });
+      }),
+      tap(({ holding, coin }) => {
+        this.holding = holding;
+        this.cryptoBalance = holding.amount;
+        this.currentCoin = coin.data;
+        this.updateMinMaxValue(coin.data);
+      }),
+      map(({ coin }) => coin.data),
+      catchError((err) => {
+        console.error('Error loading coin or holding', err);
+        this.holding = null;
+        this.cryptoBalance = 0;
+        return EMPTY;
+      })
+    ));
+  }
+
+  loadHolding(coinId: string): void {
+    this.coinHoldingsService.getHoldingByCoin(coinId).subscribe({
+      next: (data) => {
+        this.holding = data;
+        this.cryptoBalance = data?.amount || 0;
+      },
+      error: (err) => {
+        console.error('Error loading the holding:', err);
+        this.holding = null;
+        this.cryptoBalance = 0;
+      },
+    });
+  }
+
   applyPercentage(percent: number): void {
     const base =
       this.mode === CoinTransactionType.BUY
@@ -308,38 +272,46 @@ export class BuySellComponent implements OnInit {
     this.amountControl.setValue(rounded.toString());
   }
 
-  submit(): void {
-    if (this.isInvalid || this.isUpdating) return;
-
-    const priceUSD = this.currentCoin?.market_data?.current_price?.['usd'] ?? 0;
-
-    const transaction: CoinTransactionCreateDto = {
-      transaction_type: this.mode,
-      amount:
-        this.mode === CoinTransactionType.BUY
-          ? parseFloat((this.amount / priceUSD).toFixed(8))
-          : parseFloat(this.amount.toFixed(8)),
-      price_per_coin: priceUSD,
-    };
-
-    this.previewTransaction = transaction;
-    this.showConfirmationModal = true;
+  // Private helper methods
+  private loadWalletBalance(): void {
+    this.walletService
+      .getWallet()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((wallet) => {
+        this.walletBalance = wallet.balance;
+      });
   }
 
-  onUserConfirmed() {
-    console.log(!this.currentCoin);
-    if (!this.currentCoin) return;
+  private getAmountValidators(): ValidatorFn[] {
+    return [
+      Validators.required,
+      Validators.min(this.minValue),
+      Validators.max(this.maxValue),
+    ];
+  }
 
-    this.showConfirmationModal = false;
-    this.isUpdating = true;
+  private calculateMinMaxValues(price: number): { min: number; max: number } {
+    if (this.mode === CoinTransactionType.BUY) {
+      return { min: 10, max: 10000 };
+    }
+    if (price < 100) return { min: 0.1, max: 10000 };
+    if (price < 1000) return { min: 0.01, max: 1000 };
+    if (price < 10000) return { min: 0.001, max: 100 };
+    return { min: 0.0001, max: 10 };
+  }
 
-    const priceUSD = this.currentCoin.market_data.current_price['usd'];
-    const transactionHandler =
-      this.mode === CoinTransactionType.BUY
-        ? this.handleBuyTransaction.bind(this)
-        : this.handleSellTransaction.bind(this);
+  private updateMinMaxValue(coin: Coin): void {
+    const price = coin.market_data?.current_price?.['usd'] ?? 0;
+    const { min, max } = this.calculateMinMaxValues(price);
+    this.minValue = min;
+    this.maxValue = max;
 
-    transactionHandler(this.amount, priceUSD);
+    this.amountControl.setValidators(this.getAmountValidators());
+    this.amountControl.updateValueAndValidity();
+
+    if (this.amount < this.minValue) {
+      this.amountControl.setValue(this.minValue.toString());
+    }
   }
 
   private handleBuyTransaction(amount: number, priceUSD: number) {
@@ -421,5 +393,34 @@ export class BuySellComponent implements OnInit {
           console.error('Error during wallet update:', error);
         },
       });
+  }
+
+  // Getters
+  get rawAmount(): string {
+    return this.amountControl.value ?? '0';
+  }
+
+  get amount(): number {
+    return parseFloat(this.rawAmount.replace(/,/g, '.').replace(/ /g, '')) || 0;
+  }
+
+  get displayValue(): string {
+    if (this.amount === 0) return '0';
+    return this.mode === CoinTransactionType.BUY
+      ? this.amount.toLocaleString('en-US', { maximumFractionDigits: 0 })
+      : this.amount.toFixed(8).replace(/\.?0+$/, '');
+  }
+
+  get isInvalid(): boolean {
+    return (
+      !this.amount ||
+      isNaN(this.amount) ||
+      this.amount < this.minValue ||
+      this.amount > this.maxValue ||
+      (this.mode === CoinTransactionType.SELL &&
+        this.amount > this.cryptoBalance) ||
+      (this.mode === CoinTransactionType.BUY &&
+        this.amount > this.walletBalance)
+    );
   }
 }
