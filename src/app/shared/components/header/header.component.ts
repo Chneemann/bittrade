@@ -49,10 +49,6 @@ export class HeaderComponent implements OnInit {
       dataKey: 'cachedCoinPrices',
       title: 'Market',
     },
-    'home/transactions': {
-      dataKey: null,
-      title: 'Transactions',
-    },
     'home/profile/edit': {
       dataKey: null,
       title: 'Edit Profile',
@@ -112,49 +108,31 @@ export class HeaderComponent implements OnInit {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         tap((response) => {
-          this.addCoinsFromList(response);
+          response.forEach((coin) => {
+            this.addCoinRoute(coin);
+          });
           this.updateObservables();
         })
       )
       .subscribe();
   }
 
-  private addCoinsFromList(response: CoinListResponse): void {
-    response.forEach((coin) => {
-      this.addCoinRoute(coin);
-      this.addBuyRoute(coin);
-      this.addSellRoute(coin);
-    });
-  }
-
   private addCoinRoute(coin: CoinList): void {
     const cleanName = coin.name.trim().toLowerCase();
-    const path = `home/coin/${cleanName}`;
-    this.routeConfigs[path] = {
-      dataKey: `cachedCoin${coin.name}`,
-      title: `${coin.name} (${coin.symbol})`,
-      icon: cleanName,
-    };
-  }
+    const paths = [
+      `home/coin/${cleanName}`,
+      `home/transactions/${cleanName}`,
+      `home/buy/${cleanName}`,
+      `home/sell/${cleanName}`,
+    ];
 
-  private addBuyRoute(coin: CoinList): void {
-    const cleanName = coin.name.trim().toLowerCase();
-    const path = `home/buy/${cleanName}`;
-    this.routeConfigs[path] = {
-      dataKey: `cachedCoin${coin.name}`,
-      title: `Buy ${coin.name} (${coin.symbol})`,
-      icon: cleanName,
-    };
-  }
-
-  private addSellRoute(coin: CoinList): void {
-    const cleanName = coin.name.trim().toLowerCase();
-    const path = `home/sell/${cleanName}`;
-    this.routeConfigs[path] = {
-      dataKey: `cachedCoin${coin.name}`,
-      title: `Sell ${coin.name} (${coin.symbol})`,
-      icon: cleanName,
-    };
+    for (const path of paths) {
+      this.routeConfigs[path] = {
+        dataKey: `cachedCoin${coin.name}`,
+        title: `${coin.name} (${coin.symbol})`,
+        icon: cleanName,
+      };
+    }
   }
 
   private loadCoinList(): Observable<CoinListResponse> {
