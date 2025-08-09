@@ -18,7 +18,10 @@
       {{ holding?.coin?.name }} }
     </p>
 
-    <div class="input-wrapper">
+    <div
+      class="input-wrapper"
+      [style.width]="mode === CoinTransactionType.BUY ? '50%' : '70%'"
+    >
       @if (mode === CoinTransactionType.BUY) {
       <span class="prefix">$</span>
       }

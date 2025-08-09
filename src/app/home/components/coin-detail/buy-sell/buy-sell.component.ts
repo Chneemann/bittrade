@@ -121,8 +121,8 @@ export class BuySellComponent implements OnInit {
       transaction_type: this.mode,
       amount:
         this.mode === CoinTransactionType.BUY
-          ? parseFloat((this.amount / priceUSD).toFixed(8))
-          : parseFloat(this.amount.toFixed(8)),
+          ? parseFloat((this.amount / priceUSD).toFixed(6))
+          : parseFloat(this.amount.toFixed(6)),
       price_per_coin: priceUSD,
     };
 
@@ -267,7 +267,7 @@ export class BuySellComponent implements OnInit {
     const rounded =
       this.mode === CoinTransactionType.BUY
         ? Math.floor(value)
-        : parseFloat(value.toFixed(8));
+        : parseFloat(value.toFixed(6));
 
     this.amountControl.setValue(rounded.toString());
   }
@@ -315,7 +315,7 @@ export class BuySellComponent implements OnInit {
   }
 
   private handleBuyTransaction(amount: number, priceUSD: number) {
-    const amountInCoins = parseFloat((amount / priceUSD).toFixed(8));
+    const amountInCoins = parseFloat((amount / priceUSD).toFixed(6));
     const transaction: CoinTransactionCreateDto = {
       transaction_type: CoinTransactionType.BUY,
       amount: amountInCoins,
@@ -408,7 +408,7 @@ export class BuySellComponent implements OnInit {
     if (this.amount === 0) return '0';
     return this.mode === CoinTransactionType.BUY
       ? this.amount.toLocaleString('en-US', { maximumFractionDigits: 0 })
-      : this.amount.toFixed(8).replace(/\.?0+$/, '');
+      : this.amount.toFixed(6).replace(/\.?0+$/, '');
   }
 
   get isInvalid(): boolean {
