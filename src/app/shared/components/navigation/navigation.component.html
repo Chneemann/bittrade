@@ -1,4 +1,5 @@
 <nav>
+  <!-- Portfolio -->
   <a
     class="link link--nav"
     routerLink="/home/portfolio"
@@ -8,6 +9,8 @@
     <img src="assets/img/navigation/portfolio.svg" alt="Portfolio icon" />
     <span class="nav-text">Portfolio</span>
   </a>
+
+  <!-- Market -->
   <a
     class="link link--nav"
     routerLink="/home/market"
@@ -17,6 +20,19 @@
     <img src="assets/img/navigation/market.svg" alt="Market icon" />
     <span class="nav-text">Market</span>
   </a>
+
+  <!-- History -->
+  <a
+    class="link link--nav"
+    routerLink="/home/history"
+    routerLinkActive="link--active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <img src="assets/img/navigation/history.svg" alt="History icon" />
+    <span class="nav-text">History</span>
+  </a>
+
+  <!-- Profile -->
   <a
     class="link link--nav"
     routerLink="/home/profile"
