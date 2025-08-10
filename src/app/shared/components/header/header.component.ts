@@ -49,6 +49,14 @@ export class HeaderComponent implements OnInit {
       dataKey: 'cachedCoinPrices',
       title: 'Market',
     },
+    'home/portfolio': {
+      dataKey: 'cachedCoinPrices',
+      title: 'Portfolio',
+    },
+    'home/history': {
+      dataKey: null,
+      title: 'Transaction History',
+    },
     'home/profile/edit': {
       dataKey: null,
       title: 'Edit Profile',
@@ -56,10 +64,6 @@ export class HeaderComponent implements OnInit {
     'home/profile': {
       dataKey: null,
       title: 'Profile',
-    },
-    'home/portfolio': {
-      dataKey: 'cachedCoinPrices',
-      title: 'Portfolio',
     },
     'home/deposit': {
       dataKey: null,
