@@ -11,12 +11,12 @@ export class CoinTransactionService {
   constructor(private backendApi: BackendApiService) {}
 
   getAllTransactions(): Observable<CoinTransaction[]> {
-    return this.backendApi.get<CoinTransaction[]>('/api/me/transactions/');
+    return this.backendApi.get<CoinTransaction[]>('/api/me/coin/transactions/');
   }
 
   getTransactionByCoin(symbol: string): Observable<CoinTransaction[]> {
     return this.backendApi.get<CoinTransaction[]>(
-      `/api/me/transactions/${symbol}/`
+      `/api/me/coin/transaction/${symbol}/`
     );
   }
 
@@ -25,7 +25,7 @@ export class CoinTransactionService {
     tx: CoinTransactionCreateDto
   ): Observable<CoinTransaction> {
     return this.backendApi.post<CoinTransaction, CoinTransactionCreateDto>(
-      `/api/me/transactions/${coinId}/`,
+      `/api/me/coin/transaction/${coinId}/`,
       tx
     );
   }

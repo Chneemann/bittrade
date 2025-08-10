@@ -8,10 +8,10 @@ export class CoinHoldingsService {
   constructor(private backendApi: BackendApiService) {}
 
   getAllHoldings(): Observable<CoinHolding> {
-    return this.backendApi.get<CoinHolding>('/api/me/holdings/');
+    return this.backendApi.get<CoinHolding>('/api/me/coin/holdings/');
   }
 
   getHoldingByCoin(symbol: string): Observable<CoinHolding> {
-    return this.backendApi.get<CoinHolding>(`/api/me/holdings/${symbol}/`);
+    return this.backendApi.get<CoinHolding>(`/api/me/coin/holding/${symbol}/`);
   }
 }
