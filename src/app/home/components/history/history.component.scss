@@ -1,0 +1,24 @@
+.history {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.transaction-list {
+  width: 100%;
+}
+
+.no-transactions-container,
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 18px;
+  font-weight: 400;
+
+  height: 60px;
+}
