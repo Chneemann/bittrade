@@ -18,6 +18,7 @@ import { EmailVerificationComponent } from './auth/components/email-verification
 import { RegisterComponent } from './auth/components/register/register.component';
 import { PasswordResetRequestComponent } from './auth/components/password-reset/password-reset-request/password-reset-request.component';
 import { PasswordResetConfirmComponent } from './auth/components/password-reset/password-reset-confirm/password-reset-confirm.component';
+import { HistoryComponent } from './home/components/history/history.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -49,6 +50,7 @@ export const routes: Routes = [
       { path: 'profile/edit', component: EditProfileComponent },
       { path: 'portfolio', component: PortfolioComponent },
       { path: 'market', component: MarketComponent },
+      { path: 'history', component: HistoryComponent },
       { path: 'coin/:id', component: CoinDetailComponent },
       { path: 'transactions', component: TransactionsComponent },
       { path: 'transactions/:id', component: TransactionsComponent },
