@@ -8,7 +8,7 @@ import { AuthGuard } from './auth/guards/auth.guard';
 import { LogoutComponent } from './auth/components/logout/logout.component';
 import { MarketComponent } from './home/components/market/market.component';
 import { CoinDetailComponent } from './home/components/coin-detail/coin-detail.component';
-import { TransactionsComponent } from './home/components/transactions/transactions.component';
+import { CoinTransactionsComponent } from './home/components/transactions/coin-transactions.component';
 import { ProfileComponent } from './home/components/profile/profile.component';
 import { PortfolioComponent } from './home/components/portfolio/portfolio.component';
 import { DepositWithdrawComponent } from './home/components/portfolio/deposit-withdraw/deposit-withdraw.component';
@@ -52,8 +52,8 @@ export const routes: Routes = [
       { path: 'market', component: MarketComponent },
       { path: 'history', component: HistoryComponent },
       { path: 'coin/:id', component: CoinDetailComponent },
-      { path: 'transactions', component: TransactionsComponent },
-      { path: 'transactions/:id', component: TransactionsComponent },
+      { path: 'coin/transactions', component: CoinTransactionsComponent },
+      { path: 'coin/transactions/:id', component: CoinTransactionsComponent },
       { path: 'deposit', component: DepositWithdrawComponent },
       { path: 'withdraw', component: DepositWithdrawComponent },
       { path: 'buy/:id', component: BuySellComponent },

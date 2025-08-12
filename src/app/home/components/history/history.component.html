@@ -6,7 +6,7 @@
   @if (allTransactions.length !== 0) {
   <div class="transaction-list">
     @for (transaction of allTransactions; track $index) {
-    <app-transaction-card [transaction]="transaction"></app-transaction-card>
+    <app-coin-card [transaction]="transaction"></app-coin-card>
     }
   </div>
   } @else {

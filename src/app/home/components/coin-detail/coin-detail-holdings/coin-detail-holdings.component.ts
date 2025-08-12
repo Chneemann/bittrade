@@ -51,6 +51,6 @@ export class CoinDetailHoldingsComponent {
 
   onClick(coinSlug: string): void {
     if (!coinSlug) return;
-    this.router.navigate(['/home/transactions', coinSlug]);
+    this.router.navigate(['/home/coin/transactions', coinSlug]);
   }
 }

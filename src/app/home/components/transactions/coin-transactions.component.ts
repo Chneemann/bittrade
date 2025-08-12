@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TransactionCardComponent } from './transaction-card/transaction-card.component';
+import { CoinCardComponent } from './coin-card/coin-card.component';
 import { CoinTransactionService } from '../../services/coin-transactions.service';
 import { SelectionTabsComponent } from '../../../shared/components/selection-tabs/selection-tabs.component';
 
 @Component({
-  selector: 'app-transactions',
-  imports: [CommonModule, TransactionCardComponent, SelectionTabsComponent],
-  templateUrl: './transactions.component.html',
-  styleUrl: './transactions.component.scss',
+  selector: 'app-coin-transactions',
+  imports: [CommonModule, CoinCardComponent, SelectionTabsComponent],
+  templateUrl: './coin-transactions.component.html',
+  styleUrl: './coin-transactions.component.scss',
 })
-export class TransactionsComponent implements OnInit {
+export class CoinTransactionsComponent implements OnInit {
   selectedCoinId: string | null = null;
   allTransactions: any[] = [];
   transactions: any[] = [];

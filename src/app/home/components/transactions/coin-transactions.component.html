@@ -12,7 +12,7 @@
   <!-- Transaction cards -->
   @if (transactions.length !== 0) { @for (transaction of transactions; track
   $index) {
-  <app-transaction-card [transaction]="transaction"></app-transaction-card>
+  <app-coin-card [transaction]="transaction"></app-coin-card>
   } } @else {
   <div class="no-transactions-container">
     <p>No transactions found</p>

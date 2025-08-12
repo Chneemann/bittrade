@@ -125,7 +125,7 @@ export class HeaderComponent implements OnInit {
     const cleanName = coin.name.trim().toLowerCase();
     const paths = [
       `home/coin/${cleanName}`,
-      `home/transactions/${cleanName}`,
+      `home/coin/transactions/${cleanName}`,
       `home/buy/${cleanName}`,
       `home/sell/${cleanName}`,
     ];
@@ -217,7 +217,7 @@ export class HeaderComponent implements OnInit {
   get showBackButton(): boolean {
     const backButtonPaths = [
       'home/coin',
-      'home/transactions',
+      'home/coin/transactions',
       'home/deposit',
       'home/withdraw',
       'home/buy',

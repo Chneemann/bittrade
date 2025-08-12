@@ -3,11 +3,11 @@ import { CoinTransaction } from '../../../models/coin.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-transaction-card',
+  selector: 'app-coin-card',
   imports: [CommonModule],
-  templateUrl: './transaction-card.component.html',
-  styleUrl: './transaction-card.component.scss',
+  templateUrl: './coin-card.component.html',
+  styleUrl: './coin-card.component.scss',
 })
-export class TransactionCardComponent {
+export class CoinCardComponent {
   @Input() transaction: CoinTransaction | null = null;
 }
