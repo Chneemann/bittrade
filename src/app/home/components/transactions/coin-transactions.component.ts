@@ -14,7 +14,7 @@ import { SelectionTabsComponent } from '../../../shared/components/selection-tab
 export class CoinTransactionsComponent implements OnInit {
   selectedCoinId: string | null = null;
   allTransactions: any[] = [];
-  transactions: any[] = [];
+  filteredTransactions: any[] = [];
 
   dataLoaded = false;
   options: string[] = ['all', 'buy', 'sell'];
@@ -38,7 +38,7 @@ export class CoinTransactionsComponent implements OnInit {
 
   loadTransactions(coinId: string): void {
     this.coinTransactionService
-      .getTransactionByCoin(coinId)
+      .getTransactionsByCoin(coinId)
       .subscribe((txs) => {
         this.allTransactions = txs;
         this.applyFilter();
@@ -54,9 +54,9 @@ export class CoinTransactionsComponent implements OnInit {
 
   applyFilter(): void {
     if (this.activeOption === 'all') {
-      this.transactions = [...this.allTransactions];
+      this.filteredTransactions = [...this.allTransactions];
     } else {
-      this.transactions = this.allTransactions.filter(
+      this.filteredTransactions = this.allTransactions.filter(
         (tx) => tx.transaction_type === this.activeOption
       );
     }

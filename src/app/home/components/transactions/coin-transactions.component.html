@@ -10,8 +10,8 @@
   <p class="loading-container">Loading transactions...</p>
   } @else {
   <!-- Transaction cards -->
-  @if (transactions.length !== 0) { @for (transaction of transactions; track
-  $index) {
+  @if (filteredTransactions.length !== 0) { @for (transaction of
+  filteredTransactions; track $index) {
   <app-coin-card [transaction]="transaction"></app-coin-card>
   } } @else {
   <div class="no-transactions-container">

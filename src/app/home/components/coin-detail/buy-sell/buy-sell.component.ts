@@ -18,9 +18,7 @@ import {
   forkJoin,
   map,
   Observable,
-  Subject,
   switchMap,
-  takeUntil,
   tap,
   throwError,
 } from 'rxjs';
@@ -358,7 +356,7 @@ export class BuySellComponent implements OnInit {
     const coinSlug = this.currentCoin.web_slug;
 
     this.coinTransactionService
-      .addTransaction(coinSlug, transaction)
+      .addCoinTransaction(coinSlug, transaction)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (result) => {

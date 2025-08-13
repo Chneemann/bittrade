@@ -3,10 +3,10 @@
   <p class="loading-container">Loading transactions...</p>
   } @else {
   <!-- Transaction cards -->
-  @if (allTransactions.length !== 0) {
+  @if (allCoinTransactions.length !== 0) {
   <div class="transaction-list">
-    @for (transaction of allTransactions; track $index) {
-    <app-coin-card [transaction]="transaction"></app-coin-card>
+    @for (coinTransaction of allCoinTransactions; track $index) {
+    <app-coin-card [transaction]="coinTransaction"></app-coin-card>
     }
   </div>
   } @else {

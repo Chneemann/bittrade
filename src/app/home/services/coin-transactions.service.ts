@@ -10,17 +10,17 @@ import {
 export class CoinTransactionService {
   constructor(private backendApi: BackendApiService) {}
 
-  getAllTransactions(): Observable<CoinTransaction[]> {
+  getCoinTransactions(): Observable<CoinTransaction[]> {
     return this.backendApi.get<CoinTransaction[]>('/api/me/coin/transactions/');
   }
 
-  getTransactionByCoin(symbol: string): Observable<CoinTransaction[]> {
+  getTransactionsByCoin(symbol: string): Observable<CoinTransaction[]> {
     return this.backendApi.get<CoinTransaction[]>(
       `/api/me/coin/transaction/${symbol}/`
     );
   }
 
-  addTransaction(
+  addCoinTransaction(
     coinId: string,
     tx: CoinTransactionCreateDto
   ): Observable<CoinTransaction> {

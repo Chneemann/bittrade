@@ -9,7 +9,7 @@ import { CoinCardComponent } from '../transactions/coin-card/coin-card.component
   styleUrl: './history.component.scss',
 })
 export class HistoryComponent {
-  allTransactions: any[] = [];
+  allCoinTransactions: any[] = [];
   dataLoaded = false;
 
   constructor(
@@ -18,12 +18,12 @@ export class HistoryComponent {
   ) {}
 
   ngOnInit(): void {
-    this.loadAllTransactions();
+    this.loadCoinTransactions();
   }
 
-  loadAllTransactions(): void {
-    this.coinTransactionService.getAllTransactions().subscribe((txs) => {
-      this.allTransactions = txs;
+  loadCoinTransactions(): void {
+    this.coinTransactionService.getCoinTransactions().subscribe((txs) => {
+      this.allCoinTransactions = txs;
       this.dataLoaded = true;
       this.cdr.detectChanges();
     });
