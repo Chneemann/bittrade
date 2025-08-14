@@ -9,6 +9,14 @@ export interface WalletUpdateResponse {
   type: string;
 }
 
+export interface FiatTransaction {
+  id: string;
+  type: 'deposit' | 'withdrawal';
+  source: string;
+  amount: number;
+  created_at: string;
+}
+
 export enum WalletTransactionType {
   WITHDRAW = 'withdraw',
   DEPOSIT = 'deposit',
