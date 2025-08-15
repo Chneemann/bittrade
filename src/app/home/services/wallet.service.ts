@@ -6,6 +6,7 @@ import {
   WalletTransactionType,
   WalletTransactionSource,
   WalletUpdateResponse,
+  WalletTransaction,
 } from '../models/wallet.model';
 
 @Injectable({ providedIn: 'root' })
@@ -14,6 +15,14 @@ export class WalletService {
 
   getWallet(): Observable<Wallet> {
     return this.backendApi.get<Wallet>('/api/me/wallet/');
+  }
+
+  getWalletTransactionsBySource(
+    source: 'fiat' | 'coin'
+  ): Observable<WalletTransaction[]> {
+    return this.backendApi.get<WalletTransaction[]>(
+      `/api/me/wallet/transactions/${source}/`
+    );
   }
 
   changeWalletBalance(

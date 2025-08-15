@@ -9,7 +9,7 @@ export interface WalletUpdateResponse {
   type: string;
 }
 
-export interface FiatTransaction {
+export interface WalletTransaction {
   id: string;
   type: 'deposit' | 'withdrawal';
   source: string;

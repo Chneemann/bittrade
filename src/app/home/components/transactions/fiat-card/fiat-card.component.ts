@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FiatTransaction } from '../../../models/wallet.model';
+import { WalletTransaction } from '../../../models/wallet.model';
 
 @Component({
   selector: 'app-fiat-card',
@@ -8,5 +8,5 @@ import { FiatTransaction } from '../../../models/wallet.model';
   styleUrl: './fiat-card.component.scss',
 })
 export class FiatCardComponent {
-  @Input() transaction: FiatTransaction | null = null;
+  @Input() transaction: WalletTransaction | null = null;
 }
