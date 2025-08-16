@@ -3,8 +3,8 @@
   <p class="loading-container">Loading transactions...</p>
   } @else {
   <div class="transaction-list">
-    @if (mergedTransactions.length !== 0) { @for (tx of mergedTransactions;
-    track $index) { @if (isCoin(tx)) {
+    @if (sortedMergedTransactions.length !== 0) { @for (tx of
+    sortedMergedTransactions; track $index) { @if (isCoin(tx)) {
     <app-coin-card [transaction]="tx"></app-coin-card>
     } @else if (isFiat(tx)) {
     <app-fiat-card [transaction]="tx"></app-fiat-card>

@@ -18,9 +18,9 @@ type MergedTransaction =
   styleUrl: './history.component.scss',
 })
 export class HistoryComponent {
-  allCoinTransactions: CoinTransaction[] = [];
-  allFiatTransactions: WalletTransaction[] = [];
-  mergedTransactions: MergedTransaction[] = [];
+  private allCoinTransactions: CoinTransaction[] = [];
+  private allFiatTransactions: WalletTransaction[] = [];
+
   dataLoaded = false;
 
   constructor(
@@ -45,9 +45,6 @@ export class HistoryComponent {
     }).subscribe(({ coinTxs, fiatTxs }) => {
       this.allCoinTransactions = coinTxs;
       this.allFiatTransactions = fiatTxs;
-
-      this.mergedTransactions = this.mergeAndSortTransactions(coinTxs, fiatTxs);
-
       this.dataLoaded = true;
       this.cdr.detectChanges();
     });
@@ -75,6 +72,14 @@ export class HistoryComponent {
     ).sort(
       (a, b) =>
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+  }
+
+  // Getters
+  get sortedMergedTransactions(): MergedTransaction[] {
+    return this.mergeAndSortTransactions(
+      this.allCoinTransactions,
+      this.allFiatTransactions
     );
   }
 }
