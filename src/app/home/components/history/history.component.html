@@ -2,16 +2,17 @@
   @if (!dataLoaded) {
   <p class="loading-container">Loading transactions...</p>
   } @else {
-  <!-- Transaction cards -->
-  @if (allCoinTransactions.length !== 0) {
   <div class="transaction-list">
-    @for (coinTransaction of allCoinTransactions; track $index) {
-    <app-coin-card [transaction]="coinTransaction"></app-coin-card>
+    @if (mergedTransactions.length !== 0) { @for (tx of mergedTransactions;
+    track $index) { @if (isCoin(tx)) {
+    <app-coin-card [transaction]="tx"></app-coin-card>
+    } @else if (isFiat(tx)) {
+    <app-fiat-card [transaction]="tx"></app-fiat-card>
+    } } } @else {
+    <div class="no-transactions-container">
+      <p>No transactions found</p>
+    </div>
     }
   </div>
-  } @else {
-  <div class="no-transactions-container">
-    <p>No transactions found</p>
-  </div>
-  } }
+  }
 </div>
