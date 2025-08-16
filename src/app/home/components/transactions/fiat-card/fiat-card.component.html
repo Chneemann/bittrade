@@ -1,1 +1,11 @@
-<p>fiat-card works!</p>
+@if (transaction) {
+<div class="fiat-card">
+  <div class="fiat-icon">
+    <img
+      src="assets/img/fiat/dollar.svg"
+      alt="Dollar logo"
+      onerror="this.src='assets/img/coins/default.svg';"
+    />
+  </div>
+</div>
+}
