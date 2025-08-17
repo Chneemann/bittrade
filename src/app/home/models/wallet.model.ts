@@ -11,8 +11,8 @@ export interface WalletUpdateResponse {
 
 export interface WalletTransaction {
   id: string;
-  type: 'deposit' | 'withdrawal';
-  source: string;
+  transaction_type: 'deposit' | 'withdrawal';
+  transaction_source: string;
   amount: number;
   created_at: string;
 }
