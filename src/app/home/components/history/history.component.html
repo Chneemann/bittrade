@@ -9,8 +9,8 @@
   <p class="loading-container">Loading transactions...</p>
   } @else {
   <div class="transaction-list">
-    @if (sortedMergedTransactions.length !== 0) { @for (tx of
-    sortedMergedTransactions; track $index) { @if (isCoin(tx)) {
+    @if (sortedMergedTransactions.length !== 0) { @for (tx of pagedTransactions;
+    track $index) { @if (isCoin(tx)) {
     <app-coin-card [transaction]="tx"></app-coin-card>
     } @else if (isFiat(tx)) {
     <app-fiat-card [transaction]="tx"></app-fiat-card>
@@ -20,5 +20,13 @@
     </div>
     }
   </div>
+
+  <app-pagination
+    [totalItems]="sortedMergedTransactions.length"
+    [itemsPerPage]="itemsPerPage"
+    [currentPage]="currentPage"
+    (pageChange)="onPageChange($event)"
+  >
+  </app-pagination>
   }
 </div>

@@ -7,6 +7,7 @@ import { CoinTransaction } from '../../models/coin.model';
 import { WalletTransaction } from '../../models/wallet.model';
 import { FiatCardComponent } from '../transactions/fiat-card/fiat-card.component';
 import { SelectionTabsComponent } from '../../../shared/components/selection-tabs/selection-tabs.component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 type MergedTransaction =
   | (CoinTransaction & { type: 'coin' })
@@ -14,7 +15,12 @@ type MergedTransaction =
 
 @Component({
   selector: 'app-history',
-  imports: [CoinCardComponent, FiatCardComponent, SelectionTabsComponent],
+  imports: [
+    CoinCardComponent,
+    FiatCardComponent,
+    SelectionTabsComponent,
+    PaginationComponent,
+  ],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss',
 })
@@ -23,6 +29,9 @@ export class HistoryComponent {
   private allFiatTransactions: WalletTransaction[] = [];
 
   dataLoaded = false;
+
+  currentPage = 1;
+  itemsPerPage = 8;
 
   options: string[] = ['all', 'fiat', 'coin'];
   activeOption: string = 'all';
@@ -67,6 +76,10 @@ export class HistoryComponent {
     this.activeOption = option;
   }
 
+  onPageChange(page: number) {
+    this.currentPage = page;
+  }
+
   // Private helper methods
   private mergeAndSortTransactions(
     coinTxs: CoinTransaction[],
@@ -98,5 +111,11 @@ export class HistoryComponent {
       this.allFiatTransactions
     );
     return this.filterTransactions(merged, this.activeOption);
+  }
+
+  get pagedTransactions(): MergedTransaction[] {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.sortedMergedTransactions.slice(start, end);
   }
 }
