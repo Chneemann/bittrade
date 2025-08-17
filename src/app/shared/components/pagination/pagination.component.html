@@ -1,0 +1,20 @@
+@if (totalPages > 1) {
+<nav class="pagination">
+  <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+    &laquo;
+  </button>
+
+  @for (page of pages; track $index) {
+  <button (click)="changePage(page)" [class.active]="page === currentPage">
+    {{ page }}
+  </button>
+  }
+
+  <button
+    (click)="changePage(currentPage + 1)"
+    [disabled]="currentPage === totalPages"
+  >
+    &raquo;
+  </button>
+</nav>
+}
