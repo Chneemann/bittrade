@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #ffffff;
+  background: var(--color-white);
   width: 100%;
   min-width: 320px;
   min-height: 108px;
@@ -57,8 +57,6 @@
       font-size: 16px;
       font-weight: 400;
       color: var(--color-font-secondary);
-
-      height: 21px;
     }
 
     .transaction-type {
@@ -81,4 +79,35 @@
 
 .negative {
   color: var(--color-red);
+}
+
+// Media queries
+@media (max-width: 450px) {
+  .fiat-card {
+    .fiat-icon {
+      img {
+        width: 42px;
+        height: 42px;
+        margin-right: 12px;
+        padding: 6px;
+      }
+    }
+
+    .fiat-info {
+      .fiat-meta,
+      .transaction-info {
+        .fiat-name,
+        .total-value {
+          font-size: 16px;
+        }
+
+        .label-source,
+        .label-status,
+        .transaction-date,
+        .transaction-type {
+          font-size: 14px;
+        }
+      }
+    }
+  }
 }
