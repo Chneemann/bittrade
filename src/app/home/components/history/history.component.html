@@ -1,4 +1,10 @@
 <div class="history">
+  <app-selection-tabs
+    [options]="options"
+    [activeOption]="activeOption"
+    (optionSelected)="onFilterTransactions($event)"
+  ></app-selection-tabs>
+
   @if (!dataLoaded) {
   <p class="loading-container">Loading transactions...</p>
   } @else {

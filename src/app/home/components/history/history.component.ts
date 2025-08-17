@@ -6,6 +6,7 @@ import { catchError, forkJoin, of } from 'rxjs';
 import { CoinTransaction } from '../../models/coin.model';
 import { WalletTransaction } from '../../models/wallet.model';
 import { FiatCardComponent } from '../transactions/fiat-card/fiat-card.component';
+import { SelectionTabsComponent } from '../../../shared/components/selection-tabs/selection-tabs.component';
 
 type MergedTransaction =
   | (CoinTransaction & { type: 'coin' })
@@ -13,7 +14,7 @@ type MergedTransaction =
 
 @Component({
   selector: 'app-history',
-  imports: [CoinCardComponent, FiatCardComponent],
+  imports: [CoinCardComponent, FiatCardComponent, SelectionTabsComponent],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss',
 })
@@ -22,6 +23,9 @@ export class HistoryComponent {
   private allFiatTransactions: WalletTransaction[] = [];
 
   dataLoaded = false;
+
+  options: string[] = ['all', 'fiat', 'coin'];
+  activeOption: string = 'all';
 
   constructor(
     private coinTransactionService: CoinTransactionService,
@@ -59,6 +63,10 @@ export class HistoryComponent {
     return (tx as any).type === 'fiat';
   }
 
+  onFilterTransactions(option: string) {
+    this.activeOption = option;
+  }
+
   // Private helper methods
   private mergeAndSortTransactions(
     coinTxs: CoinTransaction[],
@@ -75,11 +83,20 @@ export class HistoryComponent {
     );
   }
 
+  private filterTransactions(
+    transactions: MergedTransaction[],
+    option: string
+  ): MergedTransaction[] {
+    if (option === 'all') return transactions;
+    return transactions.filter((tx) => tx.type === option);
+  }
+
   // Getters
   get sortedMergedTransactions(): MergedTransaction[] {
-    return this.mergeAndSortTransactions(
+    const merged = this.mergeAndSortTransactions(
       this.allCoinTransactions,
       this.allFiatTransactions
     );
+    return this.filterTransactions(merged, this.activeOption);
   }
 }
