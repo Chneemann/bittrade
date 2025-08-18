@@ -74,6 +74,7 @@ export class HistoryComponent {
 
   onFilterTransactions(option: string) {
     this.activeOption = option;
+    this.currentPage = 1;
   }
 
   onPageChange(page: number) {
