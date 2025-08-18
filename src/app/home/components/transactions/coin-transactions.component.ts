@@ -4,10 +4,16 @@ import { ActivatedRoute } from '@angular/router';
 import { CoinCardComponent } from './coin-card/coin-card.component';
 import { CoinTransactionService } from '../../services/coin-transactions.service';
 import { SelectionTabsComponent } from '../../../shared/components/selection-tabs/selection-tabs.component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-coin-transactions',
-  imports: [CommonModule, CoinCardComponent, SelectionTabsComponent],
+  imports: [
+    CommonModule,
+    CoinCardComponent,
+    SelectionTabsComponent,
+    PaginationComponent,
+  ],
   templateUrl: './coin-transactions.component.html',
   styleUrl: './coin-transactions.component.scss',
 })
@@ -17,6 +23,10 @@ export class CoinTransactionsComponent implements OnInit {
   filteredTransactions: any[] = [];
 
   dataLoaded = false;
+
+  currentPage = 1;
+  itemsPerPage = 8;
+
   options: string[] = ['all', 'buy', 'sell'];
   activeOption: string = 'all';
 
@@ -29,13 +39,24 @@ export class CoinTransactionsComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.selectedCoinId = params.get('id');
-
       if (this.selectedCoinId) {
         this.loadTransactions(this.selectedCoinId);
       }
     });
   }
 
+  // Public methods
+  onFilterTransactions(option: string): void {
+    this.activeOption = option;
+    this.currentPage = 1;
+    this.applyFilter();
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+  }
+
+  // Public helper methods
   loadTransactions(coinId: string): void {
     this.coinTransactionService
       .getTransactionsByCoin(coinId)
@@ -47,11 +68,6 @@ export class CoinTransactionsComponent implements OnInit {
       });
   }
 
-  onFilterTransactions(option: string) {
-    this.activeOption = option;
-    this.applyFilter();
-  }
-
   applyFilter(): void {
     if (this.activeOption === 'all') {
       this.filteredTransactions = [...this.allTransactions];
@@ -60,5 +76,12 @@ export class CoinTransactionsComponent implements OnInit {
         (tx) => tx.transaction_type === this.activeOption
       );
     }
+  }
+
+  // Getters
+  get pagedTransactions(): any[] {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.filteredTransactions.slice(start, end);
   }
 }

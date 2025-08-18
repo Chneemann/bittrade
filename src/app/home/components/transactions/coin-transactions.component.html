@@ -1,19 +1,31 @@
 @if (selectedCoinId) {
 <div class="transaction-list">
+  <!-- Filter Tabs -->
   <app-selection-tabs
     [options]="options"
     [activeOption]="activeOption"
     (optionSelected)="onFilterTransactions($event)"
-  ></app-selection-tabs>
+  >
+  </app-selection-tabs>
 
   @if (!dataLoaded) {
   <p class="loading-container">Loading transactions...</p>
   } @else {
   <!-- Transaction cards -->
   @if (filteredTransactions.length !== 0) { @for (transaction of
-  filteredTransactions; track $index) {
+  pagedTransactions; track $index) {
   <app-coin-card [transaction]="transaction"></app-coin-card>
-  } } @else {
+  }
+
+  <!-- Pagination -->
+  <app-pagination
+    [totalItems]="filteredTransactions.length"
+    [itemsPerPage]="itemsPerPage"
+    [currentPage]="currentPage"
+    (pageChange)="onPageChange($event)"
+  >
+  </app-pagination>
+  } @else {
   <div class="no-transactions-container">
     <p>No transactions found</p>
   </div>
