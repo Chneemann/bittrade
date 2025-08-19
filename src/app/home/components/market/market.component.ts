@@ -22,6 +22,7 @@ import { CoinCardComponent } from '../../../shared/components/coins/coin-card/co
 import { CoinUpdateService } from '../../services/coin-update.service';
 import { MarketHeaderComponent } from './market-header/market-header.component';
 import { SelectionTabsComponent } from '../../../shared/components/selection-tabs/selection-tabs.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-market',
@@ -30,6 +31,7 @@ import { SelectionTabsComponent } from '../../../shared/components/selection-tab
     CoinCardComponent,
     MarketHeaderComponent,
     SelectionTabsComponent,
+    LoadingComponent,
   ],
   templateUrl: './market.component.html',
   styleUrl: './market.component.scss',

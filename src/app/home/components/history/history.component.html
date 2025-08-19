@@ -6,7 +6,7 @@
   ></app-selection-tabs>
 
   @if (!dataLoaded) {
-  <p class="loading-container">Loading transactions...</p>
+  <app-loading text="Loading transactions..."></app-loading>
   } @else {
   <div class="transaction-list">
     @if (sortedMergedTransactions.length !== 0) { @for (tx of pagedTransactions;

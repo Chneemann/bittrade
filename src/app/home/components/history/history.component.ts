@@ -8,6 +8,7 @@ import { WalletTransaction } from '../../models/wallet.model';
 import { FiatCardComponent } from '../transactions/fiat-card/fiat-card.component';
 import { SelectionTabsComponent } from '../../../shared/components/selection-tabs/selection-tabs.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 type MergedTransaction =
   | (CoinTransaction & { type: 'coin' })
@@ -20,6 +21,7 @@ type MergedTransaction =
     FiatCardComponent,
     SelectionTabsComponent,
     PaginationComponent,
+    LoadingComponent,
   ],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss',

@@ -9,7 +9,7 @@
   </app-selection-tabs>
 
   @if (!dataLoaded) {
-  <p class="loading-container">Loading transactions...</p>
+  <app-loading text="Loading transactions..."></app-loading>
   } @else {
   <!-- Transaction cards -->
   @if (filteredTransactions.length !== 0) { @for (transaction of

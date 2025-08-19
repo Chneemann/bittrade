@@ -23,6 +23,7 @@ import { CoinDetailChartComponent } from './coin-detail-chart/coin-detail-chart.
 import { CoinGeckoCacheService } from '../../../core/services/external/coin-gecko-cache.service';
 import { CoinDetailHoldingsComponent } from './coin-detail-holdings/coin-detail-holdings.component';
 import { PrimaryButtonComponent } from '../../../shared/components/buttons/primary-button/primary-button.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-coin-detail',
@@ -33,6 +34,7 @@ import { PrimaryButtonComponent } from '../../../shared/components/buttons/prima
     CoinDetailChartComponent,
     CoinDetailHoldingsComponent,
     PrimaryButtonComponent,
+    LoadingComponent,
   ],
   templateUrl: './coin-detail.component.html',
   styleUrl: './coin-detail.component.scss',

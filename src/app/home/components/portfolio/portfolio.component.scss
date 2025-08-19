@@ -12,8 +12,7 @@ app-holdings-card {
   width: 100%;
 }
 
-// Loading and no holdings container
-.loading-container,
+// No holdings container
 .no-holdings-container {
   display: flex;
   justify-content: center;
@@ -23,20 +22,4 @@ app-holdings-card {
   font-weight: 400;
 
   height: 60px;
-}
-
-.loading-container {
-  animation: pulseText 1.5s infinite ease-in-out;
-}
-
-@keyframes pulseText {
-  0% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.2;
-  }
 }

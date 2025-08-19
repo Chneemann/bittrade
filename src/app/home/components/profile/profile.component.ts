@@ -5,10 +5,11 @@ import { UserService } from '../../services/user.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { UserProfile } from '../../models/user.model';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, RouterLink, PrimaryButtonComponent],
+  imports: [CommonModule, RouterLink, PrimaryButtonComponent, LoadingComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })

@@ -5,6 +5,7 @@ import { CoinCardComponent } from './coin-card/coin-card.component';
 import { CoinTransactionService } from '../../services/coin-transactions.service';
 import { SelectionTabsComponent } from '../../../shared/components/selection-tabs/selection-tabs.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-coin-transactions',
@@ -13,6 +14,7 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
     CoinCardComponent,
     SelectionTabsComponent,
     PaginationComponent,
+    LoadingComponent,
   ],
   templateUrl: './coin-transactions.component.html',
   styleUrl: './coin-transactions.component.scss',
