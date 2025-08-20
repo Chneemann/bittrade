@@ -25,33 +25,18 @@ export class HoldingsCardComponent {
     this.wallet$ = this.walletService.getWallet();
   }
 
-  private getSlug(name: string): string {
-    return name.toLowerCase();
-  }
-
+  // Getters
   get totalPortfolioAmount(): number {
     return this.holdings.reduce((total, holding) => {
-      const price = this.prices[this.getSlug(holding.coin.name)]?.usd ?? 0;
+      const price = this.prices[holding.coin.name.toLowerCase()]?.usd ?? 0;
       return total + price * holding.amount;
     }, 0);
   }
 
-  get totalPortfolioChange24h(): number {
-    let current = 0;
-    let previous = 0;
-
-    for (const { coin, amount } of this.holdings) {
-      const data = this.prices[this.getSlug(coin.name)];
-      if (!data) continue;
-
-      const valueNow = data.usd * amount;
-      const valueBefore = valueNow / (1 + (data.usd_24h_change ?? 0) / 100);
-
-      current += valueNow;
-      previous += valueBefore;
-    }
-
-    return previous === 0 ? 0 : (current - previous) / previous;
+  get totalPortfolioChange(): number {
+    const current = this.totalPortfolioAmount;
+    const previous = this.totalInvestedValue;
+    return (current - previous) / previous;
   }
 
   get totalInvestedValue(): number {

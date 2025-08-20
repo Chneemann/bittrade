@@ -8,7 +8,10 @@
         {{ totalPortfolioAmount | currency : "USD" : "symbol" : "1.2-2" }}
       </span>
       <span class="percentage">
-        {{ totalPortfolioChange24h | percent : "1.2-2" }}
+        {{
+          (totalPortfolioChange >= 0 ? "+" : "") +
+            (totalPortfolioChange | percent : "1.2-2")
+        }}
       </span>
     </div>
   </div>
