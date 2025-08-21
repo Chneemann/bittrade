@@ -3,12 +3,26 @@ export interface UserProfile {
   username: string;
   email: string;
   verified: boolean;
-  coin_purchases: number;
-  coin_sales: number;
-  held_coins: number;
-  wallet_fiat_deposits: number;
-  wallet_fiat_withdrawals: number;
-  wallet_total_balance: number;
+  coinPurchases: number;
+  coinSales: number;
+  heldCoins: number;
+  walletFiatDeposits: number;
+  walletFiatWithdrawals: number;
+  walletTotalBalance: number;
+}
+
+function snakeToCamel(s: string): string {
+  return s.replace(/(_\w)/g, (m) => m[1].toUpperCase());
+}
+
+export function mapApiToCamel<T>(apiData: any): T {
+  const result: any = {};
+  for (const key in apiData) {
+    if (apiData.hasOwnProperty(key)) {
+      result[snakeToCamel(key)] = apiData[key];
+    }
+  }
+  return result;
 }
 
 export interface UserProfileUpdate {

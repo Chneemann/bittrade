@@ -4,7 +4,7 @@ import { catchError, map, tap, shareReplay } from 'rxjs/operators';
 import { BackendApiService } from '../../core/services/backend-api.service';
 import { CoinGeckoCacheService } from '../../core/services/external/coin-gecko-cache.service';
 import { UserService } from '../../home/services/user.service';
-import { UserProfile } from '../../home/models/user.model';
+import { mapApiToCamel, UserProfile } from '../../home/models/user.model';
 import { HttpParams } from '@angular/common/http';
 import { LoginCredentials, RegisterCredentials } from '../models/auth.model';
 
@@ -25,6 +25,7 @@ export class AuthService {
     if (this.authCheck$) return this.authCheck$;
 
     this.authCheck$ = this.backendApiService.get<UserProfile>('/auth/me/').pipe(
+      map((apiData) => mapApiToCamel<UserProfile>(apiData)),
       tap((profile) => {
         this.loggedInSubject.next(true);
         this.userService.setProfile(profile);
