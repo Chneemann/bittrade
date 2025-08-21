@@ -4,9 +4,10 @@ import { catchError, map, tap, shareReplay } from 'rxjs/operators';
 import { BackendApiService } from '../../core/services/backend-api.service';
 import { CoinGeckoCacheService } from '../../core/services/external/coin-gecko-cache.service';
 import { UserService } from '../../home/services/user.service';
-import { mapApiToCamel, UserProfile } from '../../home/models/user.model';
 import { HttpParams } from '@angular/common/http';
 import { LoginCredentials, RegisterCredentials } from '../models/auth.model';
+import { mapApiToCamel } from '../../core/utils/api-mapper';
+import { UserProfile } from '../../home/models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
