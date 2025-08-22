@@ -11,10 +11,10 @@ export interface WalletUpdateResponse {
 
 export interface WalletTransaction {
   id: string;
-  transaction_type: 'deposit' | 'withdrawal';
-  transaction_source: string;
+  transactionType: 'deposit' | 'withdrawal';
+  transactionSource: string;
   amount: number;
-  created_at: string;
+  createdAt: string;
 }
 
 export enum WalletTransactionType {

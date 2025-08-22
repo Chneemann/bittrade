@@ -44,7 +44,7 @@ export class SuccessModalComponent {
     result: CoinTransactionCreateDto | number | null
   ): result is CoinTransactionCreateDto {
     return (
-      result != null && typeof result === 'object' && 'price_per_coin' in result
+      result != null && typeof result === 'object' && 'pricePerCoin' in result
     );
   }
 

@@ -116,12 +116,12 @@ export class BuySellComponent implements OnInit {
     const priceUSD = this.currentCoin?.market_data?.current_price?.['usd'] ?? 0;
 
     const transaction: CoinTransactionCreateDto = {
-      transaction_type: this.mode,
+      transactionType: this.mode,
       amount:
         this.mode === CoinTransactionType.BUY
           ? parseFloat((this.amount / priceUSD).toFixed(6))
           : parseFloat(this.amount.toFixed(6)),
-      price_per_coin: priceUSD,
+      pricePerCoin: priceUSD,
     };
 
     this.previewTransaction = transaction;
@@ -315,9 +315,9 @@ export class BuySellComponent implements OnInit {
   private handleBuyTransaction(amount: number, priceUSD: number) {
     const amountInCoins = parseFloat((amount / priceUSD).toFixed(6));
     const transaction: CoinTransactionCreateDto = {
-      transaction_type: CoinTransactionType.BUY,
+      transactionType: CoinTransactionType.BUY,
       amount: amountInCoins,
-      price_per_coin: priceUSD,
+      pricePerCoin: priceUSD,
     };
 
     this.processTransaction(transaction, () => {
@@ -331,9 +331,9 @@ export class BuySellComponent implements OnInit {
   private handleSellTransaction(amount: number, priceUSD: number) {
     const amountInFiat = parseFloat((amount * priceUSD).toFixed(2));
     const transaction: CoinTransactionCreateDto = {
-      transaction_type: CoinTransactionType.SELL,
+      transactionType: CoinTransactionType.SELL,
       amount: amount,
-      price_per_coin: priceUSD,
+      pricePerCoin: priceUSD,
     };
 
     this.updateWalletBalance(

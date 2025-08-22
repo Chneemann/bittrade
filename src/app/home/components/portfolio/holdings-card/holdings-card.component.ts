@@ -41,7 +41,7 @@ export class HoldingsCardComponent {
 
   get totalInvestedValue(): number {
     return this.holdings.reduce(
-      (sum, h) => sum + h.amount * h.average_buy_price,
+      (sum, h) => sum + h.amount * h.averageBuyPrice,
       0
     );
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { BackendApiService } from '../../core/services/backend-api.service';
 import {
   Wallet,
@@ -8,6 +8,7 @@ import {
   WalletUpdateResponse,
   WalletTransaction,
 } from '../models/wallet.model';
+import { mapApiToCamel, mapCamelToApi } from '../../core/utils/api-mapper';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
@@ -20,27 +21,28 @@ export class WalletService {
   getWalletTransactionsBySource(
     source: 'fiat' | 'coin'
   ): Observable<WalletTransaction[]> {
-    return this.backendApi.get<WalletTransaction[]>(
-      `/api/me/wallet/transactions/${source}/`
-    );
+    return this.backendApi
+      .get<WalletTransaction[]>(`/api/me/wallet/transactions/${source}/`)
+      .pipe(
+        map((transactions) =>
+          transactions.map((tx) => mapApiToCamel<WalletTransaction>(tx))
+        )
+      );
   }
 
   changeWalletBalance(
     amount: number,
-    transactionType:
-      | WalletTransactionType.DEPOSIT
-      | WalletTransactionType.WITHDRAW,
-    transactionSource:
-      | WalletTransactionSource.FIAT
-      | WalletTransactionSource.COIN
+    transactionType: WalletTransactionType,
+    transactionSource: WalletTransactionSource
   ): Observable<WalletUpdateResponse> {
     const endpoint = `/api/me/wallet/${transactionType}/`;
-    return this.backendApi.post<
-      WalletUpdateResponse,
-      { amount: number; transaction_source: string }
-    >(endpoint, {
-      amount: amount,
-      transaction_source: transactionSource,
+    const payload = mapCamelToApi({
+      amount,
+      transactionSource,
     });
+
+    return this.backendApi
+      .post<WalletUpdateResponse, any>(endpoint, payload)
+      .pipe(map((res) => mapApiToCamel<WalletUpdateResponse>(res)));
   }
 }

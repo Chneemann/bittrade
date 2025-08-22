@@ -16,26 +16,24 @@
         >Amount: {{ transaction.amount | number : "1.0-8" }}</span
       >
       <span class="label-price"
-        >Price: ${{ transaction.price_per_coin | number : "1.2-2" }}</span
+        >Price: ${{ transaction.pricePerCoin | number : "1.2-2" }}</span
       >
     </div>
     <div class="transaction-info">
       <p class="total-value">
-        ${{
-          transaction.amount * transaction.price_per_coin | number : "1.2-2"
-        }}
+        ${{ transaction.amount * transaction.pricePerCoin | number : "1.2-2" }}
       </p>
       <span class="transaction-date">{{
-        transaction.created_at | date : "short"
+        transaction.createdAt | date : "short"
       }}</span>
       <span
         class="transaction-type"
         [ngClass]="{
-          positive: transaction.transaction_type === 'buy',
-          negative: transaction.transaction_type === 'sell'
+          positive: transaction.transactionType === 'buy',
+          negative: transaction.transactionType === 'sell'
         }"
       >
-        {{ transaction.transaction_type }}
+        {{ transaction.transactionType }}
       </span>
     </div>
   </div>

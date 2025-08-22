@@ -16,16 +16,16 @@
     <div class="transaction-info">
       <p class="total-value">${{ transaction.amount | number : "1.2-2" }}</p>
       <span class="transaction-date">{{
-        transaction.created_at | date : "short"
+        transaction.createdAt | date : "short"
       }}</span>
       <span
         class="transaction-type"
         [ngClass]="{
-          positive: transaction.transaction_type === 'deposit',
-          negative: transaction.transaction_type === 'withdrawal'
+          positive: transaction.transactionType === 'deposit',
+          negative: transaction.transactionType === 'withdrawal'
         }"
       >
-        {{ transaction.transaction_type }}
+        {{ transaction.transactionType }}
       </span>
     </div>
   </div>

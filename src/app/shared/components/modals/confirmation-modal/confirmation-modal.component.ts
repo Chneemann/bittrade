@@ -33,7 +33,7 @@ export class ConfirmationModalComponent {
     result: CoinTransactionCreateDto | number | null
   ): result is CoinTransactionCreateDto {
     return (
-      result != null && typeof result === 'object' && 'price_per_coin' in result
+      result != null && typeof result === 'object' && 'pricePerCoin' in result
     );
   }
 
@@ -54,7 +54,7 @@ export class ConfirmationModalComponent {
   get totalPrice(): number {
     if (!this.isCoinTransaction(this.previewTransaction)) return 0;
     return (
-      this.previewTransaction.amount * this.previewTransaction.price_per_coin
+      this.previewTransaction.amount * this.previewTransaction.pricePerCoin
     );
   }
 }

@@ -27,7 +27,7 @@
       {{ mode === CoinTransactionType.BUY ? "Spent" : "Received" }}:
       <strong>
         {{
-          transactionResult.amount * transactionResult.price_per_coin
+          transactionResult.amount * transactionResult.pricePerCoin
             | currency : "USD" : "symbol" : "1.2-2"
         }}
       </strong>

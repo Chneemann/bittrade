@@ -63,21 +63,21 @@ export interface BaseCoin {
 }
 
 export interface CoinTransactionCreateDto {
-  transaction_type: 'buy' | 'sell';
+  transactionType: 'buy' | 'sell';
   amount: number;
-  price_per_coin: number;
+  pricePerCoin: number;
 }
 
 export interface CoinTransaction extends CoinTransactionCreateDto {
   id: string;
   coin: BaseCoin;
-  created_at: string;
+  createdAt: string;
 }
 
 export interface CoinHolding {
   id: string;
   coin: BaseCoin;
   amount: number;
-  average_buy_price: number;
-  not_holding: boolean;
+  averageBuyPrice: number;
+  notHolding: boolean;
 }
