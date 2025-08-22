@@ -183,7 +183,7 @@ export class EditProfileComponent implements OnInit {
 
     const previousEmail = this.originalProfile?.email;
     const currentEmail = profile.email;
-    const unconfirmedEmail = profile.unconfirmed_email;
+    const unconfirmedEmail = profile.unconfirmedEmail;
 
     if (currentUsername && currentUsername !== previousUsername) {
       this.showFeedbackMessage('success', 'Username successfully updated.');

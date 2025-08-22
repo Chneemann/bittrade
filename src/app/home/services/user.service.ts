@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { BackendApiService } from '../../core/services/backend-api.service';
 import { UserProfile, UserProfileUpdate } from '../models/user.model';
-import { switchMap, take, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
+import { mapCamelToApi, mapApiToCamel } from '../../core/utils/api-mapper';
 
 @Injectable({
   providedIn: 'root',
@@ -32,12 +33,17 @@ export class UserService {
   updateProfile(
     updatedProfile: Partial<UserProfileUpdate>
   ): Observable<UserProfile> {
+    const payload = mapCamelToApi(updatedProfile);
+
     return this.backendApi
       .patch<UserProfile, Partial<UserProfileUpdate>>(
         '/auth/me/update/',
-        updatedProfile
+        payload
       )
-      .pipe(tap((profile) => this.userProfileSubject.next(profile)));
+      .pipe(
+        map((apiResponse) => mapApiToCamel<UserProfile>(apiResponse)),
+        tap((profile) => this.userProfileSubject.next(profile))
+      );
   }
 
   setProfile(profile: UserProfile): void {
