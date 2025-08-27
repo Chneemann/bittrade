@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { CoinGeckoApiService } from './coin-gecko-api.service';
 import {
   Cached,
@@ -16,7 +16,7 @@ import { CoinGeckoCacheService } from './coin-gecko-cache.service';
 export class CoinGeckoService {
   constructor(
     private apiService: CoinGeckoApiService,
-    private cacheService: CoinGeckoCacheService
+    private coinGeckoCacheService: CoinGeckoCacheService
   ) {}
 
   /**
@@ -36,14 +36,14 @@ export class CoinGeckoService {
    */
   getCoinData(coinId: string): Observable<Cached<Coin>> {
     const formattedId = this.formatCoinId(coinId);
-    const key = `${this.cacheService.coinStorageKey}${formattedId}`;
-    const cached = this.cacheService.getCachedData<Coin>(key);
+    const key = `${this.coinGeckoCacheService.coinStorageKey}${formattedId}`;
+    const cached = this.coinGeckoCacheService.getCachedData<Coin>(key);
 
     if (cached) {
       return of({ data: cached.data, timestamp: cached.timestamp });
     } else {
       return this.apiService.getApiCoinData(coinId).pipe(
-        tap((data) => this.cacheService.setCache(key, data)),
+        tap((data) => this.coinGeckoCacheService.setCache(key, data)),
         map((data) => ({ data, timestamp: Date.now() }))
       );
     }
@@ -56,8 +56,8 @@ export class CoinGeckoService {
    * @returns Observable emitting Cached<CoinPricesResponse>
    */
   getCoinPrices(coinIds: string[]): Observable<Cached<CoinPricesResponse>> {
-    const cached = this.cacheService.getCachedData<CoinPricesResponse>(
-      this.cacheService.coinPricesStorageKey
+    const cached = this.coinGeckoCacheService.getCachedData<CoinPricesResponse>(
+      this.coinGeckoCacheService.coinPricesStorageKey
     );
 
     if (cached) {
@@ -65,8 +65,8 @@ export class CoinGeckoService {
     } else {
       return this.apiService.getApiCoinPrices(coinIds).pipe(
         tap((data) =>
-          this.cacheService.setCache(
-            this.cacheService.coinPricesStorageKey,
+          this.coinGeckoCacheService.setCache(
+            this.coinGeckoCacheService.coinPricesStorageKey,
             data
           )
         ),
@@ -89,20 +89,21 @@ export class CoinGeckoService {
     const formattedId = this.formatCoinId(coinId);
     const cacheKey = `${formattedId}${days}`;
 
-    const cache = this.cacheService.getMarketChartCache();
+    const cache = this.coinGeckoCacheService.getMarketChartCache();
 
     const cachedEntry = cache[cacheKey];
     if (
       cachedEntry &&
-      Date.now() - cachedEntry.timestamp < this.cacheService.defaultTtlMs
+      Date.now() - cachedEntry.timestamp <
+        this.coinGeckoCacheService.defaultTtlMs
     ) {
       return of(cachedEntry);
     } else {
       return this.apiService.getApiMarketChartData(coinId, days).pipe(
         tap((data) => {
-          const updatedCache = this.cacheService.getMarketChartCache();
+          const updatedCache = this.coinGeckoCacheService.getMarketChartCache();
           updatedCache[cacheKey] = { data, timestamp: Date.now() };
-          this.cacheService.setMarketChartCache(updatedCache);
+          this.coinGeckoCacheService.setMarketChartCache(updatedCache);
         }),
         map((data) => ({ data, timestamp: Date.now() }))
       );
@@ -118,8 +119,8 @@ export class CoinGeckoService {
   refreshCoinPricesAndMarketCharts(
     coinIds: string[]
   ): Observable<Cached<CoinPricesResponse>> {
-    this.cacheService.clearCoinPriceCache();
-    this.cacheService.clearMarketChartDataCache();
+    this.coinGeckoCacheService.clearCoinPriceCache();
+    this.coinGeckoCacheService.clearMarketChartDataCache();
     return this.getCoinPrices(coinIds);
   }
 
@@ -130,8 +131,8 @@ export class CoinGeckoService {
    */
   refreshCoinData(coinId: string): Observable<Cached<Coin>> {
     const formattedId = this.formatCoinId(coinId);
-    const key = `${this.cacheService.coinStorageKey}${formattedId}`;
-    this.cacheService.clearCache(key);
+    const key = `${this.coinGeckoCacheService.coinStorageKey}${formattedId}`;
+    this.coinGeckoCacheService.clearCache(key);
     return this.getCoinData(coinId);
   }
 
@@ -143,9 +144,9 @@ export class CoinGeckoService {
   clearMarketChartCacheForCoin(coinId: string, days: string): void {
     const formattedId = this.formatCoinId(coinId);
     const cacheKey = `${formattedId}${days}`;
-    const cache = this.cacheService.getMarketChartCache();
+    const cache = this.coinGeckoCacheService.getMarketChartCache();
     delete cache[cacheKey];
-    this.cacheService.setMarketChartCache(cache);
+    this.coinGeckoCacheService.setMarketChartCache(cache);
   }
 
   /**

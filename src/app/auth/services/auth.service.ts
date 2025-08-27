@@ -8,6 +8,7 @@ import { HttpParams } from '@angular/common/http';
 import { LoginCredentials, RegisterCredentials } from '../models/auth.model';
 import { mapApiToCamel } from '../../core/utils/api-mapper';
 import { UserProfile } from '../../home/models/user.model';
+import { CoinCacheService } from '../../home/services/coin-cache.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -19,6 +20,7 @@ export class AuthService {
   constructor(
     private backendApiService: BackendApiService,
     private coinGeckoCacheService: CoinGeckoCacheService,
+    private coinCacheService: CoinCacheService,
     private userService: UserService
   ) {}
 
@@ -50,6 +52,7 @@ export class AuthService {
         tap(() => {
           this.loggedInSubject.next(true);
           this.authCheck$ = null;
+          this.queueCoinCache();
         })
       );
   }
@@ -96,6 +99,14 @@ export class AuthService {
       '/auth/verify-email/',
       new HttpParams({ fromObject: { uid, token } })
     );
+  }
+
+  private queueCoinCache(): void {
+    this.coinCacheService.queueCoinCache().subscribe({
+      error: () => {
+        console.error('Error refreshing coin cache');
+      },
+    });
   }
 
   private clearSession(): void {
