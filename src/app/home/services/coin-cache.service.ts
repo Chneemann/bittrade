@@ -14,6 +14,6 @@ export class CoinCacheService {
   }
 
   queueCoinCache(): Observable<string[]> {
-    return this.backendApi.post<string[], {}>('/api/coins/cache/queue/', {});
+    return this.backendApi.post<string[], {}>('/api/coins/cache/', {});
   }
 }
