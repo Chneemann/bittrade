@@ -3,7 +3,7 @@
   @if (holdings$ | async; as holdings) {
   <app-holdings-card
     [holdings]="holdings"
-    [prices]="prices.data"
+    [prices]="prices"
   ></app-holdings-card>
   @if (filteredCoins$ | async; as coins) { @if (coins.length > 0) { @for (coin
   of coins; track coin.symbol) {
@@ -12,8 +12,10 @@
       [coin]="{
         name: coin.name,
         symbol: coin.symbol,
-        price: getPriceAmount(coin.name, coin.symbol, prices.data, holdings),
-        change: prices.data[coin.name.toLowerCase()].usd_24h_change,
+        price: getPriceAmount(coin.name, coin.symbol, prices, holdings),
+        change:
+          prices[coin.name.toLowerCase()].market_data
+            .price_change_percentage_24h,
         holding: getHoldingAmount(coin.symbol, holdings)
       }"
     ></app-coin-card>

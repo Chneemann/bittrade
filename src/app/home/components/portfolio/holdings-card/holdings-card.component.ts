@@ -28,7 +28,9 @@ export class HoldingsCardComponent {
   // Getters
   get totalPortfolioAmount(): number {
     return this.holdings.reduce((total, holding) => {
-      const price = this.prices[holding.coin.name.toLowerCase()]?.usd ?? 0;
+      const price =
+        this.prices[holding.coin.name.toLowerCase()]?.market_data
+          ?.current_price?.['usd'] ?? 0;
       return total + price * holding.amount;
     }, 0);
   }

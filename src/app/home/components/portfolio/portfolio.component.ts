@@ -8,13 +8,11 @@ import {
   switchMap,
 } from 'rxjs';
 import {
-  Cached,
   CoinHolding,
   CoinList,
   CoinListResponse,
   CoinPricesResponse,
 } from '../../models/coin.model';
-import { CoinGeckoService } from '../../../core/services/external/coin-gecko.service';
 import { CoinListService } from '../../services/coin-list.service';
 import { CoinUpdateService } from '../../services/coin-update.service';
 import { CoinCardComponent } from '../../../shared/components/coins/coin-card/coin-card.component';
@@ -23,6 +21,7 @@ import { Router } from '@angular/router';
 import { CoinHoldingsService } from '../../services/coin-holdings.service';
 import { HoldingsCardComponent } from './holdings-card/holdings-card.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { CoinCacheService } from '../../services/coin-cache.service';
 
 @Component({
   selector: 'app-portfolio',
@@ -40,17 +39,17 @@ export class PortfolioComponent {
 
   averageChange24h: number | null = null;
 
-  coinPrices$!: Observable<Cached<CoinPricesResponse>>;
+  coinPrices$!: Observable<CoinPricesResponse>;
   coinList$!: Observable<CoinListResponse>;
   holdings$!: Observable<CoinHolding[]>;
   filteredCoins$!: Observable<CoinListResponse>;
 
   constructor(
     private router: Router,
-    private coinGeckoService: CoinGeckoService,
     private coinListService: CoinListService,
     private coinUpdateService: CoinUpdateService,
-    private coinHoldingsService: CoinHoldingsService
+    private coinHoldingsService: CoinHoldingsService,
+    private coinCacheService: CoinCacheService
   ) {}
 
   ngOnInit(): void {
@@ -84,27 +83,20 @@ export class PortfolioComponent {
 
   private fetchCoinPrices(): void {
     this.coinPrices$ = this.coinList$.pipe(
-      switchMap((coins) => {
-        const coinIds = coins.map((c) => c.name.toLowerCase());
-        return this.coinGeckoService.getCoinPrices(coinIds);
-      }),
+      switchMap(() => this.coinCacheService.getCoinCache()),
       shareReplay({ bufferSize: 1, refCount: true })
     );
-
     this.averageChange();
   }
 
   private averageChange(): void {
-    this.coinPrices$.subscribe((cachedData) => {
-      const data = cachedData.data;
-      const changes = Object.values(data)
-        .map((coin) => coin.usd_24h_change)
+    this.coinPrices$.subscribe((prices) => {
+      const changes = Object.values(prices)
+        .map((coin) => coin.market_data.price_change_24h_in_currency['usd'])
         .filter((change) => typeof change === 'number');
 
       const total = changes.reduce((sum, value) => sum + value, 0);
-      const avg = changes.length > 0 ? total / changes.length : 0;
-
-      this.averageChange24h = avg;
+      this.averageChange24h = changes.length > 0 ? total / changes.length : 0;
     });
   }
 
@@ -123,12 +115,12 @@ export class PortfolioComponent {
   }
 
   updateCoinPrices(): void {
-    this.coinPrices$ = this.coinList$.pipe(
-      switchMap((coins) => {
-        const coinIds = coins.map((c) => c.name.toLowerCase());
-        return this.coinGeckoService.refreshCoinPricesAndMarketCharts(coinIds);
-      })
-    );
+    //  this.coinPrices$ = this.coinList$.pipe(
+    //    switchMap((coins) => {
+    //      const coinIds = coins.map((c) => c.name.toLowerCase());
+    //      return this.coinGeckoService.refreshCoinPricesAndMarketCharts(coinIds);
+    //    })
+    //  );
   }
 
   onCoinClick(coin: CoinList): void {
@@ -148,7 +140,8 @@ export class PortfolioComponent {
     prices: CoinPricesResponse,
     holdings: CoinHolding[]
   ): number {
-    const coinPrice = prices[slug.toLowerCase()].usd ?? 0;
+    const coinPrice =
+      prices[slug.toLowerCase()].market_data.current_price['usd'] ?? 0;
     const holdingAmount = this.getHoldingAmount(symbol, holdings);
 
     return coinPrice * holdingAmount;

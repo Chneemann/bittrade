@@ -27,13 +27,8 @@ export interface Cached<T> {
   readonly timestamp: number;
 }
 
-export interface CoinPrice {
-  readonly usd: number;
-  readonly usd_24h_change: number;
-}
-
 export interface CoinPricesResponse {
-  readonly [coinId: string]: CoinPrice;
+  readonly [coinId: string]: Coin;
 }
 
 export type CoinList = {

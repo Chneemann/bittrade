@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BackendApiService } from '../../core/services/backend-api.service';
-import { Coin } from '../models/coin.model';
+import { Coin, CoinPricesResponse } from '../models/coin.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,8 +9,8 @@ import { Coin } from '../models/coin.model';
 export class CoinCacheService {
   constructor(private backendApi: BackendApiService) {}
 
-  getCoinCache(): Observable<Record<string, Coin>> {
-    return this.backendApi.get<Record<string, Coin>>('/api/coins/cache/');
+  getCoinCache(): Observable<CoinPricesResponse> {
+    return this.backendApi.get<CoinPricesResponse>('/api/coins/cache/');
   }
 
   queueCoinCache(): Observable<string[]> {

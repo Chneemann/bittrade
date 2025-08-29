@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CoinGeckoService } from '../../../core/services/external/coin-gecko.service';
 import {
   BehaviorSubject,
   combineLatest,
@@ -11,7 +10,6 @@ import {
 } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import {
-  Cached,
   CoinList,
   CoinListResponse,
   CoinPricesResponse,
@@ -23,6 +21,7 @@ import { CoinUpdateService } from '../../services/coin-update.service';
 import { MarketHeaderComponent } from './market-header/market-header.component';
 import { SelectionTabsComponent } from '../../../shared/components/selection-tabs/selection-tabs.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { CoinCacheService } from '../../services/coin-cache.service';
 
 @Component({
   selector: 'app-market',
@@ -45,15 +44,15 @@ export class MarketComponent implements OnInit {
 
   private searchText$ = new BehaviorSubject<string>('');
 
-  coinPrices$!: Observable<Cached<CoinPricesResponse>>;
+  coinPrices$!: Observable<CoinPricesResponse>;
   coinList$!: Observable<CoinListResponse>;
   filteredCoins$!: Observable<CoinListResponse>;
 
   constructor(
     private router: Router,
-    private coinGeckoService: CoinGeckoService,
     private coinListService: CoinListService,
-    private coinUpdateService: CoinUpdateService
+    private coinUpdateService: CoinUpdateService,
+    private coinCacheService: CoinCacheService
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +74,7 @@ export class MarketComponent implements OnInit {
             coin.symbol.toLowerCase().includes(search)
           );
         });
-        return this.filterByOption(filteredBySearch, priceData.data);
+        return this.filterByOption(filteredBySearch, priceData);
       })
     );
   }
@@ -87,11 +86,15 @@ export class MarketComponent implements OnInit {
     switch (this.activeOption) {
       case 'gainers':
         return coins.filter(
-          (coin) => priceData[coin.name.toLowerCase()]?.usd_24h_change > 0
+          (coin) =>
+            priceData[coin.name.toLowerCase()]?.market_data
+              .price_change_24h_in_currency['usd'] > 0
         );
       case 'losers':
         return coins.filter(
-          (coin) => priceData[coin.name.toLowerCase()]?.usd_24h_change < 0
+          (coin) =>
+            priceData[coin.name.toLowerCase()]?.market_data
+              .price_change_24h_in_currency['usd'] < 0
         );
       default:
         return coins;
@@ -111,27 +114,20 @@ export class MarketComponent implements OnInit {
 
   private fetchCoinPrices(): void {
     this.coinPrices$ = this.coinList$.pipe(
-      switchMap((coins) => {
-        const coinIds = coins.map((c) => c.name.toLowerCase());
-        return this.coinGeckoService.getCoinPrices(coinIds);
-      }),
+      switchMap(() => this.coinCacheService.getCoinCache()),
       shareReplay({ bufferSize: 1, refCount: true })
     );
-
     this.averageChange();
   }
 
   private averageChange(): void {
-    this.coinPrices$.subscribe((cachedData) => {
-      const data = cachedData.data;
-      const changes = Object.values(data)
-        .map((coin) => coin.usd_24h_change)
+    this.coinPrices$.subscribe((prices) => {
+      const changes = Object.values(prices)
+        .map((coin) => coin.market_data.price_change_percentage_24h)
         .filter((change) => typeof change === 'number');
 
       const total = changes.reduce((sum, value) => sum + value, 0);
-      const avg = changes.length > 0 ? total / changes.length : 0;
-
-      this.averageChange24h = avg;
+      this.averageChange24h = changes.length > 0 ? total / changes.length : 0;
     });
   }
 
@@ -143,12 +139,12 @@ export class MarketComponent implements OnInit {
   }
 
   updateCoinPrices(): void {
-    this.coinPrices$ = this.coinList$.pipe(
-      switchMap((coins) => {
-        const coinIds = coins.map((c) => c.name.toLowerCase());
-        return this.coinGeckoService.refreshCoinPricesAndMarketCharts(coinIds);
-      })
-    );
+    //  this.coinPrices$ = this.coinList$.pipe(
+    //    switchMap((coins) => {
+    //      const coinIds = coins.map((c) => c.name.toLowerCase());
+    //      return this.coinGeckoService.refreshCoinPricesAndMarketCharts(coinIds);
+    //    })
+    //  );
   }
 
   onCoinClick(coin: CoinList): void {
