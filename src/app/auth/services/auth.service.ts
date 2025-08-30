@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, map, tap, shareReplay } from 'rxjs/operators';
+import { catchError, map, tap, shareReplay, switchMap } from 'rxjs/operators';
 import { BackendApiService } from '../../core/services/backend-api.service';
 import { CoinGeckoCacheService } from '../../core/services/external/coin-gecko-cache.service';
 import { UserService } from '../../home/services/user.service';
@@ -45,16 +45,11 @@ export class AuthService {
     return this.authCheck$;
   }
 
-  login(credentials: LoginCredentials): Observable<{ message: string }> {
-    return this.backendApiService
-      .post<{ message: string }, LoginCredentials>('/auth/login/', credentials)
-      .pipe(
-        tap(() => {
-          this.loggedInSubject.next(true);
-          this.authCheck$ = null;
-          this.queueCoinCache();
-        })
-      );
+  login(credentials: LoginCredentials): Observable<any> {
+    return this.backendApiService.post('/auth/login/', credentials).pipe(
+      tap(() => this.loggedInSubject.next(true)),
+      switchMap(() => this.coinCacheService.queueCoinCache())
+    );
   }
 
   logout(): Observable<void> {
@@ -99,14 +94,6 @@ export class AuthService {
       '/auth/verify-email/',
       new HttpParams({ fromObject: { uid, token } })
     );
-  }
-
-  private queueCoinCache(): void {
-    this.coinCacheService.queueCoinCache().subscribe({
-      error: () => {
-        console.error('Error refreshing coin cache');
-      },
-    });
   }
 
   private clearSession(): void {
