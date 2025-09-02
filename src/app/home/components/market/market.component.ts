@@ -87,13 +87,13 @@ export class MarketComponent implements OnInit {
       case 'gainers':
         return coins.filter(
           (coin) =>
-            priceData[coin.name.toLowerCase()]?.market_data
+            priceData[coin.name.toLowerCase()]?.data.market_data
               .price_change_24h_in_currency['usd'] > 0
         );
       case 'losers':
         return coins.filter(
           (coin) =>
-            priceData[coin.name.toLowerCase()]?.market_data
+            priceData[coin.name.toLowerCase()]?.data.market_data
               .price_change_24h_in_currency['usd'] < 0
         );
       default:
@@ -123,7 +123,7 @@ export class MarketComponent implements OnInit {
   private averageChange(): void {
     this.coinPrices$.subscribe((prices) => {
       const changes = Object.values(prices)
-        .map((coin) => coin.market_data.price_change_percentage_24h)
+        .map((coin) => coin.data.market_data.price_change_percentage_24h)
         .filter((change) => typeof change === 'number');
 
       const total = changes.reduce((sum, value) => sum + value, 0);

@@ -20,9 +20,10 @@
       [coin]="{
         name: coin.name,
         symbol: coin.symbol,
-        price: prices[coin.name.toLowerCase()].market_data.current_price['usd'],
+        price:
+          prices[coin.name.toLowerCase()].data.market_data.current_price['usd'],
         change:
-          prices[coin.name.toLowerCase()].market_data
+          prices[coin.name.toLowerCase()].data.market_data
             .price_change_percentage_24h
       }"
     ></app-coin-card>

@@ -92,7 +92,9 @@ export class PortfolioComponent {
   private averageChange(): void {
     this.coinPrices$.subscribe((prices) => {
       const changes = Object.values(prices)
-        .map((coin) => coin.market_data.price_change_24h_in_currency['usd'])
+        .map(
+          (coin) => coin.data.market_data.price_change_24h_in_currency['usd']
+        )
         .filter((change) => typeof change === 'number');
 
       const total = changes.reduce((sum, value) => sum + value, 0);
@@ -141,7 +143,7 @@ export class PortfolioComponent {
     holdings: CoinHolding[]
   ): number {
     const coinPrice =
-      prices[slug.toLowerCase()].market_data.current_price['usd'] ?? 0;
+      prices[slug.toLowerCase()].data.market_data.current_price['usd'] ?? 0;
     const holdingAmount = this.getHoldingAmount(symbol, holdings);
 
     return coinPrice * holdingAmount;

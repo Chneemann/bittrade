@@ -28,7 +28,7 @@ export interface Cached<T> {
 }
 
 export interface CoinPricesResponse {
-  readonly [coinId: string]: Coin;
+  readonly [coinId: string]: Cached<Coin>;
 }
 
 export type CoinList = {

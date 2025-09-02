@@ -14,7 +14,7 @@
         symbol: coin.symbol,
         price: getPriceAmount(coin.name, coin.symbol, prices, holdings),
         change:
-          prices[coin.name.toLowerCase()].market_data
+          prices[coin.name.toLowerCase()].data.market_data
             .price_change_percentage_24h,
         holding: getHoldingAmount(coin.symbol, holdings)
       }"
