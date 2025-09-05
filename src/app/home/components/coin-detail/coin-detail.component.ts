@@ -63,7 +63,6 @@ export class CoinDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.coinList$ = this.loadCoinList();
     this.currentCoin$ = this.currentCoinStream();
-    this.subscribeToUpdatePrice();
   }
 
   ngOnDestroy(): void {
@@ -73,13 +72,6 @@ export class CoinDetailComponent implements OnInit, OnDestroy {
   onIntervalChange(interval: string): void {
     this.selectedTime = interval;
     this.updateCoinChart();
-  }
-
-  private subscribeToUpdatePrice(): void {
-    const sub = this.coinUpdateService.updatePrices$.subscribe(() => {
-      this.updateCoinPrice();
-    });
-    this.subscriptions.add(sub);
   }
 
   private loadCoinList(): Observable<CoinListResponse> {

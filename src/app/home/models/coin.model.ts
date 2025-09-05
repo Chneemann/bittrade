@@ -25,6 +25,7 @@ export interface Coin {
 export interface Cached<T> {
   readonly data: T;
   readonly timestamp: number;
+  readonly cached_at?: number;
 }
 
 export interface CoinPricesResponse {

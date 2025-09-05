@@ -57,7 +57,6 @@ export class MarketComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCoinData();
-    this.subscribeToUpdatePrices();
     this.setupFilteredCoins();
   }
 
@@ -103,13 +102,6 @@ export class MarketComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-  }
-
-  private subscribeToUpdatePrices(): void {
-    const sub = this.coinUpdateService.updatePrices$.subscribe(() => {
-      this.updateCoinPrices();
-    });
-    this.subscriptions.add(sub);
   }
 
   private fetchCoinPrices(): void {

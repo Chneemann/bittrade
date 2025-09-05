@@ -6,6 +6,7 @@ import {
   shareReplay,
   Subscription,
   switchMap,
+  tap,
 } from 'rxjs';
 import {
   CoinHolding,
@@ -56,7 +57,6 @@ export class PortfolioComponent {
     this.loadCoinData();
     this.loadHoldings();
     this.filterCoinsByHoldings();
-    this.subscribeToUpdatePrices();
   }
 
   ngOnDestroy(): void {
@@ -74,16 +74,15 @@ export class PortfolioComponent {
     );
   }
 
-  private subscribeToUpdatePrices(): void {
-    const sub = this.coinUpdateService.updatePrices$.subscribe(() => {
-      this.updateCoinPrices();
-    });
-    this.subscriptions.add(sub);
-  }
-
   private fetchCoinPrices(): void {
     this.coinPrices$ = this.coinList$.pipe(
       switchMap(() => this.coinCacheService.getCoinCache()),
+      tap((prices) => {
+        const maxCachedAt = Math.max(
+          ...Object.values(prices).map((p) => p.cached_at ?? 0)
+        );
+        this.coinUpdateService.setLastUpdate(maxCachedAt);
+      }),
       shareReplay({ bufferSize: 1, refCount: true })
     );
     this.averageChange();

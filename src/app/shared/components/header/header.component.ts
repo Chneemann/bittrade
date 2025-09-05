@@ -38,6 +38,8 @@ export class HeaderComponent implements OnInit {
   currentPath: string = '';
   showRefreshButton: boolean = false;
 
+  lastUpdate$!: Observable<number | null>;
+
   canUpdate$!: Observable<boolean>;
   cooldownRemaining$!: Observable<number>;
   lastUpdateTimestamp$!: Observable<number | null>;
@@ -90,6 +92,7 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.lastUpdate$ = this.coinUpdateService.lastUpdate$;
     this.subscribeToRouteChanges();
     this.loadAndProcessCoinList();
   }
@@ -115,7 +118,6 @@ export class HeaderComponent implements OnInit {
           response.forEach((coin) => {
             this.addCoinRoute(coin);
           });
-          this.updateObservables();
         })
       )
       .subscribe();
@@ -157,19 +159,10 @@ export class HeaderComponent implements OnInit {
     this.showRefreshButton = !!matching;
 
     if (matching) {
-      const [, config] = matching;
-      const key = config.dataKey;
-
-      if (!key) {
-        this.showRefreshButton = false;
-        return;
-      }
-
-      this.canUpdate$ = this.coinUpdateService.canUpdate(key);
-      this.cooldownRemaining$ =
-        this.coinUpdateService.getCooldownRemaining(key);
+      this.canUpdate$ = this.coinUpdateService.canUpdate();
+      this.cooldownRemaining$ = this.coinUpdateService.getCooldownRemaining();
       this.lastUpdateTimestamp$ =
-        this.coinUpdateService.getLastUpdateTimestamp(key);
+        this.coinUpdateService.getLastUpdateTimestamp();
       this.refreshTooltipText$ = this.tooltipText();
     } else {
       this.canUpdate$ = of(false);
@@ -198,7 +191,7 @@ export class HeaderComponent implements OnInit {
   onUpdatePricesClick(): void {
     const config = this.findMatchingConfig()?.[1];
     if (!config || !config.dataKey) return;
-    this.coinUpdateService.triggerUpdatePrices(config.dataKey);
+    this.coinUpdateService.triggerUpdatePrices();
   }
 
   goHistoryBack(): void {
